@@ -4,6 +4,11 @@
 
 package com.ptit.p.documents;
 
+import com.ptit.p.documents.dao.BookDAO;
+import com.ptit.p.documents.model.Book;
+import com.ptit.p.documents.view.BookFrm;
+import java.util.List;
+
 /**
  *
  * @author ADMIN
@@ -11,6 +16,10 @@ package com.ptit.p.documents;
 public class PDocuments {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        BookDAO bookDAO = new BookDAO();
+        List<Book> books = bookDAO.findAll();
+
+        BookFrm bookView = new BookFrm();
+        bookView.renderBookList(books);
     }
 }

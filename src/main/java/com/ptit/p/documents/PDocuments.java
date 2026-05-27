@@ -8,7 +8,9 @@ public class PDocuments {
     public static void main(String[] args) {
         // Run Kien's Admin User Management GUI entry point
         try {
-            com.formdev.flatlaf.FlatIntelliJLaf.setup();
+            boolean success = com.formdev.flatlaf.FlatIntelliJLaf.setup();
+            System.out.println("DEBUG: FlatLaf setup success? " + success);
+            System.out.println("DEBUG: Active LookAndFeel is -> " + javax.swing.UIManager.getLookAndFeel().getName());
         } catch (Exception ex) {
             System.err.println("FlatLaf Look and Feel setup failed: " + ex.getMessage());
         }

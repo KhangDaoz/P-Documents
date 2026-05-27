@@ -65,7 +65,7 @@ public class EditUserFrm extends JFrame implements ActionListener {
         // Dòng 4: Mật khẩu
         pnlGrid.add(createGridLabel("Password", Color.WHITE, false));
         txtPassword = new JPasswordField(user.getPassword());
-        txtPassword.putClientProperty("showRevealButton", true);
+        txtPassword.putClientProperty("PasswordField.showRevealButton", true);
         txtPassword.setHorizontalAlignment(JTextField.CENTER);
         txtPassword.setBackground(Color.WHITE);
         txtPassword.setForeground(Color.BLACK);

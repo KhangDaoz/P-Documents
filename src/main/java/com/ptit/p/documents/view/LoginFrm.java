@@ -57,7 +57,7 @@ public class LoginFrm extends JFrame implements ActionListener {
         pnl.add(lblPass);
 
         txtPassword = new JPasswordField(15);
-        txtPassword.putClientProperty("showRevealButton", true);
+        txtPassword.putClientProperty("PasswordField.showRevealButton", true);
         txtPassword.setBackground(Color.WHITE);
         txtPassword.setForeground(Color.BLACK);
         txtPassword.setFont(new Font("Segoe UI", Font.PLAIN, 14));

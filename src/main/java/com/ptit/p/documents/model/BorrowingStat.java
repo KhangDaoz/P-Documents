@@ -1,4 +1,4 @@
-package com.library.model;
+package com.ptit.p.documents.model;
 
 /**
  * Thực thể thống kê sách mượn nhiều - kế thừa Book (spec §1.a "Tầng thực thể").

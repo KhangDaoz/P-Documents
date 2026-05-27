@@ -1,4 +1,4 @@
-package com.library.model;
+package com.ptit.p.documents.model;
 
 /**
  * Sinh viên - Tầng thực thể (spec §1.b bước 29).

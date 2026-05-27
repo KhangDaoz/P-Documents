@@ -1,7 +1,7 @@
-package com.library.view;
+package com.ptit.p.documents.view;
 
-import com.library.dao.StockStatDAO;
-import com.library.model.StockStat;
+import com.ptit.p.documents.dao.StockStatDAO;
+import com.ptit.p.documents.model.StockStat;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -90,9 +90,12 @@ public class StockStatFrm extends JFrame {
             currentRows = dao.searchDamageLossRecords(from, to, reason);
             tableModel.setRowCount(0);
             for (StockStat s : currentRows) {
+                // Spec §2.b bước 15-18: BookItem truy cập qua book.getItems()
+                String barcode = s.getBook().getItems().isEmpty()
+                        ? "" : s.getBook().getItems().get(0).getId();
                 tableModel.addRow(new Object[]{
-                    s.getBookItem().getBook().getTitle(),
-                    s.getBookItem().getBarcode(),
+                    s.getBook().getTitle(),
+                    barcode,
                     s.getReason()
                 });
             }

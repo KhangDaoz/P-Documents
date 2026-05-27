@@ -1,14 +1,18 @@
-package com.library.model;
+package com.ptit.p.documents.model;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Đầu sách - Tầng thực thể (spec §1.a, §2.a).
- * Thuộc tính theo spec §1.b bước 16: title, author, category (+ bookId là khóa).
+ * Đầu sách - Tầng thực thể.
+ * Sở hữu danh sách BookItem (bản sách).
  */
 public class Book {
     private String bookId;
     private String title;
     private String author;
     private String category;
+    private List<BookItem> items = new ArrayList<>();
 
     public Book() {}
 
@@ -27,4 +31,8 @@ public class Book {
     public void   setAuthor(String v)   { this.author = v; }
     public String getCategory()         { return category; }
     public void   setCategory(String v) { this.category = v; }
+
+    public List<BookItem> getItems()              { return items; }
+    public void           setItems(List<BookItem> v) { this.items = v; }
+    public void           addItem(BookItem item)  { this.items.add(item); }
 }

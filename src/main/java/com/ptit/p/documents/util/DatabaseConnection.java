@@ -1,4 +1,4 @@
-package com.library.util;
+package com.ptit.p.documents.util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -1,7 +1,7 @@
-package com.library.view;
+package com.ptit.p.documents.view;
 
-import com.library.dao.BorrowingStatDAO;
-import com.library.model.BorrowingStat;
+import com.ptit.p.documents.dao.BorrowingStatDAO;
+import com.ptit.p.documents.model.BorrowingStat;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;

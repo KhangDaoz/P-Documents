@@ -1,4 +1,4 @@
-package com.library.view;
+package com.ptit.p.documents.view;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,10 +1,9 @@
-package com.library.dao;
+package com.ptit.p.documents.dao;
 
-import com.library.model.BookItem;
-import com.library.model.Book;
-import com.library.model.BorrowedBook;
-import com.library.model.Borrowing;
-import com.library.model.Student;
+import com.ptit.p.documents.model.BookItem;
+import com.ptit.p.documents.model.BorrowedBook;
+import com.ptit.p.documents.model.Borrowing;
+import com.ptit.p.documents.model.Student;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -20,22 +19,20 @@ public class BorrowedBookDAO extends DAO {
 
     /**
      * Lấy toàn bộ lịch sử mượn trả của một đầu sách theo bookId.
-     * Spec §1.b bước 25-33.
+     * Spec §1.b bước 25-33: BorrowedBook -> Borrowing -> Student.
      */
     public List<BorrowedBook> getBorrowHistoryByBook(String bookId) {
         List<BorrowedBook> result = new ArrayList<>();
         String sql =
             "SELECT bb.id, bb.due_date, bb.return_date, bb.status, " +
             "       bi.barcode, bi.status AS item_status, " +
-            "       b.book_id, b.title, b.author, b.category, " +
             "       br.borrow_id, br.borrow_date, " +
             "       s.student_code, s.full_name " +
             "FROM borrowed_books bb " +
             "JOIN book_items bi  ON bi.barcode    = bb.barcode " +
-            "JOIN books b        ON b.book_id     = bi.book_id " +
             "JOIN borrowings br  ON br.borrow_id  = bb.borrow_id " +
             "JOIN students s     ON s.student_code= br.student_code " +
-            "WHERE b.book_id = ? " +
+            "WHERE bi.book_id = ? " +
             "ORDER BY br.borrow_date DESC";
 
         PreparedStatement ps = null;
@@ -46,16 +43,9 @@ public class BorrowedBookDAO extends DAO {
             rs = ps.executeQuery();
             while (rs.next()) {
                 // Đóng gói lồng nhau theo spec §1.b bước 27-31
-                Book book = new Book(
-                    rs.getString("book_id"),
-                    rs.getString("title"),
-                    rs.getString("author"),
-                    rs.getString("category")
-                );
                 BookItem item = new BookItem(
                     rs.getString("barcode"),
-                    rs.getString("item_status"),
-                    book
+                    rs.getString("item_status")
                 );
                 Student student = new Student(
                     rs.getString("student_code"),

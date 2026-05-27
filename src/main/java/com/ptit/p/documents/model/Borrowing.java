@@ -1,4 +1,4 @@
-package com.library.model;
+package com.ptit.p.documents.model;
 
 import java.time.LocalDate;
 

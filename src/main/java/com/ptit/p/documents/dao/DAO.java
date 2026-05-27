@@ -1,6 +1,6 @@
-package com.library.dao;
+package com.ptit.p.documents.dao;
 
-import com.library.util.DatabaseConnection;
+import com.ptit.p.documents.util.DatabaseConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

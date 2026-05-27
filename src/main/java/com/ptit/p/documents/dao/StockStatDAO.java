@@ -1,8 +1,8 @@
-package com.library.dao;
+package com.ptit.p.documents.dao;
 
-import com.library.model.Book;
-import com.library.model.BookItem;
-import com.library.model.StockStat;
+import com.ptit.p.documents.model.Book;
+import com.ptit.p.documents.model.BookItem;
+import com.ptit.p.documents.model.StockStat;
 import com.lowagie.text.Document;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
@@ -59,20 +59,19 @@ public class StockStatDAO extends DAO {
             if (!filterAll) ps.setString(3, reason);
             rs = ps.executeQuery();
             while (rs.next()) {
-                // Đóng gói theo spec §2.b bước 14-18: StockStat -> BookItem -> Book
+                // Spec §2.b bước 15-18: StockStat -> Book -> BookItem
                 Book book = new Book(
                     rs.getString("book_id"),
                     rs.getString("title"),
                     rs.getString("author"),
                     rs.getString("category")
                 );
-                BookItem item = new BookItem(
+                book.addItem(new BookItem(
                     rs.getString("barcode"),
-                    rs.getString("item_status"),
-                    book
-                );
+                    rs.getString("item_status")
+                ));
                 StockStat ss = new StockStat(
-                    item,
+                    book,
                     rs.getString("reason"),
                     rs.getDate("reported_date").toLocalDate()
                 );
@@ -126,9 +125,10 @@ public class StockStatDAO extends DAO {
 
             DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             for (StockStat s : rows) {
-                String titleText = s.getBookItem() != null && s.getBookItem().getBook() != null
-                        ? s.getBookItem().getBook().getTitle() : "";
-                String barcode = s.getBookItem() != null ? s.getBookItem().getBarcode() : "";
+                Book b = s.getBook();
+                String titleText = b != null ? b.getTitle() : "";
+                String barcode = b != null && !b.getItems().isEmpty()
+                        ? b.getItems().get(0).getId() : "";
                 table.addCell(new PdfPCell(new Phrase(titleText, cellFont)));
                 table.addCell(new PdfPCell(new Phrase(barcode, cellFont)));
                 table.addCell(new PdfPCell(new Phrase(s.getReason(), cellFont)));

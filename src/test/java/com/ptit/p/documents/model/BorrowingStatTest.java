@@ -1,4 +1,4 @@
-package com.library.model;
+package com.ptit.p.documents.model;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

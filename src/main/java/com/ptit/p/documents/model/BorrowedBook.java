@@ -1,11 +1,10 @@
-package com.library.model;
+package com.ptit.p.documents.model;
 
 import java.time.LocalDate;
 
 /**
  * Chi tiết một dòng mượn - Tầng thực thể (spec §1.b bước 27-31).
- * Tham chiếu Borrowing + BookItem; cung cấp 6 cột hiển thị trong BorrowDetailFrm
- * (mã SV, tên, ngày mượn, hạn trả, ngày trả, trạng thái - spec §1.b bước 34).
+ * Tham chiếu Borrowing + BookItem; cung cấp 6 cột hiển thị trong BorrowDetailFrm.
  */
 public class BorrowedBook {
     private Borrowing borrowing;

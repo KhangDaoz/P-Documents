@@ -1,6 +1,6 @@
-package com.library.dao;
+package com.ptit.p.documents.dao;
 
-import com.library.model.BorrowingStat;
+import com.ptit.p.documents.model.BorrowingStat;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;

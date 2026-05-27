@@ -23,26 +23,26 @@ public class AddUserFrm extends JFrame implements ActionListener {
         setLocationRelativeTo(null);
 
         JPanel pnlMain = new JPanel(new GridBagLayout());
-        pnlMain.setBackground(new Color(220, 224, 230));
+        pnlMain.setBackground(new Color(240, 242, 245));
         setContentPane(pnlMain);
 
         JPanel pnl = new JPanel(null);
         pnl.setPreferredSize(new Dimension(600, 390));
         pnl.setBackground(Color.WHITE);
-        pnl.setBorder(BorderFactory.createLineBorder(new Color(190, 195, 205), 1));
+        pnl.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240), 1));
         pnlMain.add(pnl);
 
         // Tiêu đề form (hiển thị phẳng đẹp, không giống nút bấm)
         JLabel lblHeader = new JLabel("Create New Account", JLabel.CENTER);
         lblHeader.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        lblHeader.setForeground(new Color(50, 60, 70));
+        lblHeader.setForeground(new Color(30, 41, 59));
         lblHeader.setBounds(100, 30, 400, 35);
         pnl.add(lblHeader);
 
         // Grid panel cho bảng thông tin
         JPanel pnlGrid = new JPanel(new GridLayout(5, 2, 0, 0));
         pnlGrid.setBounds(100, 75, 400, 175);
-        pnlGrid.setBorder(BorderFactory.createLineBorder(new Color(180, 185, 195), 1));
+        pnlGrid.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240), 1));
 
         // Dòng 1: Họ tên
         pnlGrid.add(createGridLabel("Full Name", Color.WHITE));
@@ -81,21 +81,21 @@ public class AddUserFrm extends JFrame implements ActionListener {
 
         // Nút Thêm mới và Huỷ
         btnAddnew = new JButton("Save");
-        btnAddnew.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        btnAddnew.setBackground(Color.WHITE);
-        btnAddnew.setForeground(Color.BLACK);
+        btnAddnew.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnAddnew.setBackground(new Color(59, 130, 246));
+        btnAddnew.setForeground(Color.WHITE);
         btnAddnew.setFocusPainted(false);
-        btnAddnew.setBorder(BorderFactory.createLineBorder(new Color(150, 160, 175)));
+        btnAddnew.setBorder(BorderFactory.createEmptyBorder());
         btnAddnew.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnAddnew.setBounds(130, 280, 140, 35);
         btnAddnew.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                btnAddnew.setBackground(new Color(245, 247, 250));
+                btnAddnew.setBackground(new Color(37, 99, 235));
             }
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
-                btnAddnew.setBackground(Color.WHITE);
+                btnAddnew.setBackground(new Color(59, 130, 246));
             }
         });
         btnAddnew.addActionListener(this);
@@ -104,15 +104,15 @@ public class AddUserFrm extends JFrame implements ActionListener {
         btnCancel = new JButton("Cancel");
         btnCancel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         btnCancel.setBackground(Color.WHITE);
-        btnCancel.setForeground(Color.BLACK);
+        btnCancel.setForeground(new Color(100, 116, 139));
         btnCancel.setFocusPainted(false);
-        btnCancel.setBorder(BorderFactory.createLineBorder(new Color(150, 160, 175)));
+        btnCancel.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240)));
         btnCancel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnCancel.setBounds(330, 280, 140, 35);
         btnCancel.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                btnCancel.setBackground(new Color(245, 247, 250));
+                btnCancel.setBackground(new Color(248, 250, 252));
             }
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
@@ -127,9 +127,9 @@ public class AddUserFrm extends JFrame implements ActionListener {
         JLabel label = new JLabel(text, JLabel.CENTER);
         label.setOpaque(true);
         label.setBackground(background);
-        label.setForeground(Color.BLACK);
+        label.setForeground(new Color(71, 85, 105));
         label.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        label.setBorder(BorderFactory.createLineBorder(new Color(180, 185, 195), 1));
+        label.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240), 1));
         return label;
     }
 

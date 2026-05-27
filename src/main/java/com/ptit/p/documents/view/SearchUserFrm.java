@@ -41,13 +41,13 @@ public class SearchUserFrm extends JFrame implements ActionListener {
 
         // pnlMain is the content pane with BorderLayout
         JPanel pnlMain = new JPanel(new BorderLayout(0, 15));
-        pnlMain.setBackground(new Color(220, 224, 230));
+        pnlMain.setBackground(new Color(240, 242, 245));
         pnlMain.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
         setContentPane(pnlMain);
 
         // Top panel for search fields
         JPanel pnlTop = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
-        pnlTop.setBackground(new Color(220, 224, 230));
+        pnlTop.setBackground(new Color(240, 242, 245));
 
         txtKey = new JTextField("Enter keyword to search...");
         txtKey.setPreferredSize(new Dimension(350, 35));
@@ -55,7 +55,7 @@ public class SearchUserFrm extends JFrame implements ActionListener {
         txtKey.setForeground(Color.GRAY);
         txtKey.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         txtKey.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(150, 160, 175), 1),
+            BorderFactory.createLineBorder(new Color(226, 232, 240), 1),
             BorderFactory.createEmptyBorder(0, 10, 0, 10)
         ));
         txtKey.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -79,20 +79,20 @@ public class SearchUserFrm extends JFrame implements ActionListener {
 
         btnSearch = new JButton("Search");
         btnSearch.setPreferredSize(new Dimension(100, 35));
-        btnSearch.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        btnSearch.setBackground(Color.WHITE);
-        btnSearch.setForeground(Color.BLACK);
+        btnSearch.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnSearch.setBackground(new Color(59, 130, 246));
+        btnSearch.setForeground(Color.WHITE);
         btnSearch.setFocusPainted(false);
-        btnSearch.setBorder(BorderFactory.createLineBorder(new Color(150, 160, 175)));
+        btnSearch.setBorder(BorderFactory.createEmptyBorder());
         btnSearch.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnSearch.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                btnSearch.setBackground(new Color(245, 247, 250));
+                btnSearch.setBackground(new Color(37, 99, 235));
             }
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
-                btnSearch.setBackground(Color.WHITE);
+                btnSearch.setBackground(new Color(59, 130, 246));
             }
         });
         btnSearch.addActionListener(this);
@@ -102,11 +102,11 @@ public class SearchUserFrm extends JFrame implements ActionListener {
 
         // Center panel for table and label
         JPanel pnlCenter = new JPanel(new BorderLayout(0, 10));
-        pnlCenter.setBackground(new Color(220, 224, 230));
+        pnlCenter.setBackground(new Color(240, 242, 245));
 
         JLabel lblList = new JLabel("User List", JLabel.LEFT);
         lblList.setFont(new Font("Segoe UI", Font.BOLD, 15));
-        lblList.setForeground(new Color(50, 60, 70));
+        lblList.setForeground(new Color(30, 41, 59));
         pnlCenter.add(lblList, BorderLayout.NORTH);
 
         // Bảng dữ liệu
@@ -169,7 +169,7 @@ public class SearchUserFrm extends JFrame implements ActionListener {
         JScrollPane scrollPane = new JScrollPane(tblUser);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.getViewport().setBackground(Color.WHITE);
-        scrollPane.setBorder(BorderFactory.createLineBorder(new Color(150, 160, 175), 1));
+        scrollPane.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240), 1));
         pnlCenter.add(scrollPane, BorderLayout.CENTER);
 
         pnlMain.add(pnlCenter, BorderLayout.CENTER);
@@ -186,20 +186,20 @@ public class SearchUserFrm extends JFrame implements ActionListener {
 
         // Bottom panel for back button
         JPanel pnlBottom = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
-        pnlBottom.setBackground(new Color(220, 224, 230));
+        pnlBottom.setBackground(new Color(240, 242, 245));
 
         btnBack = new JButton("Back");
         btnBack.setPreferredSize(new Dimension(100, 35));
         btnBack.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         btnBack.setBackground(Color.WHITE);
-        btnBack.setForeground(Color.BLACK);
+        btnBack.setForeground(new Color(100, 116, 139));
         btnBack.setFocusPainted(false);
-        btnBack.setBorder(BorderFactory.createLineBorder(new Color(150, 160, 175)));
+        btnBack.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240)));
         btnBack.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnBack.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                btnBack.setBackground(new Color(245, 247, 250));
+                btnBack.setBackground(new Color(248, 250, 252));
             }
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {

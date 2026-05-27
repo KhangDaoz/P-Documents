@@ -27,31 +27,31 @@ public class EditUserFrm extends JFrame implements ActionListener {
         setLocationRelativeTo(null);
 
         JPanel pnlMain = new JPanel(new GridBagLayout());
-        pnlMain.setBackground(new Color(220, 224, 230));
+        pnlMain.setBackground(new Color(240, 242, 245));
         setContentPane(pnlMain);
 
         JPanel pnl = new JPanel(null);
         pnl.setPreferredSize(new Dimension(600, 420));
         pnl.setBackground(Color.WHITE);
-        pnl.setBorder(BorderFactory.createLineBorder(new Color(190, 195, 205), 1));
+        pnl.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240), 1));
         pnlMain.add(pnl);
 
         // Tiêu đề form (hiển thị phẳng đẹp, không giống nút bấm)
         JLabel lblHeader = new JLabel("Update User Information", JLabel.CENTER);
         lblHeader.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        lblHeader.setForeground(new Color(50, 60, 70));
+        lblHeader.setForeground(new Color(30, 41, 59));
         lblHeader.setBounds(100, 30, 400, 35);
         pnl.add(lblHeader);
 
         // Grid panel cho bảng thông tin
         JPanel pnlGrid = new JPanel(new GridLayout(6, 2, 0, 0));
         pnlGrid.setBounds(100, 75, 400, 210);
-        pnlGrid.setBorder(BorderFactory.createLineBorder(new Color(180, 185, 195), 1));
+        pnlGrid.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240), 1));
 
         // Dòng 1: MNV
         pnlGrid.add(createGridLabel("Employee ID", Color.WHITE, false));
         String mnvStr = "NV" + String.format("%03d", user.getId());
-        pnlGrid.add(createGridLabel(mnvStr, new Color(225, 228, 233), false));
+        pnlGrid.add(createGridLabel(mnvStr, new Color(248, 250, 252), false));
 
         // Dòng 2: Họ tên
         pnlGrid.add(createGridLabel("Full Name", Color.WHITE, false));
@@ -92,15 +92,15 @@ public class EditUserFrm extends JFrame implements ActionListener {
         btnCancel = new JButton("Cancel");
         btnCancel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         btnCancel.setBackground(Color.WHITE);
-        btnCancel.setForeground(Color.BLACK);
+        btnCancel.setForeground(new Color(100, 116, 139));
         btnCancel.setFocusPainted(false);
-        btnCancel.setBorder(BorderFactory.createLineBorder(new Color(150, 160, 175)));
+        btnCancel.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240)));
         btnCancel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnCancel.setBounds(130, 310, 140, 35);
         btnCancel.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                btnCancel.setBackground(new Color(245, 247, 250));
+                btnCancel.setBackground(new Color(248, 250, 252));
             }
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
@@ -111,21 +111,21 @@ public class EditUserFrm extends JFrame implements ActionListener {
         pnl.add(btnCancel);
 
         btnUpdate = new JButton("Update");
-        btnUpdate.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        btnUpdate.setBackground(Color.WHITE);
-        btnUpdate.setForeground(Color.BLACK);
+        btnUpdate.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnUpdate.setBackground(new Color(59, 130, 246));
+        btnUpdate.setForeground(Color.WHITE);
         btnUpdate.setFocusPainted(false);
-        btnUpdate.setBorder(BorderFactory.createLineBorder(new Color(150, 160, 175)));
+        btnUpdate.setBorder(BorderFactory.createEmptyBorder());
         btnUpdate.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnUpdate.setBounds(330, 310, 140, 35);
         btnUpdate.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                btnUpdate.setBackground(new Color(245, 247, 250));
+                btnUpdate.setBackground(new Color(37, 99, 235));
             }
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
-                btnUpdate.setBackground(Color.WHITE);
+                btnUpdate.setBackground(new Color(59, 130, 246));
             }
         });
         btnUpdate.addActionListener(this);
@@ -136,9 +136,9 @@ public class EditUserFrm extends JFrame implements ActionListener {
         JLabel label = new JLabel(text, JLabel.CENTER);
         label.setOpaque(true);
         label.setBackground(background);
-        label.setForeground(Color.BLACK);
+        label.setForeground(new Color(71, 85, 105));
         label.setFont(new Font("Segoe UI", bold ? Font.BOLD : Font.PLAIN, 13));
-        label.setBorder(BorderFactory.createLineBorder(new Color(180, 185, 195), 1));
+        label.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240), 1));
         return label;
     }
 
@@ -146,7 +146,7 @@ public class EditUserFrm extends JFrame implements ActionListener {
         JTextField tf = new JTextField(text);
         tf.setHorizontalAlignment(JTextField.CENTER);
         tf.setOpaque(true);
-        tf.setBackground(editable ? Color.WHITE : new Color(225, 228, 233));
+        tf.setBackground(editable ? Color.WHITE : new Color(248, 250, 252));
         tf.setForeground(Color.BLACK);
         tf.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         // Đã xoá setBorder tuỳ chỉnh để FlatLaf có thể vẽ nút mắt và giao diện mặc định

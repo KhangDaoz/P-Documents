@@ -24,13 +24,13 @@ public class ConfirmAddUserFrm extends JFrame implements ActionListener {
         setLocationRelativeTo(null);
 
         JPanel pnlMain = new JPanel(new GridBagLayout());
-        pnlMain.setBackground(new Color(220, 224, 230));
+        pnlMain.setBackground(new Color(240, 242, 245));
         setContentPane(pnlMain);
 
         JPanel pnl = new JPanel(null);
         pnl.setPreferredSize(new Dimension(600, 390));
         pnl.setBackground(Color.WHITE);
-        pnl.setBorder(BorderFactory.createLineBorder(new Color(190, 195, 205), 1));
+        pnl.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240), 1));
         pnlMain.add(pnl);
 
         // Tiêu đề form (hiển thị phẳng đẹp, không giống nút bấm)
@@ -85,31 +85,49 @@ public class ConfirmAddUserFrm extends JFrame implements ActionListener {
 
         pnl.add(pnlGrid);
 
-        // Nút Xác nhận & Lưu ở góc dưới bên phải
-        btnConfirm = new JButton("Confirm & Save");
-        btnConfirm.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        btnConfirm.setBackground(Color.WHITE);
-        btnConfirm.setForeground(Color.BLACK);
-        btnConfirm.setFocusPainted(false);
-        btnConfirm.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        btnConfirm.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        btnConfirm.setBounds(350, 280, 150, 35);
-        btnConfirm.addMouseListener(new java.awt.event.MouseAdapter() {
+        // Nút Xác nhận & Huỷ
+        btnCancel = new JButton("Cancel");
+        btnCancel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        btnCancel.setBackground(Color.WHITE);
+        btnCancel.setForeground(new Color(100, 116, 139));
+        btnCancel.setFocusPainted(false);
+        btnCancel.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240)));
+        btnCancel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btnCancel.setBounds(130, 280, 140, 35);
+        btnCancel.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                btnConfirm.setBackground(new Color(245, 247, 250));
+                btnCancel.setBackground(new Color(248, 250, 252));
             }
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
-                btnConfirm.setBackground(Color.WHITE);
+                btnCancel.setBackground(Color.WHITE);
+            }
+        });
+        btnCancel.addActionListener(this);
+        pnl.add(btnCancel);
+
+        btnConfirm = new JButton("Confirm & Save");
+        btnConfirm.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnConfirm.setBackground(new Color(59, 130, 246));
+        btnConfirm.setForeground(Color.WHITE);
+        btnConfirm.setFocusPainted(false);
+        btnConfirm.setBorder(BorderFactory.createEmptyBorder());
+        btnConfirm.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btnConfirm.setBounds(330, 280, 140, 35);
+        btnConfirm.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                btnConfirm.setBackground(new Color(37, 99, 235));
+            }
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                btnConfirm.setBackground(new Color(59, 130, 246));
             }
         });
         btnConfirm.addActionListener(this);
         pnl.add(btnConfirm);
 
-        // Cancel button is not visible on the screenshot, but keep variable to prevent compilation errors
-        btnCancel = new JButton();
-        
         // JTable is not used anymore in visual, keep dummy to satisfy other references
         tblAddUserConfirm = new JTable();
     }
@@ -118,9 +136,9 @@ public class ConfirmAddUserFrm extends JFrame implements ActionListener {
         JLabel label = new JLabel(text, JLabel.CENTER);
         label.setOpaque(true);
         label.setBackground(background);
-        label.setForeground(Color.BLACK);
+        label.setForeground(new Color(71, 85, 105));
         label.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        label.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+        label.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240), 1));
         return label;
     }
 

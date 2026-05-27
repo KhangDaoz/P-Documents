@@ -21,25 +21,25 @@ public class LoginFrm extends JFrame implements ActionListener {
 
         // Panel nền sử dụng GridBagLayout để căn giữa
         JPanel pnlMain = new JPanel(new GridBagLayout());
-        pnlMain.setBackground(new Color(220, 224, 230));
+        pnlMain.setBackground(new Color(240, 242, 245));
         setContentPane(pnlMain);
 
         // Card panel chứa nội dung form với vị trí tuyệt đối như thiết kế
         JPanel pnl = new JPanel(null);
         pnl.setPreferredSize(new Dimension(500, 380));
         pnl.setBackground(Color.WHITE);
-        pnl.setBorder(BorderFactory.createLineBorder(new Color(190, 195, 205), 1));
+        pnl.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240), 1));
         pnlMain.add(pnl);
 
         JLabel lblLogin = new JLabel("Login", JLabel.CENTER);
         lblLogin.setFont(new Font("Segoe UI", Font.BOLD, 22));
-        lblLogin.setForeground(new Color(50, 60, 70));
+        lblLogin.setForeground(new Color(30, 41, 59));
         lblLogin.setBounds(150, 50, 200, 40);
         pnl.add(lblLogin);
 
         JLabel lblUser = new JLabel("Username:", JLabel.RIGHT);
         lblUser.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        lblUser.setForeground(Color.BLACK);
+        lblUser.setForeground(new Color(71, 85, 105));
         lblUser.setBounds(60, 130, 90, 30);
         pnl.add(lblUser);
 
@@ -53,7 +53,7 @@ public class LoginFrm extends JFrame implements ActionListener {
 
         JLabel lblPass = new JLabel("Password:", JLabel.RIGHT);
         lblPass.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        lblPass.setForeground(Color.BLACK);
+        lblPass.setForeground(new Color(71, 85, 105));
         lblPass.setBounds(60, 200, 90, 30);
         pnl.add(lblPass);
 
@@ -70,21 +70,21 @@ public class LoginFrm extends JFrame implements ActionListener {
         pnl.add(txtPassword);
 
         btnLogin = new JButton("Login");
-        btnLogin.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        btnLogin.setBackground(Color.WHITE);
-        btnLogin.setForeground(Color.BLACK);
+        btnLogin.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnLogin.setBackground(new Color(59, 130, 246));
+        btnLogin.setForeground(Color.WHITE);
         btnLogin.setFocusPainted(false);
-        btnLogin.setBorder(BorderFactory.createLineBorder(new Color(150, 160, 175)));
+        btnLogin.setBorder(BorderFactory.createEmptyBorder());
         btnLogin.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnLogin.setBounds(195, 290, 110, 35);
         btnLogin.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                btnLogin.setBackground(new Color(245, 247, 250));
+                btnLogin.setBackground(new Color(37, 99, 235));
             }
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
-                btnLogin.setBackground(Color.WHITE);
+                btnLogin.setBackground(new Color(59, 130, 246));
             }
         });
         btnLogin.addActionListener(this);

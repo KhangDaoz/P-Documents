@@ -14,7 +14,7 @@ public class UserManageFrm extends JFrame implements ActionListener {
     public UserManageFrm() {
         super("UserManageFrm");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600);
+        setSize(660, 470);
         setLocationRelativeTo(null);
 
         JPanel pnlMain = new JPanel(new GridBagLayout());

@@ -16,7 +16,7 @@ public class LoginFrm extends JFrame implements ActionListener {
     public LoginFrm() {
         super("LoginFrm");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600);
+        setSize(560, 450);
         setLocationRelativeTo(null);
 
         // Panel nền sử dụng GridBagLayout để căn giữa

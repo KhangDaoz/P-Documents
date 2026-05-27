@@ -36,7 +36,7 @@ public class SearchUserFrm extends JFrame implements ActionListener {
         this.searchResults = new ArrayList<>();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(950, 650);
+        setSize(860, 560);
         setLocationRelativeTo(null);
 
         JPanel pnlMain = new JPanel(new GridBagLayout());
@@ -44,7 +44,7 @@ public class SearchUserFrm extends JFrame implements ActionListener {
         setContentPane(pnlMain);
 
         JPanel pnl = new JPanel(null);
-        pnl.setPreferredSize(new Dimension(800, 450));
+        pnl.setPreferredSize(new Dimension(800, 480));
         pnl.setBackground(new Color(220, 224, 230));
         pnlMain.add(pnl);
 
@@ -57,7 +57,7 @@ public class SearchUserFrm extends JFrame implements ActionListener {
             BorderFactory.createLineBorder(new Color(150, 160, 175), 1),
             BorderFactory.createEmptyBorder(0, 10, 0, 10)
         ));
-        txtKey.setBounds(50, 30, 300, 30);
+        txtKey.setBounds(50, 20, 300, 30);
         txtKey.addFocusListener(new java.awt.event.FocusAdapter() {
             @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -85,7 +85,7 @@ public class SearchUserFrm extends JFrame implements ActionListener {
         btnSearch.setFocusPainted(false);
         btnSearch.setBorder(BorderFactory.createLineBorder(new Color(150, 160, 175)));
         btnSearch.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        btnSearch.setBounds(370, 30, 80, 30);
+        btnSearch.setBounds(370, 20, 80, 30);
         btnSearch.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
@@ -103,7 +103,7 @@ public class SearchUserFrm extends JFrame implements ActionListener {
         JLabel lblList = new JLabel("User List", JLabel.LEFT);
         lblList.setFont(new Font("Segoe UI", Font.BOLD, 15));
         lblList.setForeground(new Color(50, 60, 70));
-        lblList.setBounds(50, 80, 200, 25);
+        lblList.setBounds(50, 70, 200, 25);
         pnl.add(lblList);
 
         // Bảng dữ liệu
@@ -164,7 +164,7 @@ public class SearchUserFrm extends JFrame implements ActionListener {
         });
 
         JScrollPane scrollPane = new JScrollPane(tblUser);
-        scrollPane.setBounds(50, 120, 700, 230);
+        scrollPane.setBounds(50, 105, 700, 290);
         scrollPane.getViewport().setBackground(Color.WHITE);
         scrollPane.setBorder(BorderFactory.createLineBorder(new Color(150, 160, 175), 1));
         pnl.add(scrollPane);
@@ -187,7 +187,7 @@ public class SearchUserFrm extends JFrame implements ActionListener {
         btnBack.setFocusPainted(false);
         btnBack.setBorder(BorderFactory.createLineBorder(new Color(150, 160, 175)));
         btnBack.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        btnBack.setBounds(650, 370, 100, 35);
+        btnBack.setBounds(650, 415, 100, 35);
         btnBack.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
@@ -243,28 +243,6 @@ public class SearchUserFrm extends JFrame implements ActionListener {
             tableModel.addRow(row);
         }
 
-        // Tự động thu gọn khoảng trống thừa ở dưới bảng dựa trên số dòng
-        Container parent = tblUser.getParent();
-        if (parent instanceof JViewport) {
-            JScrollPane scrollPane = (JScrollPane) parent.getParent();
-            int rowCount = tableModel.getRowCount();
-            int rowHeight = tblUser.getRowHeight();
-            int headerHeight = tblUser.getTableHeader().getPreferredSize().height;
-            if (headerHeight == 0) headerHeight = 25;
-            
-            int requiredHeight = headerHeight + (rowCount * rowHeight) + 2;
-            int newHeight = Math.min(requiredHeight, 230);
-            
-            scrollPane.setBounds(50, 120, 700, newHeight);
-            
-            // Điều chỉnh vị trí nút Back bám theo mép dưới của bảng (cách 20px)
-            if (btnBack != null) {
-                btnBack.setLocation(650, 120 + newHeight + 20);
-            }
-            
-            scrollPane.revalidate();
-            scrollPane.repaint();
-        }
     }
 
     @Override

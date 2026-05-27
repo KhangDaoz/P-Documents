@@ -12,7 +12,7 @@ public class AdminHomeFrm extends JFrame implements ActionListener {
     public AdminHomeFrm() {
         super("AdminHomeFrm");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600);
+        setSize(660, 420);
         setLocationRelativeTo(null);
 
         JPanel pnlMain = new JPanel(new GridBagLayout());

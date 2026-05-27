@@ -23,7 +23,7 @@ public class EditUserFrm extends JFrame implements ActionListener {
         this.user = user;
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600);
+        setSize(660, 470);
         setLocationRelativeTo(null);
 
         JPanel pnlMain = new JPanel(new GridBagLayout());

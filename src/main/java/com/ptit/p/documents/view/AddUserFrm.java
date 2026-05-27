@@ -22,8 +22,19 @@ public class AddUserFrm extends JFrame implements ActionListener {
         setSize(660, 460);
         setLocationRelativeTo(null);
 
-        JPanel pnlMain = new JPanel(new GridBagLayout());
-        pnlMain.setBackground(new Color(240, 242, 245));
+        JPanel pnlMain = new JPanel(new GridBagLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+                Color color1 = new Color(226, 232, 240);
+                Color color2 = new Color(148, 163, 184);
+                GradientPaint gp = new GradientPaint(0, 0, color1, getWidth(), getHeight(), color2);
+                g2d.setPaint(gp);
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
         setContentPane(pnlMain);
 
         JPanel pnl = new JPanel(null);
@@ -80,7 +91,7 @@ public class AddUserFrm extends JFrame implements ActionListener {
         pnl.add(pnlGrid);
 
         // Nút Thêm mới và Huỷ
-        btnAddnew = new JButton("Save");
+        btnAddnew = new JButton("Add New");
         btnAddnew.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btnAddnew.setBackground(new Color(96, 165, 250));
         btnAddnew.setForeground(Color.WHITE);
@@ -121,6 +132,18 @@ public class AddUserFrm extends JFrame implements ActionListener {
         });
         btnCancel.addActionListener(this);
         pnl.add(btnCancel);
+    }
+
+    // Constructor nhận dữ liệu cũ để điền lại khi người dùng nhấn Back từ màn hình Confirm
+    public AddUserFrm(User user) {
+        this();
+        if (user != null) {
+            txtFullName.setText(user.getFullName());
+            txtUsername.setText(user.getUsername());
+            txtPassword.setText(user.getPassword());
+            txtPhone.setText(user.getPhone());
+            txtRole.setText(user.getRole());
+        }
     }
 
     private JLabel createGridLabel(String text, Color background) {

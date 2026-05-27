@@ -40,14 +40,25 @@ public class SearchUserFrm extends JFrame implements ActionListener {
         setLocationRelativeTo(null);
 
         // pnlMain is the content pane with BorderLayout
-        JPanel pnlMain = new JPanel(new BorderLayout(0, 15));
-        pnlMain.setBackground(new Color(240, 242, 245));
+        JPanel pnlMain = new JPanel(new BorderLayout(0, 15)) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+                Color color1 = new Color(226, 232, 240);
+                Color color2 = new Color(148, 163, 184);
+                GradientPaint gp = new GradientPaint(0, 0, color1, getWidth(), getHeight(), color2);
+                g2d.setPaint(gp);
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
         pnlMain.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
         setContentPane(pnlMain);
 
         // Top panel for search fields
         JPanel pnlTop = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
-        pnlTop.setBackground(new Color(240, 242, 245));
+        pnlTop.setOpaque(false);
 
         txtKey = new JTextField("Enter keyword to search...");
         txtKey.setPreferredSize(new Dimension(350, 35));
@@ -114,7 +125,7 @@ public class SearchUserFrm extends JFrame implements ActionListener {
 
         // Center panel for table and label
         JPanel pnlCenter = new JPanel(new BorderLayout(0, 10));
-        pnlCenter.setBackground(new Color(240, 242, 245));
+        pnlCenter.setOpaque(false);
 
         JLabel lblList = new JLabel("User List", JLabel.LEFT);
         lblList.setFont(new Font("Segoe UI", Font.BOLD, 15));
@@ -198,7 +209,7 @@ public class SearchUserFrm extends JFrame implements ActionListener {
 
         // Bottom panel for back button
         JPanel pnlBottom = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
-        pnlBottom.setBackground(new Color(240, 242, 245));
+        pnlBottom.setOpaque(false);
 
         btnBack = new JButton("Back");
         btnBack.setPreferredSize(new Dimension(100, 35));

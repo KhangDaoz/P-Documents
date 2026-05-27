@@ -147,14 +147,16 @@ public class ConfirmDeleteUserFrm extends JFrame implements ActionListener {
             if (success) {
                 // Hệ thống hiển thị thông báo "Xoá tài khoản thành công"
                 JOptionPane.showMessageDialog(this, "Account deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                this.dispose();
+                UserManageFrm manageFrm = new UserManageFrm();
+                manageFrm.setVisible(true);
             } else {
                 JOptionPane.showMessageDialog(this, "Failed to delete account or account not found!", "Error", JOptionPane.ERROR_MESSAGE);
+                // Admin click nút OK -> gọi lại lớp SearchUserFrm để cập nhật trạng thái
+                this.dispose();
+                SearchUserFrm searchFrm = new SearchUserFrm(SearchUserFrm.Mode.DELETE);
+                searchFrm.setVisible(true);
             }
-
-            // Admin click nút OK -> gọi lại lớp SearchUserFrm để cập nhật trạng thái
-            this.dispose();
-            SearchUserFrm searchFrm = new SearchUserFrm(SearchUserFrm.Mode.DELETE);
-            searchFrm.setVisible(true);
         } else if (e.getSource() == btnCancel) {
             this.dispose();
             SearchUserFrm searchFrm = new SearchUserFrm(SearchUserFrm.Mode.DELETE);

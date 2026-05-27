@@ -236,8 +236,8 @@ public class SearchUserFrm extends JFrame implements ActionListener {
                 roleText = "Admin";
             } else if ("manager".equalsIgnoreCase(u.getRole())) {
                 roleText = "Manager";
-            } else if ("staff".equalsIgnoreCase(u.getRole())) {
-                roleText = "Staff";
+            } else if ("librarian".equalsIgnoreCase(u.getRole())) {
+                roleText = "Librarian";
             }
 
             Object[] row = {

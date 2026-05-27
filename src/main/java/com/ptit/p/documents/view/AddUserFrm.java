@@ -159,8 +159,8 @@ public class AddUserFrm extends JFrame implements ActionListener {
             }
 
             String roleLower = role.toLowerCase();
-            if (!roleLower.equals("admin") && !roleLower.equals("manager") && !roleLower.equals("staff")) {
-                JOptionPane.showMessageDialog(this, "Role must be admin, manager, or staff!", "Invalid Role", JOptionPane.ERROR_MESSAGE);
+            if (!roleLower.equals("admin") && !roleLower.equals("manager") && !roleLower.equals("librarian")) {
+                JOptionPane.showMessageDialog(this, "Role must be admin, manager, or librarian!", "Invalid Role", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 

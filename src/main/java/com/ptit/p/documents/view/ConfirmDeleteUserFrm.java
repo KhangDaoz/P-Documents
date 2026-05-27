@@ -73,8 +73,8 @@ public class ConfirmDeleteUserFrm extends JFrame implements ActionListener {
             roleText = "Admin";
         } else if ("manager".equalsIgnoreCase(roleText)) {
             roleText = "Manager";
-        } else if ("staff".equalsIgnoreCase(roleText)) {
-            roleText = "Staff";
+        } else if ("librarian".equalsIgnoreCase(roleText)) {
+            roleText = "Librarian";
         }
         pnlGrid.add(createGridLabel(roleText, Color.WHITE));
 

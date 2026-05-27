@@ -20,7 +20,7 @@ public class UserDAOTest {
     public void testCheckLoginSuccess() {
         User loginUser = new User();
         loginUser.setUsername("admin");
-        loginUser.setPassword("123"); // Updated to match actual MySQL inserted data
+        loginUser.setPassword("123"); 
 
         User result = userDAO.checkLogin(loginUser);
         assertNotNull(result);
@@ -41,7 +41,6 @@ public class UserDAOTest {
 
     @Test
     public void testSearchUser() {
-        // 'thangnt' is inserted in the DB from the setup script
         List<User> results = userDAO.searchUser("thangnt");
         assertFalse(results.isEmpty());
         User thang = results.get(0);
@@ -64,7 +63,7 @@ public class UserDAOTest {
         newUser.setPhone("0999888777");
         newUser.setRole("librarian");
 
-        // First, ensure it doesn't exist from a previous failed test run
+        
         List<User> cleanList = userDAO.searchUser("testuser_add");
         if (!cleanList.isEmpty()) userDAO.deleteUser(cleanList.get(0));
 

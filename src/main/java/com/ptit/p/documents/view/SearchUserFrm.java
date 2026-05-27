@@ -74,6 +74,18 @@ public class SearchUserFrm extends JFrame implements ActionListener {
                 }
             }
         });
+        txtKey.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { checkEmpty(); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { checkEmpty(); }
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { checkEmpty(); }
+            private void checkEmpty() {
+                String text = txtKey.getText();
+                // Chỉ nạp lại bảng nếu thanh tìm kiếm thực sự bị xóa trắng (không phải là chữ placeholder)
+                if (text.trim().isEmpty() && !text.equals("Enter keyword to search...")) {
+                    performSearch();
+                }
+            }
+        });
         txtKey.addActionListener(this);
         pnlTop.add(txtKey);
 

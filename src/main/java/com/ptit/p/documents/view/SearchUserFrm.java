@@ -80,7 +80,7 @@ public class SearchUserFrm extends JFrame implements ActionListener {
         btnSearch = new JButton("Search");
         btnSearch.setPreferredSize(new Dimension(100, 35));
         btnSearch.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btnSearch.setBackground(new Color(59, 130, 246));
+        btnSearch.setBackground(new Color(96, 165, 250));
         btnSearch.setForeground(Color.WHITE);
         btnSearch.setFocusPainted(false);
         btnSearch.setBorder(BorderFactory.createEmptyBorder());
@@ -88,11 +88,11 @@ public class SearchUserFrm extends JFrame implements ActionListener {
         btnSearch.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                btnSearch.setBackground(new Color(37, 99, 235));
+                btnSearch.setBackground(new Color(59, 130, 246));
             }
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
-                btnSearch.setBackground(new Color(59, 130, 246));
+                btnSearch.setBackground(new Color(96, 165, 250));
             }
         });
         btnSearch.addActionListener(this);
@@ -192,14 +192,14 @@ public class SearchUserFrm extends JFrame implements ActionListener {
         btnBack.setPreferredSize(new Dimension(100, 35));
         btnBack.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         btnBack.setBackground(Color.WHITE);
-        btnBack.setForeground(new Color(100, 116, 139));
+        btnBack.setForeground(new Color(50, 60, 70));
         btnBack.setFocusPainted(false);
-        btnBack.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240)));
+        btnBack.setBorder(BorderFactory.createLineBorder(new Color(160, 170, 185)));
         btnBack.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnBack.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                btnBack.setBackground(new Color(248, 250, 252));
+                btnBack.setBackground(new Color(230, 235, 240));
             }
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {

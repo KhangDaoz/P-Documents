@@ -37,7 +37,7 @@ public class UserManageFrm extends JFrame implements ActionListener {
         // 1. Edit Account button (Top) - Primary style
         btnEditUser = new JButton("Edit Account");
         btnEditUser.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btnEditUser.setBackground(new Color(59, 130, 246));
+        btnEditUser.setBackground(new Color(96, 165, 250));
         btnEditUser.setForeground(Color.WHITE);
         btnEditUser.setFocusPainted(false);
         btnEditUser.setBorder(BorderFactory.createEmptyBorder());
@@ -46,11 +46,11 @@ public class UserManageFrm extends JFrame implements ActionListener {
         btnEditUser.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                btnEditUser.setBackground(new Color(37, 99, 235));
+                btnEditUser.setBackground(new Color(59, 130, 246));
             }
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
-                btnEditUser.setBackground(new Color(59, 130, 246));
+                btnEditUser.setBackground(new Color(96, 165, 250));
             }
         });
         btnEditUser.addActionListener(this);
@@ -59,7 +59,7 @@ public class UserManageFrm extends JFrame implements ActionListener {
         // 2. Create Account button (Middle) - Primary style
         btnAddUser = new JButton("Create Account");
         btnAddUser.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btnAddUser.setBackground(new Color(59, 130, 246));
+        btnAddUser.setBackground(new Color(96, 165, 250));
         btnAddUser.setForeground(Color.WHITE);
         btnAddUser.setFocusPainted(false);
         btnAddUser.setBorder(BorderFactory.createEmptyBorder());
@@ -68,11 +68,11 @@ public class UserManageFrm extends JFrame implements ActionListener {
         btnAddUser.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                btnAddUser.setBackground(new Color(37, 99, 235));
+                btnAddUser.setBackground(new Color(59, 130, 246));
             }
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
-                btnAddUser.setBackground(new Color(59, 130, 246));
+                btnAddUser.setBackground(new Color(96, 165, 250));
             }
         });
         btnAddUser.addActionListener(this);
@@ -81,7 +81,7 @@ public class UserManageFrm extends JFrame implements ActionListener {
         // 3. Delete Account button (Bottom) - Primary style
         btnDeleteUser = new JButton("Delete Account");
         btnDeleteUser.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btnDeleteUser.setBackground(new Color(59, 130, 246));
+        btnDeleteUser.setBackground(new Color(96, 165, 250));
         btnDeleteUser.setForeground(Color.WHITE);
         btnDeleteUser.setFocusPainted(false);
         btnDeleteUser.setBorder(BorderFactory.createEmptyBorder());
@@ -90,11 +90,11 @@ public class UserManageFrm extends JFrame implements ActionListener {
         btnDeleteUser.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                btnDeleteUser.setBackground(new Color(37, 99, 235));
+                btnDeleteUser.setBackground(new Color(59, 130, 246));
             }
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
-                btnDeleteUser.setBackground(new Color(59, 130, 246));
+                btnDeleteUser.setBackground(new Color(96, 165, 250));
             }
         });
         btnDeleteUser.addActionListener(this);
@@ -104,15 +104,15 @@ public class UserManageFrm extends JFrame implements ActionListener {
         btnBack = new JButton("Back");
         btnBack.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         btnBack.setBackground(Color.WHITE);
-        btnBack.setForeground(new Color(100, 116, 139));
+        btnBack.setForeground(new Color(50, 60, 70));
         btnBack.setFocusPainted(false);
-        btnBack.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240)));
+        btnBack.setBorder(BorderFactory.createLineBorder(new Color(160, 170, 185)));
         btnBack.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnBack.setBounds(450, 310, 100, 40);
         btnBack.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                btnBack.setBackground(new Color(248, 250, 252));
+                btnBack.setBackground(new Color(230, 235, 240));
             }
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {

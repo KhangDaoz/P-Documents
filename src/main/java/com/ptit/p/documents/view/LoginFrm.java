@@ -71,7 +71,7 @@ public class LoginFrm extends JFrame implements ActionListener {
 
         btnLogin = new JButton("Login");
         btnLogin.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btnLogin.setBackground(new Color(59, 130, 246));
+        btnLogin.setBackground(new Color(96, 165, 250));
         btnLogin.setForeground(Color.WHITE);
         btnLogin.setFocusPainted(false);
         btnLogin.setBorder(BorderFactory.createEmptyBorder());
@@ -80,11 +80,11 @@ public class LoginFrm extends JFrame implements ActionListener {
         btnLogin.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                btnLogin.setBackground(new Color(37, 99, 235));
+                btnLogin.setBackground(new Color(59, 130, 246));
             }
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
-                btnLogin.setBackground(new Color(59, 130, 246));
+                btnLogin.setBackground(new Color(96, 165, 250));
             }
         });
         btnLogin.addActionListener(this);

@@ -89,15 +89,15 @@ public class ConfirmAddUserFrm extends JFrame implements ActionListener {
         btnCancel = new JButton("Cancel");
         btnCancel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         btnCancel.setBackground(Color.WHITE);
-        btnCancel.setForeground(new Color(100, 116, 139));
+        btnCancel.setForeground(new Color(50, 60, 70));
         btnCancel.setFocusPainted(false);
-        btnCancel.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240)));
+        btnCancel.setBorder(BorderFactory.createLineBorder(new Color(160, 170, 185)));
         btnCancel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnCancel.setBounds(130, 280, 140, 35);
         btnCancel.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                btnCancel.setBackground(new Color(248, 250, 252));
+                btnCancel.setBackground(new Color(230, 235, 240));
             }
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
@@ -109,7 +109,7 @@ public class ConfirmAddUserFrm extends JFrame implements ActionListener {
 
         btnConfirm = new JButton("Confirm & Save");
         btnConfirm.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btnConfirm.setBackground(new Color(59, 130, 246));
+        btnConfirm.setBackground(new Color(96, 165, 250));
         btnConfirm.setForeground(Color.WHITE);
         btnConfirm.setFocusPainted(false);
         btnConfirm.setBorder(BorderFactory.createEmptyBorder());
@@ -118,11 +118,11 @@ public class ConfirmAddUserFrm extends JFrame implements ActionListener {
         btnConfirm.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                btnConfirm.setBackground(new Color(37, 99, 235));
+                btnConfirm.setBackground(new Color(59, 130, 246));
             }
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
-                btnConfirm.setBackground(new Color(59, 130, 246));
+                btnConfirm.setBackground(new Color(96, 165, 250));
             }
         });
         btnConfirm.addActionListener(this);

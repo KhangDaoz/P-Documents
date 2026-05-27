@@ -33,7 +33,7 @@ public class AdminHomeFrm extends JFrame implements ActionListener {
 
         btnManageUsers = new JButton("Manage Accounts");
         btnManageUsers.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btnManageUsers.setBackground(new Color(59, 130, 246));
+        btnManageUsers.setBackground(new Color(96, 165, 250));
         btnManageUsers.setForeground(Color.WHITE);
         btnManageUsers.setFocusPainted(false);
         btnManageUsers.setBorder(BorderFactory.createEmptyBorder());
@@ -42,11 +42,11 @@ public class AdminHomeFrm extends JFrame implements ActionListener {
         btnManageUsers.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                btnManageUsers.setBackground(new Color(37, 99, 235));
+                btnManageUsers.setBackground(new Color(59, 130, 246));
             }
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
-                btnManageUsers.setBackground(new Color(59, 130, 246));
+                btnManageUsers.setBackground(new Color(96, 165, 250));
             }
         });
         btnManageUsers.addActionListener(this);
@@ -55,15 +55,15 @@ public class AdminHomeFrm extends JFrame implements ActionListener {
         btnLogout = new JButton("Logout");
         btnLogout.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         btnLogout.setBackground(Color.WHITE);
-        btnLogout.setForeground(new Color(100, 116, 139));
+        btnLogout.setForeground(new Color(50, 60, 70));
         btnLogout.setFocusPainted(false);
-        btnLogout.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240)));
+        btnLogout.setBorder(BorderFactory.createLineBorder(new Color(160, 170, 185)));
         btnLogout.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnLogout.setBounds(140, 145, 220, 45);
         btnLogout.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                btnLogout.setBackground(new Color(248, 250, 252));
+                btnLogout.setBackground(new Color(230, 235, 240));
             }
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {

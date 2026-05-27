@@ -20,7 +20,7 @@ public class UserDAOTest {
     public void testCheckLoginSuccess() {
         User loginUser = new User();
         loginUser.setUsername("admin");
-        loginUser.setPassword("admin");
+        loginUser.setPassword("123"); // Updated to match actual MySQL inserted data
 
         User result = userDAO.checkLogin(loginUser);
         assertNotNull(result);
@@ -41,11 +41,12 @@ public class UserDAOTest {
 
     @Test
     public void testSearchUser() {
-        List<User> results = userDAO.searchUser("kien");
+        // 'thangnt' is inserted in the DB from the setup script
+        List<User> results = userDAO.searchUser("thangnt");
         assertFalse(results.isEmpty());
-        User kien = results.get(0);
-        assertEquals("kien", kien.getUsername());
-        assertEquals("Tran Trung Kien", kien.getFullName());
+        User thang = results.get(0);
+        assertEquals("thangnt", thang.getUsername());
+        assertEquals("Nguyen Tien Thang", thang.getFullName());
     }
 
     @Test
@@ -57,24 +58,28 @@ public class UserDAOTest {
     @Test
     public void testAddAndSearchUser() {
         User newUser = new User();
-        newUser.setUsername("testuser");
+        newUser.setUsername("testuser_add");
         newUser.setPassword("password");
         newUser.setFullName("Test User Name");
         newUser.setPhone("0999888777");
-        newUser.setRole("staff");
+        newUser.setRole("librarian");
+
+        // First, ensure it doesn't exist from a previous failed test run
+        List<User> cleanList = userDAO.searchUser("testuser_add");
+        if (!cleanList.isEmpty()) userDAO.deleteUser(cleanList.get(0));
 
         // Thêm mới tài khoản
         boolean addSuccess = userDAO.addUser(newUser);
         assertTrue(addSuccess);
 
         // Kiểm tra xem đã tìm thấy tài khoản mới chưa
-        List<User> searchResults = userDAO.searchUser("testuser");
+        List<User> searchResults = userDAO.searchUser("testuser_add");
         assertEquals(1, searchResults.size());
         assertEquals("Test User Name", searchResults.get(0).getFullName());
 
         // Kiểm tra trùng username
         User duplicateUser = new User();
-        duplicateUser.setUsername("testuser");
+        duplicateUser.setUsername("testuser_add");
         duplicateUser.setPassword("pass");
         duplicateUser.setFullName("Duplicate");
         duplicateUser.setPhone("123");
@@ -82,50 +87,66 @@ public class UserDAOTest {
 
         boolean addDuplicateSuccess = userDAO.addUser(duplicateUser);
         assertFalse(addDuplicateSuccess);
+
+        // Cleanup
+        userDAO.deleteUser(searchResults.get(0));
     }
 
     @Test
     public void testUpdateUser() {
-        // Tìm tài khoản kien (ID = 2)
-        List<User> searchResults = userDAO.searchUser("kien");
+        // Tìm tài khoản thangnt để cập nhật
+        List<User> searchResults = userDAO.searchUser("thangnt");
         assertFalse(searchResults.isEmpty());
-        User kien = searchResults.get(0);
+        User thang = searchResults.get(0);
 
-        // Thay đổi họ tên, số điện thoại và tên đăng nhập
-        kien.setUsername("kien_new");
-        kien.setFullName("Tran Trung Kien - Updated");
-        kien.setPhone("0000000000");
+        String originalFullName = thang.getFullName();
+        String originalPhone = thang.getPhone();
 
-        boolean updateSuccess = userDAO.updateUser(kien);
-        assertTrue(updateSuccess);
+        try {
+            // Thay đổi họ tên, số điện thoại
+            thang.setFullName("Nguyen Tien Thang - Updated");
+            thang.setPhone("0000000000");
 
-        // Tìm lại xem thông tin đã cập nhật chưa
-        List<User> updatedResults = userDAO.searchUser("kien_new");
-        assertFalse(updatedResults.isEmpty());
-        assertEquals("Tran Trung Kien - Updated", updatedResults.get(0).getFullName());
-        assertEquals("0000000000", updatedResults.get(0).getPhone());
-        assertEquals("kien_new", updatedResults.get(0).getUsername());
+            boolean updateSuccess = userDAO.updateUser(thang);
+            assertTrue(updateSuccess);
 
-        // Kiểm tra không được trùng tên đăng nhập với tài khoản khác (vd: admin)
-        kien.setUsername("admin");
-        boolean updateDuplicateSuccess = userDAO.updateUser(kien);
-        assertFalse(updateDuplicateSuccess);
+            // Tìm lại xem thông tin đã cập nhật chưa
+            List<User> updatedResults = userDAO.searchUser("thangnt");
+            assertFalse(updatedResults.isEmpty());
+            assertEquals("Nguyen Tien Thang - Updated", updatedResults.get(0).getFullName());
+            assertEquals("0000000000", updatedResults.get(0).getPhone());
+
+            // Kiểm tra không được trùng tên đăng nhập với tài khoản khác (vd: admin)
+            thang.setUsername("admin");
+            boolean updateDuplicateSuccess = userDAO.updateUser(thang);
+            assertFalse(updateDuplicateSuccess);
+        } finally {
+            // Restore back to original to keep DB state clean for next test runs
+            thang.setUsername("thangnt");
+            thang.setFullName(originalFullName);
+            thang.setPhone(originalPhone);
+            userDAO.updateUser(thang);
+        }
     }
 
     @Test
     public void testDeleteUser() {
         // Tạo tài khoản mới để xoá
         User toDelete = new User();
-        toDelete.setUsername("todelete");
+        toDelete.setUsername("test_todelete");
         toDelete.setPassword("password");
         toDelete.setFullName("Delete Me");
         toDelete.setPhone("1234");
-        toDelete.setRole("staff");
+        toDelete.setRole("librarian");
+
+        // Clean if exists
+        List<User> cleanList = userDAO.searchUser("test_todelete");
+        if (!cleanList.isEmpty()) userDAO.deleteUser(cleanList.get(0));
 
         userDAO.addUser(toDelete);
         
         // Tìm để lấy ID thực tế của user vừa tạo
-        List<User> searchBefore = userDAO.searchUser("todelete");
+        List<User> searchBefore = userDAO.searchUser("test_todelete");
         assertFalse(searchBefore.isEmpty());
         User createdUser = searchBefore.get(0);
 
@@ -134,7 +155,7 @@ public class UserDAOTest {
         assertTrue(deleteSuccess);
 
         // Kiểm tra tìm kiếm lại xem đã mất chưa
-        List<User> searchAfter = userDAO.searchUser("todelete");
+        List<User> searchAfter = userDAO.searchUser("test_todelete");
         assertTrue(searchAfter.isEmpty());
     }
 }

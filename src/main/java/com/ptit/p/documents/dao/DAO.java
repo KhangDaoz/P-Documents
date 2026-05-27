@@ -6,7 +6,14 @@ public class DAO {
     protected Connection con;
 
     public DAO() {
-        // Giao tiếp DB thực tế sẽ được thiết lập tại đây
-        // con = DriverManager.getConnection(url, username, password);
+        String dbUrl = "jdbc:mysql://localhost:3306/P_Documents?useSSL=false&serverTimezone=UTC";
+        String dbClass = "com.mysql.cj.jdbc.Driver";
+
+        try {
+            Class.forName(dbClass);
+            con = java.sql.DriverManager.getConnection(dbUrl, "root", "08082005");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

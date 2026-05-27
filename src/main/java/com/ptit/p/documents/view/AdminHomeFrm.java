@@ -21,8 +21,15 @@ public class AdminHomeFrm extends JFrame implements ActionListener {
 
         JPanel pnl = new JPanel(null);
         pnl.setPreferredSize(new Dimension(600, 350));
-        pnl.setBackground(new Color(220, 224, 230));
+        pnl.setBackground(Color.WHITE);
+        pnl.setBorder(BorderFactory.createLineBorder(new Color(190, 195, 205), 1));
         pnlMain.add(pnl);
+
+        JLabel lblHeader = new JLabel("Admin Dashboard", JLabel.CENTER);
+        lblHeader.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        lblHeader.setForeground(new Color(50, 60, 70));
+        lblHeader.setBounds(100, 30, 400, 35);
+        pnl.add(lblHeader);
 
         btnManageUsers = new JButton("Manage Accounts");
         btnManageUsers.setFont(new Font("Segoe UI", Font.PLAIN, 14));

@@ -23,8 +23,15 @@ public class UserManageFrm extends JFrame implements ActionListener {
 
         JPanel pnl = new JPanel(null);
         pnl.setPreferredSize(new Dimension(600, 400));
-        pnl.setBackground(new Color(220, 224, 230));
+        pnl.setBackground(Color.WHITE);
+        pnl.setBorder(BorderFactory.createLineBorder(new Color(190, 195, 205), 1));
         pnlMain.add(pnl);
+
+        JLabel lblHeader = new JLabel("Manage Accounts", JLabel.CENTER);
+        lblHeader.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        lblHeader.setForeground(new Color(50, 60, 70));
+        lblHeader.setBounds(100, 25, 400, 35);
+        pnl.add(lblHeader);
 
         // 1. Edit Account button (Top)
         btnEditUser = new JButton("Edit Account");

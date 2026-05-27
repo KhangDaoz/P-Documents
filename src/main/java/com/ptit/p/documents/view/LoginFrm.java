@@ -27,7 +27,8 @@ public class LoginFrm extends JFrame implements ActionListener {
         // Card panel chứa nội dung form với vị trí tuyệt đối như thiết kế
         JPanel pnl = new JPanel(null);
         pnl.setPreferredSize(new Dimension(500, 380));
-        pnl.setBackground(new Color(220, 224, 230));
+        pnl.setBackground(Color.WHITE);
+        pnl.setBorder(BorderFactory.createLineBorder(new Color(190, 195, 205), 1));
         pnlMain.add(pnl);
 
         JLabel lblLogin = new JLabel("Login", JLabel.CENTER);

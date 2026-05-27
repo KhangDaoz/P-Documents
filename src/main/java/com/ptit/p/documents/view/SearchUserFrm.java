@@ -39,17 +39,18 @@ public class SearchUserFrm extends JFrame implements ActionListener {
         setSize(860, 560);
         setLocationRelativeTo(null);
 
-        JPanel pnlMain = new JPanel(new GridBagLayout());
+        // pnlMain is the content pane with BorderLayout
+        JPanel pnlMain = new JPanel(new BorderLayout(0, 15));
         pnlMain.setBackground(new Color(220, 224, 230));
+        pnlMain.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
         setContentPane(pnlMain);
 
-        JPanel pnl = new JPanel(null);
-        pnl.setPreferredSize(new Dimension(800, 480));
-        pnl.setBackground(new Color(220, 224, 230));
-        pnlMain.add(pnl);
+        // Top panel for search fields
+        JPanel pnlTop = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
+        pnlTop.setBackground(new Color(220, 224, 230));
 
-        // Ô nhập tìm kiếm
         txtKey = new JTextField("Enter keyword to search...");
+        txtKey.setPreferredSize(new Dimension(350, 35));
         txtKey.setBackground(Color.WHITE);
         txtKey.setForeground(Color.GRAY);
         txtKey.setFont(new Font("Segoe UI", Font.PLAIN, 14));
@@ -57,7 +58,6 @@ public class SearchUserFrm extends JFrame implements ActionListener {
             BorderFactory.createLineBorder(new Color(150, 160, 175), 1),
             BorderFactory.createEmptyBorder(0, 10, 0, 10)
         ));
-        txtKey.setBounds(50, 20, 300, 30);
         txtKey.addFocusListener(new java.awt.event.FocusAdapter() {
             @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -75,17 +75,16 @@ public class SearchUserFrm extends JFrame implements ActionListener {
             }
         });
         txtKey.addActionListener(this);
-        pnl.add(txtKey);
+        pnlTop.add(txtKey);
 
-        // Nút Search
         btnSearch = new JButton("Search");
+        btnSearch.setPreferredSize(new Dimension(100, 35));
         btnSearch.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         btnSearch.setBackground(Color.WHITE);
         btnSearch.setForeground(Color.BLACK);
         btnSearch.setFocusPainted(false);
         btnSearch.setBorder(BorderFactory.createLineBorder(new Color(150, 160, 175)));
         btnSearch.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        btnSearch.setBounds(370, 20, 80, 30);
         btnSearch.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
@@ -97,14 +96,18 @@ public class SearchUserFrm extends JFrame implements ActionListener {
             }
         });
         btnSearch.addActionListener(this);
-        pnl.add(btnSearch);
+        pnlTop.add(btnSearch);
 
-        // Nhãn danh sách user (phẳng, không giống nút bấm)
+        pnlMain.add(pnlTop, BorderLayout.NORTH);
+
+        // Center panel for table and label
+        JPanel pnlCenter = new JPanel(new BorderLayout(0, 10));
+        pnlCenter.setBackground(new Color(220, 224, 230));
+
         JLabel lblList = new JLabel("User List", JLabel.LEFT);
         lblList.setFont(new Font("Segoe UI", Font.BOLD, 15));
         lblList.setForeground(new Color(50, 60, 70));
-        lblList.setBounds(50, 70, 200, 25);
-        pnl.add(lblList);
+        pnlCenter.add(lblList, BorderLayout.NORTH);
 
         // Bảng dữ liệu
         String[] columnNames = {"ID", "Full Name", "Username", "Password", "Phone", "Role", "", ""};
@@ -164,10 +167,12 @@ public class SearchUserFrm extends JFrame implements ActionListener {
         });
 
         JScrollPane scrollPane = new JScrollPane(tblUser);
-        scrollPane.setBounds(50, 105, 700, 290);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.getViewport().setBackground(Color.WHITE);
         scrollPane.setBorder(BorderFactory.createLineBorder(new Color(150, 160, 175), 1));
-        pnl.add(scrollPane);
+        pnlCenter.add(scrollPane, BorderLayout.CENTER);
+
+        pnlMain.add(pnlCenter, BorderLayout.CENTER);
 
         // Thiết lập kích thước cột
         tblUser.getColumnModel().getColumn(0).setPreferredWidth(60);  // ID
@@ -179,15 +184,18 @@ public class SearchUserFrm extends JFrame implements ActionListener {
         tblUser.getColumnModel().getColumn(6).setPreferredWidth(35);  // Sửa ✎
         tblUser.getColumnModel().getColumn(7).setPreferredWidth(35);  // Xoá 🗑
 
-        // Nút Quay lại ở góc dưới bên phải
+        // Bottom panel for back button
+        JPanel pnlBottom = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        pnlBottom.setBackground(new Color(220, 224, 230));
+
         btnBack = new JButton("Back");
+        btnBack.setPreferredSize(new Dimension(100, 35));
         btnBack.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         btnBack.setBackground(Color.WHITE);
         btnBack.setForeground(Color.BLACK);
         btnBack.setFocusPainted(false);
         btnBack.setBorder(BorderFactory.createLineBorder(new Color(150, 160, 175)));
         btnBack.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        btnBack.setBounds(650, 415, 100, 35);
         btnBack.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
@@ -199,7 +207,9 @@ public class SearchUserFrm extends JFrame implements ActionListener {
             }
         });
         btnBack.addActionListener(this);
-        pnl.add(btnBack);
+        pnlBottom.add(btnBack);
+
+        pnlMain.add(pnlBottom, BorderLayout.SOUTH);
 
         // Dummy btnAction to satisfy variable references without display
         btnAction = new JButton();

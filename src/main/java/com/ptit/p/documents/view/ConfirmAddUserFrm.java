@@ -55,7 +55,10 @@ public class ConfirmAddUserFrm extends JFrame implements ActionListener {
         // Dòng 3: Mật khẩu
         pnlGrid.add(createGridLabel("Password", Color.WHITE));
         JPasswordField txtConfirmPassword = new JPasswordField(user.getPassword());
+        txtConfirmPassword.putClientProperty("JPasswordField.showRevealButton", true);
         txtConfirmPassword.putClientProperty("PasswordField.showRevealButton", true);
+        txtConfirmPassword.putClientProperty("showRevealButton", true);
+        txtConfirmPassword.putClientProperty("FlatLaf.style", "showRevealButton: true");
         txtConfirmPassword.setHorizontalAlignment(JTextField.CENTER);
         txtConfirmPassword.setBackground(Color.WHITE);
         txtConfirmPassword.setForeground(Color.BLACK);

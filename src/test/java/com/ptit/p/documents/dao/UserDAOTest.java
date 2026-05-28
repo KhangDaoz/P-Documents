@@ -89,7 +89,7 @@ public class UserDAOTest {
         testUser.setPassword("pass");
         testUser.setFullName("Nguyen Van Search");
         testUser.setPhone("0999000111");
-        testUser.setRole("reader");
+        testUser.setRole("librarian");
         userDAO.addUser(testUser);
 
         // Chạy test
@@ -167,7 +167,7 @@ public class UserDAOTest {
         testUser.setPassword("pass");
         testUser.setFullName("Old Name");
         testUser.setPhone("0000");
-        testUser.setRole("reader");
+        testUser.setRole("librarian");
         userDAO.addUser(testUser);
 
         // Lấy user ra để lấy đúng ID được DB sinh ra
@@ -197,7 +197,7 @@ public class UserDAOTest {
         targetUser.setPassword("pass");
         targetUser.setFullName("Target User");
         targetUser.setPhone("111");
-        targetUser.setRole("reader");
+        targetUser.setRole("librarian");
         userDAO.addUser(targetUser);
         
         // 2. Tạo một user khác ngáng đường (Conflict)
@@ -206,7 +206,7 @@ public class UserDAOTest {
         conflictUser.setPassword("pass");
         conflictUser.setFullName("Conflict User");
         conflictUser.setPhone("222");
-        conflictUser.setRole("reader");
+        conflictUser.setRole("librarian");
         userDAO.addUser(conflictUser);
 
         // 3. Lấy Target ra 

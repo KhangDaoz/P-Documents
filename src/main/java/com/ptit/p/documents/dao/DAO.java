@@ -6,7 +6,7 @@ public class DAO {
     protected Connection con;
 
     public DAO() {
-        String dbUrl = "jdbc:mysql://localhost:3306/P_Documents?useSSL=false&serverTimezone=UTC";
+        String dbUrl = "jdbc:mysql://localhost:3306/p_documents?useSSL=false&serverTimezone=UTC";
         String dbClass = "com.mysql.cj.jdbc.Driver";
 
         try {

@@ -34,4 +34,8 @@ public class DAO {
             e.printStackTrace();
         }
     }
+
+    public Connection getCon() {
+        return con;
+    }
 }

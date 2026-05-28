@@ -218,26 +218,36 @@ public class DatabaseInitializer {
     }
 
     private static void insertSeedDataIfEmpty(Statement st) throws Exception {
-        // Chỉ seed tblUser nếu chưa có dữ liệu
-        java.sql.ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM tblUser");
+        java.sql.ResultSet rs;
+
+        rs = st.executeQuery("SELECT COUNT(*) FROM tblStudent");
+        rs.next();
+        if (rs.getInt(1) == 0) {
+            st.executeUpdate(
+                "INSERT INTO tblStudent (ID, fullName, email, phone, address) VALUES"
+                + " ('SV220001', 'Le Van An',    'levan.an@student.edu.vn',   '0923456789', 'Ha Noi'),"
+                + " ('SV220002', 'Pham Thi Binh','pham.binh@student.edu.vn',  '0934567890', 'Ha Noi')"
+            );
+        }
+
+        rs = st.executeQuery("SELECT COUNT(*) FROM tblUser");
         rs.next();
         if (rs.getInt(1) == 0) {
             st.executeUpdate(
                 "INSERT INTO tblUser (username, password, fullName, phone, role) VALUES"
-                + " ('admin',      '123456', 'Nguyễn Văn Admin', '0901234567', 'admin'),"
-                + " ('librarian1', '123456', 'Trần Thị Thư',     '0912345678', 'librarian')"
+                + " ('admin',      '123456', 'Nguyen Van Admin', '0901234567', 'admin'),"
+                + " ('librarian1', '123456', 'Tran Thi Thu',     '0912345678', 'librarian')"
             );
         }
 
-        // Chỉ seed tblBook nếu chưa có dữ liệu
         rs = st.executeQuery("SELECT COUNT(*) FROM tblBook");
         rs.next();
         if (rs.getInt(1) == 0) {
             st.executeUpdate(
                 "INSERT INTO tblBook (ISBN, title, author, genre, publisher, publishYear, price, description) VALUES"
-                + " ('978-604-1-01234-5', 'Lập Trình C Căn Bản',   'Nguyễn Phú Quý',  'Technology',  'NXB Thông Tin', 2020, 85000.00,  'Sách nhập môn lập trình C'),"
-                + " ('978-604-1-05678-9', 'Cơ Sở Dữ Liệu',         'Trần Minh Tùng',  'Technology',  'NXB ĐHQG',      2019, 95000.00,  'Giáo trình cơ sở dữ liệu'),"
-                + " ('978-604-1-09012-3', 'Giải Tích Toán Học',     'Lê Đình Phương',  'Mathematics', 'NXB Giáo Dục',  2021, 75000.00,  'Tài liệu giải tích toán học')"
+                + " ('978-604-1-01234-5', 'Lap Trinh C Can Ban', 'Nguyen Phu Quy', 'Technology',  'NXB Thong Tin', 2020, 85000.00, 'Sach nhap mon lap trinh C'),"
+                + " ('978-604-1-05678-9', 'Co So Du Lieu',        'Tran Minh Tung', 'Technology',  'NXB DHQG',      2019, 95000.00, 'Giao trinh co so du lieu'),"
+                + " ('978-604-1-09012-3', 'Giai Tich Toan Hoc',   'Le Dinh Phuong', 'Mathematics', 'NXB Giao Duc',  2021, 75000.00, 'Tai lieu giai tich toan hoc')"
             );
             st.executeUpdate(
                 "INSERT INTO tblBookItem (status, tblBookISBN) VALUES"
@@ -249,15 +259,14 @@ public class DatabaseInitializer {
             );
         }
 
-        // Chỉ seed tblFine nếu chưa có dữ liệu
         rs = st.executeQuery("SELECT COUNT(*) FROM tblFine");
         rs.next();
         if (rs.getInt(1) == 0) {
             st.executeUpdate(
                 "INSERT INTO tblFine (name, fineRate, description) VALUES"
-                + " ('Trả trễ',        5000.00,  'Phạt 5.000đ/ngày trả trễ'),"
-                + " ('Mất sách',     500000.00,  'Phạt mất sách bằng giá trị sách'),"
-                + " ('Hư hỏng sách',  50000.00,  'Phạt hư hỏng tuỳ mức độ')"
+                + " ('Tra tre',       5000.00,  'Phat 5.000d/ngay tra tre'),"
+                + " ('Mat sach',    500000.00,  'Phat mat sach bang gia tri sach'),"
+                + " ('Hu hong sach', 50000.00,  'Phat hu hong tuy muc do')"
             );
         }
     }

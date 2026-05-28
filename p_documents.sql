@@ -4,6 +4,8 @@
 --  thêm UNIQUE, thêm timestamps, chuẩn hoá quan hệ
 -- ============================================================
 
+DROP DATABASE IF EXISTS p_documents;
+
 CREATE DATABASE IF NOT EXISTS p_documents
   CHARACTER SET utf8mb4
   COLLATE utf8mb4_unicode_ci;

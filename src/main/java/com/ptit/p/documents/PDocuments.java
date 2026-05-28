@@ -6,7 +6,6 @@ import javax.swing.SwingUtilities;
 public class PDocuments {
 
     public static void main(String[] args) {
-        // Run Kien's Admin User Management GUI entry point
         try {
             boolean success = com.formdev.flatlaf.FlatIntelliJLaf.setup();
             System.out.println("DEBUG: FlatLaf setup success? " + success);

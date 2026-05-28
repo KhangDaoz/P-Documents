@@ -176,7 +176,7 @@ public class UserDAOTest {
         User userToUpdate = searchResults.get(0);
 
         // 2. Chỉnh sửa
-        userToUpdate.setFullName("Nguyễn Đức Quang Sửa");
+        userToUpdate.setFullName("Nguyễn Đức Quang S");
         userToUpdate.setPhone("0966777999");
 
         boolean updateSuccess = userDAO.updateUser(userToUpdate);
@@ -185,7 +185,7 @@ public class UserDAOTest {
         // 3. Lấy lại từ DB để đối chiếu
         List<User> updatedResults = userDAO.searchUser("quangnd");
         assertFalse(updatedResults.isEmpty());
-        assertEquals("Nguyễn Đức Quang Sửa", updatedResults.get(0).getFullName());
+        assertEquals("Nguyễn Đức Quang S", updatedResults.get(0).getFullName());
         assertEquals("0966777999", updatedResults.get(0).getPhone());
     }
 

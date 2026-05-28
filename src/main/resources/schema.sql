@@ -1,9 +1,4 @@
--- ============================================================
---  HỆ THỐNG QUẢN LÝ THƯ VIỆN - BẢN CHUẨN (COPY & PASTE LÀ CHẠY)
---  Tạo database mới: p_documents
--- ============================================================
-
-DROP DATABASE IF EXISTS p_documents;               -- Xóa database cũ nếu có (để làm sạch)
+DROP DATABASE IF EXISTS p_documents;               
 CREATE DATABASE p_documents
   CHARACTER SET utf8mb4
   COLLATE utf8mb4_unicode_ci;

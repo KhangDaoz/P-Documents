@@ -40,22 +40,22 @@ public class UserDAOTest {
     public void testCheckLoginStandard() {
         // Chuẩn bị dữ liệu 
         User testUser = new User();
-        testUser.setUsername("test_login_std");
+        testUser.setUsername("hoangnd");
         testUser.setPassword("123456");
-        testUser.setFullName("Login Standard User");
-        testUser.setPhone("0111222333");
+        testUser.setFullName("Nguyễn Đình Hoàng");
+        testUser.setPhone("0911222333");
         testUser.setRole("librarian");
         userDAO.addUser(testUser);
 
         // Chạy test
         User loginRequest = new User();
-        loginRequest.setUsername("test_login_std");
+        loginRequest.setUsername("hoangnd");
         loginRequest.setPassword("123456");
 
         User result = userDAO.checkLogin(loginRequest);
         assertNotNull(result);
-        assertEquals("test_login_std", result.getUsername());
-        assertEquals("Login Standard User", result.getFullName());
+        assertEquals("hoangnd", result.getUsername());
+        assertEquals("Nguyễn Đình Hoàng", result.getFullName());
         assertEquals("librarian", result.getRole());
     }
 
@@ -63,16 +63,16 @@ public class UserDAOTest {
     public void testCheckLoginException() {
         // Chuẩn bị dữ liệu
         User testUser = new User();
-        testUser.setUsername("test_login_err");
+        testUser.setUsername("hoangnd_fake");
         testUser.setPassword("123456");
-        testUser.setFullName("Login Error User");
-        testUser.setPhone("0111222333");
+        testUser.setFullName("Tài Khoản Lỗi");
+        testUser.setPhone("0911222334");
         testUser.setRole("librarian");
         userDAO.addUser(testUser);
 
         // Cố tình truyền sai password
         User loginRequest = new User();
-        loginRequest.setUsername("test_login_err");
+        loginRequest.setUsername("hoangnd_fake");
         loginRequest.setPassword("wrongpassword");
         
         User result = userDAO.checkLogin(loginRequest);
@@ -85,22 +85,22 @@ public class UserDAOTest {
     public void testSearchUserStandard() {
         // Chuẩn bị dữ liệu
         User testUser = new User();
-        testUser.setUsername("test_search");
-        testUser.setPassword("pass");
-        testUser.setFullName("Nguyen Van Search");
-        testUser.setPhone("0999000111");
+        testUser.setUsername("tuanvq");
+        testUser.setPassword("123456");
+        testUser.setFullName("Vũ Quang Tuấn");
+        testUser.setPhone("0988777666");
         testUser.setRole("librarian");
         userDAO.addUser(testUser);
 
         // Chạy test
-        List<User> results = userDAO.searchUser("Van Search");
+        List<User> results = userDAO.searchUser("Quang Tuấn");
         assertFalse(results.isEmpty());
         
         // Kiểm tra xem kết quả có chứa user mình vừa tạo không
         boolean found = false;
         for (User u : results) {
-            if (u.getUsername().equals("test_search")) {
-                assertEquals("Nguyen Van Search", u.getFullName());
+            if (u.getUsername().equals("tuanvq")) {
+                assertEquals("Vũ Quang Tuấn", u.getFullName());
                 found = true;
                 break;
             }
@@ -119,38 +119,38 @@ public class UserDAOTest {
     @Test
     public void testAddUserStandard() {
         User newUser = new User();
-        newUser.setUsername("test_add_new");
+        newUser.setUsername("linhpt");
         newUser.setPassword("password");
-        newUser.setFullName("Add New Name");
-        newUser.setPhone("0999888777");
+        newUser.setFullName("Phạm Thùy Linh");
+        newUser.setPhone("0911222333");
         newUser.setRole("librarian");
 
         boolean addSuccess = userDAO.addUser(newUser);
         assertTrue(addSuccess);
 
         // Xác nhận lại xem thêm được chưa
-        List<User> searchResults = userDAO.searchUser("test_add_new");
+        List<User> searchResults = userDAO.searchUser("linhpt");
         assertFalse(searchResults.isEmpty());
-        assertEquals("Add New Name", searchResults.get(0).getFullName());
+        assertEquals("Phạm Thùy Linh", searchResults.get(0).getFullName());
     }
 
     @Test
     public void testAddUserException() {
         // Tạo 1 tài khoản ban đầu
         User firstUser = new User();
-        firstUser.setUsername("test_duplicate"); 
+        firstUser.setUsername("minhpd"); 
         firstUser.setPassword("pass1");
-        firstUser.setFullName("First User");
-        firstUser.setPhone("111");
+        firstUser.setFullName("Phan Đình Minh");
+        firstUser.setPhone("0933444555");
         firstUser.setRole("manager");
         assertTrue(userDAO.addUser(firstUser));
 
         // Cố tình tạo 1 tài khoản nữa trùng username
         User duplicateUser = new User();
-        duplicateUser.setUsername("test_duplicate"); 
+        duplicateUser.setUsername("minhpd"); 
         duplicateUser.setPassword("pass2");
-        duplicateUser.setFullName("Duplicate User");
-        duplicateUser.setPhone("222");
+        duplicateUser.setFullName("Phan Đình Minh 2");
+        duplicateUser.setPhone("0933444666");
         duplicateUser.setRole("librarian");
 
         boolean addDuplicateSuccess = userDAO.addUser(duplicateUser);
@@ -163,59 +163,59 @@ public class UserDAOTest {
     public void testUpdateUserStandard() {
         // 1. Chuẩn bị dữ liệu ban đầu
         User testUser = new User();
-        testUser.setUsername("test_update");
+        testUser.setUsername("quangnd");
         testUser.setPassword("pass");
-        testUser.setFullName("Old Name");
-        testUser.setPhone("0000");
+        testUser.setFullName("Nguyễn Đức Quang");
+        testUser.setPhone("0966777888");
         testUser.setRole("librarian");
         userDAO.addUser(testUser);
 
         // Lấy user ra để lấy đúng ID được DB sinh ra
-        List<User> searchResults = userDAO.searchUser("test_update");
+        List<User> searchResults = userDAO.searchUser("quangnd");
         assertFalse(searchResults.isEmpty());
         User userToUpdate = searchResults.get(0);
 
         // 2. Chỉnh sửa
-        userToUpdate.setFullName("Updated Name");
-        userToUpdate.setPhone("9999");
+        userToUpdate.setFullName("Nguyễn Đức Quang Sửa");
+        userToUpdate.setPhone("0966777999");
 
         boolean updateSuccess = userDAO.updateUser(userToUpdate);
         assertTrue(updateSuccess);
 
         // 3. Lấy lại từ DB để đối chiếu
-        List<User> updatedResults = userDAO.searchUser("test_update");
+        List<User> updatedResults = userDAO.searchUser("quangnd");
         assertFalse(updatedResults.isEmpty());
-        assertEquals("Updated Name", updatedResults.get(0).getFullName());
-        assertEquals("9999", updatedResults.get(0).getPhone());
+        assertEquals("Nguyễn Đức Quang Sửa", updatedResults.get(0).getFullName());
+        assertEquals("0966777999", updatedResults.get(0).getPhone());
     }
 
     @Test
     public void testUpdateUserException() {
         // 1. Tạo user muốn đổi (Target)
         User targetUser = new User();
-        targetUser.setUsername("test_update_fail");
+        targetUser.setUsername("tuanma");
         targetUser.setPassword("pass");
-        targetUser.setFullName("Target User");
-        targetUser.setPhone("111");
+        targetUser.setFullName("Mai Anh Tuấn");
+        targetUser.setPhone("0977111222");
         targetUser.setRole("librarian");
         userDAO.addUser(targetUser);
         
         // 2. Tạo một user khác ngáng đường (Conflict)
         User conflictUser = new User();
-        conflictUser.setUsername("test_conflict");
+        conflictUser.setUsername("hungnq");
         conflictUser.setPassword("pass");
-        conflictUser.setFullName("Conflict User");
-        conflictUser.setPhone("222");
+        conflictUser.setFullName("Nguyễn Quang Hưng");
+        conflictUser.setPhone("0977333444");
         conflictUser.setRole("librarian");
         userDAO.addUser(conflictUser);
 
         // 3. Lấy Target ra 
-        List<User> searchResults = userDAO.searchUser("test_update_fail");
+        List<User> searchResults = userDAO.searchUser("tuanma");
         assertFalse(searchResults.isEmpty());
         User userToUpdate = searchResults.get(0);
 
         // 4. Cố tình đổi username của Target trùng với tên của Conflict
-        userToUpdate.setUsername("test_conflict");
+        userToUpdate.setUsername("hungnq");
 
         boolean updateDuplicateSuccess = userDAO.updateUser(userToUpdate);
         assertFalse(updateDuplicateSuccess);
@@ -227,15 +227,15 @@ public class UserDAOTest {
     public void testDeleteUserStandard() {
         // 1. Tạo một user tạm
         User toDelete = new User();
-        toDelete.setUsername("test_todelete");
-        toDelete.setPassword("password");
-        toDelete.setFullName("Delete Me");
-        toDelete.setPhone("1234");
+        toDelete.setUsername("khoihd");
+        toDelete.setPassword("123456");
+        toDelete.setFullName("Hoàng Đình Khôi");
+        toDelete.setPhone("0944555666");
         toDelete.setRole("librarian");
         userDAO.addUser(toDelete);
         
         // 2. Lấy nó ra từ DB để có ID
-        List<User> searchBefore = userDAO.searchUser("test_todelete");
+        List<User> searchBefore = userDAO.searchUser("khoihd");
         assertFalse(searchBefore.isEmpty());
         User createdUser = searchBefore.get(0);
 
@@ -244,7 +244,7 @@ public class UserDAOTest {
         assertTrue(deleteSuccess);
 
         // 4. Xác minh là đã xóa sạch
-        List<User> searchAfter = userDAO.searchUser("test_todelete");
+        List<User> searchAfter = userDAO.searchUser("khoihd");
         assertTrue(searchAfter.isEmpty());
     }
 }

@@ -63,7 +63,6 @@ public class AddUserFrm extends JFrame implements ActionListener {
         txtPassword.setHorizontalAlignment(JTextField.CENTER);
         txtPassword.setBackground(Color.WHITE);
         txtPassword.setForeground(Color.BLACK);
-        // Đã xoá setBorder để FlatLaf tự động quản lý viền và hiển thị nút mắt
         pnlGrid.add(txtPassword);
 
         // Dòng 4: Số điện thoại

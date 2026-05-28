@@ -20,7 +20,6 @@ public class UserManageFrm extends JFrame implements ActionListener {
         JPanel pnlMain = new JPanel(new GridBagLayout());
         setContentPane(pnlMain);
 
-        // Card panel chứa nội dung form với vị trí tuyệt đối như thiết kế
         JPanel pnl = new JPanel(null);
         pnl.setPreferredSize(new Dimension(600, 400));
         pnl.setBackground(Color.WHITE);
@@ -32,8 +31,6 @@ public class UserManageFrm extends JFrame implements ActionListener {
         lblHeader.setForeground(new Color(30, 41, 59));
         lblHeader.setBounds(100, 25, 400, 35);
         pnl.add(lblHeader);
-
-        // 1. Edit Account button (Top) - Primary style
         btnEditUser = new JButton("Edit Account");
         btnEditUser.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btnEditUser.setBackground(new Color(96, 165, 250));
@@ -54,8 +51,6 @@ public class UserManageFrm extends JFrame implements ActionListener {
         });
         btnEditUser.addActionListener(this);
         pnl.add(btnEditUser);
-
-        // 2. Create Account button (Middle) - Primary style
         btnAddUser = new JButton("Create Account");
         btnAddUser.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btnAddUser.setBackground(new Color(96, 165, 250));
@@ -76,8 +71,6 @@ public class UserManageFrm extends JFrame implements ActionListener {
         });
         btnAddUser.addActionListener(this);
         pnl.add(btnAddUser);
-
-        // 3. Delete Account button (Bottom) - Primary style
         btnDeleteUser = new JButton("Delete Account");
         btnDeleteUser.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btnDeleteUser.setBackground(new Color(96, 165, 250));
@@ -98,8 +91,6 @@ public class UserManageFrm extends JFrame implements ActionListener {
         });
         btnDeleteUser.addActionListener(this);
         pnl.add(btnDeleteUser);
-
-        // 4. Back button (Bottom Right) - Secondary style
         btnBack = new JButton("Back");
         btnBack.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         btnBack.setBackground(Color.WHITE);

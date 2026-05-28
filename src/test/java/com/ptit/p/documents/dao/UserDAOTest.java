@@ -18,10 +18,10 @@ public class UserDAOTest {
     @BeforeEach
     public void setUp() throws SQLException {
         userDAO = new UserDAO();
-        con = userDAO.con; // Lấy connection từ userDAO, fix lỗi cú pháp DAO.con
+        con = userDAO.con; 
         
         if (con != null) {
-            con.setAutoCommit(false); // Bọc transaction để không làm bẩn DB
+            con.setAutoCommit(false); 
         }
     }
 
@@ -38,7 +38,7 @@ public class UserDAOTest {
 
     @Test
     public void testCheckLoginStandard() {
-        // Chuẩn bị dữ liệu (để không phụ thuộc vào data có sẵn trong DB)
+        // Chuẩn bị dữ liệu 
         User testUser = new User();
         testUser.setUsername("test_login_std");
         testUser.setPassword("123456");
@@ -128,7 +128,7 @@ public class UserDAOTest {
         boolean addSuccess = userDAO.addUser(newUser);
         assertTrue(addSuccess);
 
-        // Xác nhận lại xem đã thực sự thêm được chưa
+        // Xác nhận lại xem thêm được chưa
         List<User> searchResults = userDAO.searchUser("test_add_new");
         assertFalse(searchResults.isEmpty());
         assertEquals("Add New Name", searchResults.get(0).getFullName());

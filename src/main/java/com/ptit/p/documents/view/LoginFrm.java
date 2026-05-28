@@ -19,7 +19,6 @@ public class LoginFrm extends JFrame implements ActionListener {
         setSize(560, 450);
         setLocationRelativeTo(null);
 
-        // Panel nền sử dụng GridBagLayout để căn giữa
         JPanel pnlMain = new JPanel(new GridBagLayout());
         setContentPane(pnlMain);
 
@@ -46,7 +45,6 @@ public class LoginFrm extends JFrame implements ActionListener {
         txtUsername.setBackground(Color.WHITE);
         txtUsername.setForeground(Color.BLACK);
         txtUsername.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        // Đã xoá setBorder để FlatLaf vẽ giao diện mặc định đẹp hơn
         txtUsername.setBounds(160, 130, 280, 30);
         pnl.add(txtUsername);
 
@@ -64,7 +62,6 @@ public class LoginFrm extends JFrame implements ActionListener {
         txtPassword.setBackground(Color.WHITE);
         txtPassword.setForeground(Color.BLACK);
         txtPassword.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        // Đã xoá setBorder để FlatLaf tự động quản lý viền và hiển thị nút mắt
         txtPassword.setBounds(160, 200, 280, 30);
         pnl.add(txtPassword);
 

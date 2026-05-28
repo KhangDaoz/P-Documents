@@ -146,10 +146,8 @@ public class SearchUserFrm extends JFrame implements ActionListener {
         tblUser.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
         tblUser.getTableHeader().setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
 
-        // Căn giữa header bảng
         ((DefaultTableCellRenderer)tblUser.getTableHeader().getDefaultRenderer()).setHorizontalAlignment(JLabel.CENTER);
 
-        // Căn giữa các ô trong bảng (trừ 2 cột biểu tượng)
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         for (int i = 0; i < tblUser.getColumnCount() - 2; i++) {
@@ -185,17 +183,17 @@ public class SearchUserFrm extends JFrame implements ActionListener {
 
         pnlMain.add(pnlCenter, BorderLayout.CENTER);
 
-        // Thiết lập kích thước cột
-        tblUser.getColumnModel().getColumn(0).setPreferredWidth(60);  // ID
-        tblUser.getColumnModel().getColumn(1).setPreferredWidth(170); // Full Name
-        tblUser.getColumnModel().getColumn(2).setPreferredWidth(100); // Username
-        tblUser.getColumnModel().getColumn(3).setPreferredWidth(100); // Password
-        tblUser.getColumnModel().getColumn(4).setPreferredWidth(110); // Phone
-        tblUser.getColumnModel().getColumn(5).setPreferredWidth(90);  // Role
-        tblUser.getColumnModel().getColumn(6).setPreferredWidth(35);  // Sửa ✎
-        tblUser.getColumnModel().getColumn(7).setPreferredWidth(35);  // Xoá 🗑
 
-        // Bottom panel for back button
+        tblUser.getColumnModel().getColumn(0).setPreferredWidth(60);  
+        tblUser.getColumnModel().getColumn(1).setPreferredWidth(170); 
+        tblUser.getColumnModel().getColumn(2).setPreferredWidth(100); 
+        tblUser.getColumnModel().getColumn(3).setPreferredWidth(100); 
+        tblUser.getColumnModel().getColumn(4).setPreferredWidth(110); 
+        tblUser.getColumnModel().getColumn(5).setPreferredWidth(90);  
+        tblUser.getColumnModel().getColumn(6).setPreferredWidth(35); 
+        tblUser.getColumnModel().getColumn(7).setPreferredWidth(35); 
+
+ 
         JPanel pnlBottom = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         pnlBottom.setOpaque(false);
 
@@ -222,7 +220,6 @@ public class SearchUserFrm extends JFrame implements ActionListener {
 
         pnlMain.add(pnlBottom, BorderLayout.SOUTH);
 
-        // Dummy btnAction to satisfy variable references without display
         btnAction = new JButton();
 
         // Load danh sách người dùng ban đầu
@@ -281,34 +278,22 @@ public class SearchUserFrm extends JFrame implements ActionListener {
         @Override
         public void paintIcon(Component c, Graphics g, int x, int y) {
             Graphics2D g2 = (Graphics2D) g.create();
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            
-            // Draw a modern, beautiful pencil icon
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);         
             g2.translate(x + 8, y + 8);
             g2.rotate(Math.toRadians(-45));
-            
-            // Draw pencil tip (wood color)
-            g2.setColor(new Color(222, 184, 135)); // BurlyWood
+            g2.setColor(new Color(222, 184, 135)); 
             int[] px = {-3, 3, 0};
             int[] py = {3, 3, 7};
             g2.fillPolygon(px, py, 3);
-            
-            // Draw pencil graphite lead tip
-            g2.setColor(new Color(60, 60, 60)); // Dark grey
+            g2.setColor(new Color(60, 60, 60)); 
             int[] lx = {-1, 1, 0};
             int[] ly = {5, 5, 7};
             g2.fillPolygon(lx, ly, 3);
-            
-            // Draw pencil body (blue/indigo)
-            g2.setColor(new Color(70, 130, 180)); // SteelBlue
+            g2.setColor(new Color(70, 130, 180)); 
             g2.fillRect(-3, -7, 6, 10);
-            
-            // Draw silver band
-            g2.setColor(new Color(192, 192, 192)); // Silver
+            g2.setColor(new Color(192, 192, 192)); 
             g2.fillRect(-3, -9, 6, 2);
-            
-            // Draw pink eraser on top
-            g2.setColor(new Color(255, 182, 193)); // LightPink
+            g2.setColor(new Color(255, 182, 193)); 
             g2.fillRect(-3, -11, 6, 2);
             
             g2.dispose();
@@ -329,22 +314,13 @@ public class SearchUserFrm extends JFrame implements ActionListener {
         @Override
         public void paintIcon(Component c, Graphics g, int x, int y) {
             Graphics2D g2 = (Graphics2D) g.create();
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            
-            // Draw a modern, beautiful trash bin icon
-            g2.setColor(new Color(220, 53, 69)); // Crimson red
-            
-            // Lid handle
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); 
+            g2.setColor(new Color(220, 53, 69));      
             g2.fillRect(x + 6, y + 1, 4, 2);
-            // Lid plate
-            g2.fillRect(x + 2, y + 3, 12, 2);
-            
-            // Container body
+            g2.fillRect(x + 2, y + 3, 12, 2);   
             int[] bx = {x + 4, x + 12, x + 11, x + 5};
             int[] by = {y + 5, y + 5, y + 14, y + 14};
             g2.fillPolygon(bx, by, 4);
-            
-            // Vertical stripes inside bin (white cuts)
             g2.setColor(Color.WHITE);
             g2.fillRect(x + 6, y + 7, 1, 5);
             g2.fillRect(x + 8, y + 7, 1, 5);

@@ -14,9 +14,9 @@ public class UserDAO extends DAO {
     }
 
     /**
-     * Verifies login credentials.
-     * @param u Entity containing username and password to verify.
-     * @return User object with full details if credentials are correct; null otherwise.
+     * Xác thực thông tin đăng nhập.
+     * @param u Đối tượng chứa tài khoản và mật khẩu cần xác thực.
+     * @return Đối tượng User với đầy đủ thông tin nếu đúng; ngược lại trả về null.
      */
     public User checkLogin(User u) {
         if (u == null || u.getUsername() == null || u.getPassword() == null) {
@@ -46,9 +46,9 @@ public class UserDAO extends DAO {
     }
 
     /**
-     * Searches users by keyword.
-     * @param keyword Keyword (can be username, full name, or phone).
-     * @return List of matching User objects.
+     * Tìm kiếm người dùng theo từ khóa.
+     * @param keyword Từ khóa (có thể là tên đăng nhập, họ tên hoặc số điện thoại).
+     * @return Danh sách các đối tượng User phù hợp.
      */
     public List<User> searchUser(String keyword) {
         List<User> result = new ArrayList<>();
@@ -78,22 +78,22 @@ public class UserDAO extends DAO {
     }
 
     /**
-     * Adds a new user account to the database.
-     * @param u User object to add.
-     * @return true if added successfully; false if username already exists.
+     * Thêm tài khoản người dùng mới vào cơ sở dữ liệu.
+     * @param u Đối tượng User cần thêm.
+     * @return true nếu thêm thành công; false nếu tên đăng nhập đã tồn tại.
      */
     public boolean addUser(User u) {
         if (u == null || u.getUsername() == null) {
             return false;
         }
-        // Check if username already exists
+        // Kiểm tra xem tên đăng nhập đã tồn tại chưa
         String checkSql = "SELECT ID FROM tblUser WHERE username = ?";
         try {
             PreparedStatement psCheck = con.prepareStatement(checkSql);
             psCheck.setString(1, u.getUsername());
             ResultSet rs = psCheck.executeQuery();
             if (rs.next()) {
-                return false; // Username exists
+                return false; // Tên đăng nhập đã tồn tại
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -117,15 +117,15 @@ public class UserDAO extends DAO {
     }
 
     /**
-     * Updates user information.
-     * @param u User object containing updated information (matching ID).
-     * @return true if updated successfully; false if target user ID is not found.
+     * Cập nhật thông tin người dùng.
+     * @param u Đối tượng User chứa thông tin mới (trùng ID).
+     * @return true nếu cập nhật thành công; false nếu không tìm thấy ID người dùng.
      */
     public boolean updateUser(User u) {
         if (u == null) {
             return false;
         }
-        // Check if new username conflicts with another user
+        // Kiểm tra xem tên đăng nhập mới có trùng với người dùng khác không
         String checkSql = "SELECT ID FROM tblUser WHERE username = ? AND ID != ?";
         try {
             PreparedStatement psCheck = con.prepareStatement(checkSql);
@@ -133,7 +133,7 @@ public class UserDAO extends DAO {
             psCheck.setInt(2, u.getId());
             ResultSet rs = psCheck.executeQuery();
             if (rs.next()) {
-                return false; // Conflict
+                return false; // Trùng tên đăng nhập
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -158,9 +158,9 @@ public class UserDAO extends DAO {
     }
 
     /**
-     * Deletes a user account from the system.
-     * @param u User object to delete (or just containing the target ID).
-     * @return true if deleted successfully; false if ID is not found.
+     * Xóa tài khoản người dùng khỏi hệ thống.
+     * @param u Đối tượng User cần xóa (chỉ cần chứa ID mục tiêu).
+     * @return true nếu xóa thành công; false nếu không tìm thấy ID.
      */
     public boolean deleteUser(User u) {
         if (u == null) {

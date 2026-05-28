@@ -121,8 +121,6 @@ public class ConfirmDeleteUserFrm extends JFrame implements ActionListener {
         });
         btnConfirm.addActionListener(this);
         pnl.add(btnConfirm);
-
-        // JTable is not used anymore in visual, keep dummy to satisfy other references
         tblDeleteUserConfirm = new JTable();
     }
 
@@ -151,15 +149,14 @@ public class ConfirmDeleteUserFrm extends JFrame implements ActionListener {
                 manageFrm.setVisible(true);
             } else {
                 JOptionPane.showMessageDialog(this, "Failed to delete account or account not found!", "Error", JOptionPane.ERROR_MESSAGE);
-                // Admin click nút OK -> gọi lại lớp SearchUserFrm để cập nhật trạng thái
                 this.dispose();
-                SearchUserFrm searchFrm = new SearchUserFrm(SearchUserFrm.Mode.DELETE);
-                searchFrm.setVisible(true);
+                UserManageFrm manageFrm = new UserManageFrm();
+                manageFrm.setVisible(true);
             }
         } else if (e.getSource() == btnCancel) {
             this.dispose();
-            SearchUserFrm searchFrm = new SearchUserFrm(SearchUserFrm.Mode.DELETE);
-            searchFrm.setVisible(true);
+            UserManageFrm manageFrm = new UserManageFrm();
+            manageFrm.setVisible(true);
         }
     }
 }

@@ -15,19 +15,7 @@ public class AdminHomeFrm extends JFrame implements ActionListener {
         setSize(560, 330);
         setLocationRelativeTo(null);
 
-        JPanel pnlMain = new JPanel(new GridBagLayout()) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                Graphics2D g2d = (Graphics2D) g;
-                g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-                Color color1 = new Color(226, 232, 240);
-                Color color2 = new Color(148, 163, 184);
-                GradientPaint gp = new GradientPaint(0, 0, color1, getWidth(), getHeight(), color2);
-                g2d.setPaint(gp);
-                g2d.fillRect(0, 0, getWidth(), getHeight());
-            }
-        };
+        JPanel pnlMain = new JPanel(new GridBagLayout());
         setContentPane(pnlMain);
 
         JPanel pnl = new JPanel(null);

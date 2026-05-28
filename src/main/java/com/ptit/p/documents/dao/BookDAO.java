@@ -31,8 +31,8 @@ public class BookDAO extends DAO {
             return false;
         }
 
-        String sql = "INSERT INTO tblBook (ISBN, title, author, genre, publisher, publishYear, price, description, availableCopies, totalCopies) "
-               + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO tblBook (ISBN, title, author, genre, publisher, publishYear, price, description) "
+               + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, book.getISBN());
             ps.setString(2, book.getTitle());
@@ -42,8 +42,6 @@ public class BookDAO extends DAO {
             ps.setInt(6, book.getPublishYear());
             ps.setDouble(7, book.getPrice());
             ps.setString(8, book.getDescription());
-            ps.setInt(9, book.getAvailableCopies());
-            ps.setInt(10, book.getTotalCopies());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -57,7 +55,17 @@ public class BookDAO extends DAO {
      */
     public List<Book> searchBook(String keyword) {
         List<Book> books = new ArrayList<>();
-        String sql = "SELECT * FROM tblBook WHERE title LIKE ? OR author LIKE ? OR ISBN LIKE ?";
+        String sql = "SELECT b.*, "
+                   + "COALESCE(bi.totalCopies, 0) AS totalCopies, "
+                   + "COALESCE(bi.availableCopies, 0) AS availableCopies "
+                   + "FROM tblBook b "
+                   + "LEFT JOIN ( "
+                   + "    SELECT tblBookISBN, COUNT(*) AS totalCopies, "
+                   + "           SUM(CASE WHEN status = 'good' THEN 1 ELSE 0 END) AS availableCopies "
+                   + "    FROM tblBookItem "
+                   + "    GROUP BY tblBookISBN "
+                   + ") bi ON b.ISBN = bi.tblBookISBN "
+                   + "WHERE b.title LIKE ? OR b.author LIKE ? OR b.ISBN LIKE ?";
         Connection conn = getConnection();
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             String searchPattern = "%" + keyword + "%";
@@ -92,7 +100,7 @@ public class BookDAO extends DAO {
      */
     public boolean updateBook(Book book) {
         String sql = "UPDATE tblBook SET title = ?, author = ?, genre = ?, publisher = ?, "
-                   + "publishYear = ?, price = ?, description = ? WHERE ISBN = ?";
+               + "publishYear = ?, price = ?, description = ? WHERE ISBN = ?";
         Connection conn = getConnection();
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, book.getTitle());
@@ -128,12 +136,25 @@ public class BookDAO extends DAO {
 
     /**
      * Kiểm tra tình trạng mượn của sách.
-     * Trả về true nếu sách đang có phiếu mượn ở trạng thái "borrowing" hoặc "waiting".
+     * Trả về true nếu sách đang có phiếu mượn ở trạng thái chưa hoàn tất.
      */
     public boolean checkBookStatus(String isbn) {
-        String sql = "SELECT COUNT(*) AS cnt FROM tblBorrowedBook bb "
-                   + "JOIN tblBookItem bi ON bb.tblBookItemID = bi.ID "
-                   + "WHERE bi.tblBookISBN = ? AND bb.status IN ('borrowing', 'waiting')";
+        return checkBookStatus(isbn, false);
+    }
+
+    /**
+     * Kiểm tra tình trạng mượn của sách.
+     * Nếu includeHistory = true, kiểm tra mọi lịch sử mượn để phục vụ xoá cứng.
+     */
+    public boolean checkBookStatus(String isbn, boolean includeHistory) {
+        String sql = includeHistory
+                ? "SELECT COUNT(*) AS cnt FROM tblBorrowedBook bb "
+                + "JOIN tblBookItem bi ON bb.tblBookItemID = bi.ID "
+                + "WHERE bi.tblBookISBN = ?"
+                : "SELECT COUNT(*) AS cnt FROM tblBorrowing br "
+                + "JOIN tblBorrowedBook bb ON br.ID = bb.tblBorrowingID "
+                + "JOIN tblBookItem bi ON bb.tblBookItemID = bi.ID "
+                + "WHERE bi.tblBookISBN = ? AND br.status IN ('pending', 'borrowed', 'overdue')";
         Connection conn = getConnection();
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, isbn);

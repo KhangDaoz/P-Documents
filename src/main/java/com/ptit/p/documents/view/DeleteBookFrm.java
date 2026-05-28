@@ -198,12 +198,20 @@ public class DeleteBookFrm extends JFrame implements ActionListener {
         if (e.getSource() == btnConfirmDelete) {
             String isbn = currentBook.getISBN();
 
+            BookDAO bookDAO = new BookDAO();
+
+            if (bookDAO.checkBookStatus(isbn, true)) {
+                JOptionPane.showMessageDialog(this,
+                        "Sách đã có lịch sử mượn nên không thể xóa cứng theo ràng buộc cơ sở dữ liệu.",
+                        "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
             // Bước 1: Xóa tất cả bản sách vật lý (BookItem)
             BookItemDAO bookItemDAO = new BookItemDAO();
             bookItemDAO.deleteBookItem(isbn);
 
             // Bước 2: Xóa đầu sách (Book)
-            BookDAO bookDAO = new BookDAO();
             boolean success = bookDAO.deleteBook(isbn);
 
             if (success) {

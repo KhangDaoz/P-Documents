@@ -187,11 +187,16 @@ public class EditBookFrm extends JFrame implements ActionListener {
             // Validate bắt buộc
             String title = txtTitle.getText().trim();
             String author = txtAuthor.getText().trim();
+            String genre = txtGenre.getText().trim();
+            String publisher = txtPublisher.getText().trim();
+            String publishYearStr = txtPublishYear.getText().trim();
             String priceStr = txtPrice.getText().trim();
+            String description = txtDescription.getText().trim();
 
-            if (title.isEmpty() || author.isEmpty() || priceStr.isEmpty()) {
+            if (title.isEmpty() || author.isEmpty() || genre.isEmpty() || publisher.isEmpty()
+                    || publishYearStr.isEmpty() || priceStr.isEmpty() || description.isEmpty()) {
                 JOptionPane.showMessageDialog(this,
-                        "Vui lòng nhập đầy đủ các trường bắt buộc (*): tên sách, tác giả, giá bìa!",
+                        "Vui lòng nhập đầy đủ các trường bắt buộc (*): tên sách, tác giả, thể loại, nhà xuất bản, năm xuất bản, giá bìa, mô tả!",
                         "Lỗi", JOptionPane.WARNING_MESSAGE);
                 return;
             }
@@ -214,27 +219,24 @@ public class EditBookFrm extends JFrame implements ActionListener {
             }
 
             // Validate năm xuất bản
-            int publishYear = 0;
-            String publishYearStr = txtPublishYear.getText().trim();
-            if (!publishYearStr.isEmpty()) {
-                try {
-                    publishYear = Integer.parseInt(publishYearStr);
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(this,
-                            "Năm xuất bản phải là số nguyên hợp lệ!",
-                            "Lỗi", JOptionPane.WARNING_MESSAGE);
-                    return;
-                }
+            int publishYear;
+            try {
+                publishYear = Integer.parseInt(publishYearStr);
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this,
+                        "Năm xuất bản phải là số nguyên hợp lệ!",
+                        "Lỗi", JOptionPane.WARNING_MESSAGE);
+                return;
             }
 
             // Cập nhật đối tượng Book bằng set()
             currentBook.setTitle(title);
             currentBook.setAuthor(author);
-            currentBook.setGenre(txtGenre.getText().trim());
-            currentBook.setPublisher(txtPublisher.getText().trim());
+            currentBook.setGenre(genre);
+            currentBook.setPublisher(publisher);
             currentBook.setPublishYear(publishYear);
             currentBook.setPrice(price);
-            currentBook.setDescription(txtDescription.getText().trim());
+            currentBook.setDescription(description);
 
             // Gọi BookDAO.updateBook()
             BookDAO bookDAO = new BookDAO();

@@ -31,7 +31,6 @@ public class AddUserFrm extends JFrame implements ActionListener {
         pnl.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240), 1));
         pnlMain.add(pnl);
 
-        // Tiêu đề form (hiển thị phẳng đẹp, không giống nút bấm)
         JLabel lblHeader = new JLabel("Create New Account", JLabel.CENTER);
         lblHeader.setFont(new Font("Segoe UI", Font.BOLD, 16));
         lblHeader.setForeground(new Color(30, 41, 59));

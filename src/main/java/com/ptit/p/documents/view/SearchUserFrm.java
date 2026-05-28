@@ -20,7 +20,7 @@ public class SearchUserFrm extends JFrame implements ActionListener {
     private final Mode mode;
     private final JTextField txtKey;
     private final JButton btnSearch;
-    private final JButton btnAction; // Nút "Sửa" hoặc "Xoá" tuỳ thuộc vào Mode
+    private final JButton btnAction;
     private final JButton btnBack;
     private final JTable tblUser;
     private final DefaultTableModel tableModel;
@@ -39,12 +39,12 @@ public class SearchUserFrm extends JFrame implements ActionListener {
         setSize(860, 560);
         setLocationRelativeTo(null);
 
-        // pnlMain is the content pane with BorderLayout
+        // pnlMain là khung chứa nội dung sử dụng BorderLayout
         JPanel pnlMain = new JPanel(new BorderLayout(0, 15));
         pnlMain.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
         setContentPane(pnlMain);
 
-        // Top panel for search fields
+        // Panel phía trên dành cho các trường tìm kiếm
         JPanel pnlTop = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
         pnlTop.setOpaque(false);
 
@@ -79,7 +79,7 @@ public class SearchUserFrm extends JFrame implements ActionListener {
             public void insertUpdate(javax.swing.event.DocumentEvent e) { checkEmpty(); }
             private void checkEmpty() {
                 String text = txtKey.getText();
-                // Chỉ nạp lại bảng nếu thanh tìm kiếm thực sự bị xóa trắng (không phải là chữ placeholder)
+                // Chỉ nạp lại bảng nếu thanh tìm kiếm thực sự bị xóa trắng 
                 if (text.trim().isEmpty() && !text.equals("Enter keyword to search...")) {
                     performSearch();
                 }
@@ -111,7 +111,7 @@ public class SearchUserFrm extends JFrame implements ActionListener {
 
         pnlMain.add(pnlTop, BorderLayout.NORTH);
 
-        // Center panel for table and label
+        // Panel trung tâm dành cho bảng và nhãn
         JPanel pnlCenter = new JPanel(new BorderLayout(0, 10));
         pnlCenter.setOpaque(false);
 

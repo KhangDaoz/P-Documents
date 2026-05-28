@@ -160,7 +160,6 @@ public class EditUserFrm extends JFrame implements ActionListener {
         tf.setBackground(editable ? Color.WHITE : new Color(248, 250, 252));
         tf.setForeground(Color.BLACK);
         tf.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        // Đã xoá setBorder tuỳ chỉnh để FlatLaf có thể vẽ nút mắt và giao diện mặc định
         tf.setEditable(editable);
         tf.setEnabled(editable);
         return tf;

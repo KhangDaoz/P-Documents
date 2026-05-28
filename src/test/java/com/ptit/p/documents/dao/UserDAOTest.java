@@ -247,4 +247,17 @@ public class UserDAOTest {
         List<User> searchAfter = userDAO.searchUser("test_todelete");
         assertTrue(searchAfter.isEmpty());
     }
+
+    @Test
+    public void testDeleteUserException() {
+        // Cố tình xóa một User null
+        boolean deleteNull = userDAO.deleteUser(null);
+        assertFalse(deleteNull);
+
+        // Cố tình xóa một User có ID không tồn tại trong DB (ví dụ ID = 999999)
+        User fakeUser = new User();
+        fakeUser.setId(999999);
+        boolean deleteFake = userDAO.deleteUser(fakeUser);
+        assertFalse(deleteFake);
+    }
 }

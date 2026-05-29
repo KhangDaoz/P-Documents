@@ -85,9 +85,9 @@ public class BorrowingStatFrm extends JFrame {
             int row = table.getSelectedRow();
             if (row >= 0 && row < currentRows.size()) {
                 BorrowingStat s = currentRows.get(row);
-                // Mở chi tiết khi user click
+                // Mở chi tiết khi user click — dùng getIsbn() thay cho getBookId()
                 SwingUtilities.invokeLater(() ->
-                    new BorrowDetailFrm(this, s.getBookId(), s.getTitle()).setVisible(true));
+                    new BorrowDetailFrm(this, s.getIsbn(), s.getTitle()).setVisible(true));
                 table.clearSelection();
             }
         });
@@ -103,7 +103,7 @@ public class BorrowingStatFrm extends JFrame {
             tableModel.setRowCount(0);
             for (BorrowingStat s : currentRows) {
                 tableModel.addRow(new Object[]{
-                    s.getBookId(), s.getTitle(), s.getAuthor(), s.getCategory(), s.getBorrowCount()
+                    s.getIsbn(), s.getTitle(), s.getAuthor(), s.getGenre(), s.getBorrowCount()
                 });
             }
             if (currentRows.isEmpty()) {

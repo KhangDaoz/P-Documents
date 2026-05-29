@@ -15,10 +15,6 @@ import java.util.List;
 /**
  * Giao diện báo cáo sách hư hỏng / thất lạc (spec §2.a, §2.b bước 9-27).
  *
- * NOTE: spec §2.a "Tầng giao diện" có ghi tên "StockReportFrm" trong bảng View,
- * nhưng spec §2.b bước 8-9 lại gọi là "StockStatFrm". Code dùng "StockStatFrm"
- * theo đúng tên trong biểu đồ tuần tự (đã thống nhất với người dùng).
- *
  * - Nhập khoảng thời gian + lý do (Tất cả/Hư hỏng/Thất lạc)
  * - "Tìm kiếm" -> gọi StockStatDAO.searchDamageLossRecords()
  * - "In báo cáo PDF" -> gọi StockStatDAO.exportToPDF()
@@ -36,7 +32,7 @@ public class StockStatFrm extends JFrame {
         new String[]{"Tất cả", "Hư hỏng", "Thất lạc"});
 
     private final DefaultTableModel tableModel = new DefaultTableModel(
-        new String[]{"Tên sách", "Mã vạch", "Tình trạng"}, 0) {
+        new String[]{"Tên sách", "Mã bản sách", "Tình trạng"}, 0) {
         @Override public boolean isCellEditable(int r, int c) { return false; }
     };
     private final JTable table = new JTable(tableModel);
@@ -90,12 +86,12 @@ public class StockStatFrm extends JFrame {
             currentRows = dao.searchDamageLossRecords(from, to, reason);
             tableModel.setRowCount(0);
             for (StockStat s : currentRows) {
-                // Spec §2.b bước 15-18: BookItem truy cập qua book.getItems()
-                String barcode = s.getBook().getItems().isEmpty()
-                        ? "" : s.getBook().getItems().get(0).getId();
+                // BookItem.getId() trả về int; hiển thị dạng chuỗi
+                String itemId = s.getBook().getItems().isEmpty()
+                        ? "" : String.valueOf(s.getBook().getItems().get(0).getId());
                 tableModel.addRow(new Object[]{
                     s.getBook().getTitle(),
-                    barcode,
+                    itemId,
                     s.getReason()
                 });
             }

@@ -2,21 +2,23 @@ package com.ptit.p.documents.model;
 
 /**
  * Bản sách - Tầng thực thể.
- * Chỉ gồm id và status (missing, damaged). Book là chủ sở hữu danh sách BookItem.
+ * Ánh xạ bảng tblBookItem (schema p_documents).
+ * ID là INT auto_increment, status là ENUM('good','damaged','lost').
+ * Book là chủ sở hữu danh sách BookItem.
  */
 public class BookItem {
-    private String id;
-    private String status;
+    private int    id;       // tblBookItem.ID (int)
+    private String status;   // 'good', 'damaged', 'lost'
 
     public BookItem() {}
 
-    public BookItem(String id, String status) {
+    public BookItem(int id, String status) {
         this.id     = id;
         this.status = status;
     }
 
-    public String getId()             { return id; }
-    public void   setId(String v)     { this.id = v; }
+    public int    getId()             { return id; }
+    public void   setId(int v)        { this.id = v; }
     public String getStatus()         { return status; }
     public void   setStatus(String v) { this.status = v; }
 }

@@ -10,33 +10,34 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileOutputStream;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * DAO truy vấn CSDL thống kê sách mượn nhiều và xuất Excel
- * (spec §1.a: BorrowingStatDAO - getTopBorrowedBooks(), exportToExcel()).
+ * DAO truy vấn CSDL thống kê sách mượn nhiều và xuất Excel.
+ * Truy vấn trên schema p_documents: tblBook, tblBookItem, tblBorrowedBook, tblBorrowing.
+ * Dùng tblBorrowing.createdAt thay cho borrow_date.
  */
 public class BorrowingStatDAO extends DAO {
 
     /**
      * Lấy danh sách top N đầu sách được mượn nhiều nhất trong khoảng [from, to].
-     * Tương ứng spec §1.b bước 14-19.
+     * Lọc theo tblBorrowing.createdAt (thay cho borrow_date không còn trong schema final).
      */
     public List<BorrowingStat> getTopBorrowedBooks(LocalDate from, LocalDate to, int topN) {
         List<BorrowingStat> result = new ArrayList<>();
         String sql =
-            "SELECT b.book_id, b.title, b.author, b.category, COUNT(bb.id) AS borrow_count " +
-            "FROM books b " +
-            "JOIN book_items bi    ON bi.book_id  = b.book_id " +
-            "JOIN borrowed_books bb ON bb.barcode  = bi.barcode " +
-            "JOIN borrowings br    ON br.borrow_id = bb.borrow_id " +
-            "WHERE br.borrow_date BETWEEN ? AND ? " +
-            "GROUP BY b.book_id, b.title, b.author, b.category " +
+            "SELECT b.ISBN, b.title, b.author, b.genre, COUNT(bb.ID) AS borrow_count " +
+            "FROM tblBook b " +
+            "JOIN tblBookItem bi    ON bi.tblBookISBN  = b.ISBN " +
+            "JOIN tblBorrowedBook bb ON bb.tblBookItemID = bi.ID " +
+            "JOIN tblBorrowing br   ON br.ID = bb.tblBorrowingID " +
+            "WHERE br.createdAt BETWEEN ? AND ? " +
+            "GROUP BY b.ISBN, b.title, b.author, b.genre " +
             "ORDER BY borrow_count DESC " +
             "LIMIT ?";
 
@@ -44,17 +45,17 @@ public class BorrowingStatDAO extends DAO {
         ResultSet rs = null;
         try {
             ps = getConnection().prepareStatement(sql);
-            ps.setDate(1, Date.valueOf(from));
-            ps.setDate(2, Date.valueOf(to));
+            // createdAt là TIMESTAMP, nên dùng Timestamp cho phạm vi ngày đầy đủ
+            ps.setTimestamp(1, Timestamp.valueOf(from.atStartOfDay()));
+            ps.setTimestamp(2, Timestamp.valueOf(to.atTime(23, 59, 59)));
             ps.setInt(3, topN);
             rs = ps.executeQuery();
             while (rs.next()) {
-                // Đóng gói kết quả vào BorrowingStat (kế thừa Book) - spec §1.b bước 15-18
                 result.add(new BorrowingStat(
-                    rs.getString("book_id"),
+                    rs.getString("ISBN"),
                     rs.getString("title"),
                     rs.getString("author"),
-                    rs.getString("category"),
+                    rs.getString("genre"),
                     rs.getInt("borrow_count")
                 ));
             }
@@ -68,8 +69,8 @@ public class BorrowingStatDAO extends DAO {
     }
 
     /**
-     * Xuất danh sách thống kê ra file .xlsx (spec §1.b bước 38-42).
-     * Cột: Mã sách, Tên sách, Tác giả, Thể loại, Lượt mượn (theo bước 20).
+     * Xuất danh sách thống kê ra file .xlsx.
+     * Cột: Mã sách, Tên sách, Tác giả, Thể loại, Lượt mượn.
      */
     public boolean exportToExcel(List<BorrowingStat> rows, String filePath) {
         try (Workbook wb = new XSSFWorkbook();
@@ -94,10 +95,10 @@ public class BorrowingStatDAO extends DAO {
             int r = 1;
             for (BorrowingStat s : rows) {
                 Row row = sheet.createRow(r++);
-                row.createCell(0).setCellValue(s.getBookId());
+                row.createCell(0).setCellValue(s.getIsbn());
                 row.createCell(1).setCellValue(s.getTitle());
                 row.createCell(2).setCellValue(s.getAuthor());
-                row.createCell(3).setCellValue(s.getCategory());
+                row.createCell(3).setCellValue(s.getGenre());
                 row.createCell(4).setCellValue(s.getBorrowCount());
             }
 

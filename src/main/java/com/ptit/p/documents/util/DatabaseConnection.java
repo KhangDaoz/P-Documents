@@ -6,13 +6,14 @@ import java.sql.SQLException;
 
 /**
  * Singleton quản lý kết nối CSDL MySQL cho Library Management System.
+ * Kết nối tới database: p_documents (schema final).
  * Cách dùng:
  *   Connection conn = DatabaseConnection.getInstance().getConnection();
  */
 public class DatabaseConnection {
 
     private static final String URL =
-            "jdbc:mysql://localhost:3306/library_management?useSSL=false&serverTimezone=UTC&characterEncoding=utf8";
+            "jdbc:mysql://localhost:3306/p_documents?useSSL=false&serverTimezone=UTC&characterEncoding=utf8";
     private static final String USER     = "root";
     private static final String PASSWORD = "123456";   // chỉnh theo môi trường
 

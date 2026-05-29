@@ -16,64 +16,95 @@ import com.lowagie.text.pdf.PdfWriter;
 
 import java.awt.Color;
 import java.io.FileOutputStream;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * DAO truy vấn sách hư hỏng / thất lạc và xuất PDF
- * (spec §2.a: StockStatDAO - searchDamageLossRecords(), exportToPDF()).
+ * DAO truy vấn sách hư hỏng / thất lạc và xuất PDF.
+ * Schema final KHÔNG có bảng stock_reports.
+ * Thay vào đó, dùng tblBookItem.status ('damaged'/'lost') và tblBookItem.updatedAt
+ * làm ngày báo cáo (khi status bị cập nhật thành damaged/lost).
+ *
+ * Mapping hiển thị:
+ *   'damaged' -> "Hư hỏng"
+ *   'lost'    -> "Thất lạc"
  */
 public class StockStatDAO extends DAO {
 
     /**
-     * Tra cứu báo cáo theo khoảng thời gian và lý do.
-     * @param reason "Tất cả" | "Hư hỏng" | "Thất lạc" (spec §2.b bước 11)
+     * Tra cứu sách hư hỏng/thất lạc theo khoảng thời gian và lý do.
+     * @param reason "Tất cả" | "Hư hỏng" | "Thất lạc"
      */
     public List<StockStat> searchDamageLossRecords(LocalDate from, LocalDate to, String reason) {
         List<StockStat> result = new ArrayList<>();
         boolean filterAll = reason == null || reason.equalsIgnoreCase("Tất cả");
 
+        // Map lý do tiếng Việt -> giá trị ENUM tiếng Anh
+        String statusFilter = null;
+        if (!filterAll) {
+            if ("Hư hỏng".equals(reason)) {
+                statusFilter = "damaged";
+            } else if ("Thất lạc".equals(reason)) {
+                statusFilter = "lost";
+            }
+        }
+
         StringBuilder sql = new StringBuilder(
-            "SELECT sr.id, sr.reason, sr.reported_date, " +
-            "       bi.barcode, bi.status AS item_status, " +
-            "       b.book_id, b.title, b.author, b.category " +
-            "FROM stock_reports sr " +
-            "JOIN book_items bi ON bi.barcode = sr.barcode " +
-            "JOIN books b       ON b.book_id  = bi.book_id " +
-            "WHERE sr.reported_date BETWEEN ? AND ? "
+            "SELECT bi.ID AS itemId, bi.status AS item_status, bi.updatedAt AS reported_date, " +
+            "       b.ISBN, b.title, b.author, b.genre " +
+            "FROM tblBookItem bi " +
+            "JOIN tblBook b ON b.ISBN = bi.tblBookISBN " +
+            "WHERE bi.status IN ('damaged', 'lost') " +
+            "AND bi.updatedAt BETWEEN ? AND ? "
         );
-        if (!filterAll) sql.append("AND sr.reason = ? ");
-        sql.append("ORDER BY sr.reported_date DESC");
+        if (!filterAll && statusFilter != null) {
+            sql.append("AND bi.status = ? ");
+        }
+        sql.append("ORDER BY bi.updatedAt DESC");
 
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             ps = getConnection().prepareStatement(sql.toString());
-            ps.setDate(1, Date.valueOf(from));
-            ps.setDate(2, Date.valueOf(to));
-            if (!filterAll) ps.setString(3, reason);
+            ps.setTimestamp(1, Timestamp.valueOf(from.atStartOfDay()));
+            ps.setTimestamp(2, Timestamp.valueOf(to.atTime(23, 59, 59)));
+            if (!filterAll && statusFilter != null) {
+                ps.setString(3, statusFilter);
+            }
             rs = ps.executeQuery();
             while (rs.next()) {
-                // Spec §2.b bước 15-18: StockStat -> Book -> BookItem
                 Book book = new Book(
-                    rs.getString("book_id"),
+                    rs.getString("ISBN"),
                     rs.getString("title"),
                     rs.getString("author"),
-                    rs.getString("category")
+                    rs.getString("genre")
                 );
                 book.addItem(new BookItem(
-                    rs.getString("barcode"),
+                    rs.getInt("itemId"),
                     rs.getString("item_status")
                 ));
+
+                // Map status ENUM -> hiển thị tiếng Việt
+                String statusEnum = rs.getString("item_status");
+                String displayReason;
+                if ("damaged".equals(statusEnum)) {
+                    displayReason = "Hư hỏng";
+                } else if ("lost".equals(statusEnum)) {
+                    displayReason = "Thất lạc";
+                } else {
+                    displayReason = statusEnum;
+                }
+
+                Timestamp reportedTs = rs.getTimestamp("reported_date");
                 StockStat ss = new StockStat(
                     book,
-                    rs.getString("reason"),
-                    rs.getDate("reported_date").toLocalDate()
+                    displayReason,
+                    reportedTs == null ? null : reportedTs.toLocalDateTime().toLocalDate()
                 );
                 result.add(ss);
             }
@@ -87,8 +118,8 @@ public class StockStatDAO extends DAO {
     }
 
     /**
-     * Xuất danh sách báo cáo ra PDF (spec §2.b bước 22-27).
-     * Cột: Tên sách, Mã vạch, Tình trạng (theo bước 21).
+     * Xuất danh sách báo cáo ra PDF.
+     * Cột: Tên sách, Mã bản sách, Tình trạng, Ngày báo cáo.
      */
     public boolean exportToPDF(List<StockStat> rows, String filePath) {
         Document doc = new Document(PageSize.A4);
@@ -114,7 +145,7 @@ public class StockStatDAO extends DAO {
             PdfPTable table = new PdfPTable(new float[]{4, 2, 2, 2});
             table.setWidthPercentage(100);
 
-            String[] cols = {"Ten sach", "Ma vach", "Tinh trang", "Ngay bao cao"};
+            String[] cols = {"Ten sach", "Ma ban sach", "Tinh trang", "Ngay bao cao"};
             for (String h : cols) {
                 PdfPCell cell = new PdfPCell(new Phrase(h, headerFont));
                 cell.setBackgroundColor(new Color(70, 130, 180));
@@ -127,10 +158,10 @@ public class StockStatDAO extends DAO {
             for (StockStat s : rows) {
                 Book b = s.getBook();
                 String titleText = b != null ? b.getTitle() : "";
-                String barcode = b != null && !b.getItems().isEmpty()
-                        ? b.getItems().get(0).getId() : "";
+                String itemId = b != null && !b.getItems().isEmpty()
+                        ? String.valueOf(b.getItems().get(0).getId()) : "";
                 table.addCell(new PdfPCell(new Phrase(titleText, cellFont)));
-                table.addCell(new PdfPCell(new Phrase(barcode, cellFont)));
+                table.addCell(new PdfPCell(new Phrase(itemId, cellFont)));
                 table.addCell(new PdfPCell(new Phrase(s.getReason(), cellFont)));
                 table.addCell(new PdfPCell(new Phrase(
                     s.getReportedDate() == null ? "" : s.getReportedDate().format(df), cellFont)));

@@ -1,8 +1,8 @@
 package com.ptit.p.documents.model;
 
 /**
- * Thực thể thống kê sách mượn nhiều - kế thừa Book (spec §1.a "Tầng thực thể").
- * Bổ sung thuộc tính borrowCount để hiển thị cột "Lượt mượn" (spec §1.b bước 20).
+ * Thực thể thống kê sách mượn nhiều - kế thừa Book.
+ * Bổ sung thuộc tính borrowCount để hiển thị cột "Lượt mượn".
  */
 public class BorrowingStat extends Book {
     private int borrowCount;
@@ -11,8 +11,8 @@ public class BorrowingStat extends Book {
         super();
     }
 
-    public BorrowingStat(String bookId, String title, String author, String category, int borrowCount) {
-        super(bookId, title, author, category);
+    public BorrowingStat(String isbn, String title, String author, String genre, int borrowCount) {
+        super(isbn, title, author, genre);
         this.borrowCount = borrowCount;
     }
 

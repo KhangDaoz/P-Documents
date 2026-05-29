@@ -20,7 +20,7 @@ public class BorrowDetailFrm extends JFrame {
     private final BorrowingStatFrm parent;
     private final BorrowedBookDAO dao = new BorrowedBookDAO();
 
-    public BorrowDetailFrm(BorrowingStatFrm parent, String bookId, String bookTitle) {
+    public BorrowDetailFrm(BorrowingStatFrm parent, String isbn, String bookTitle) {
         this.parent = parent;
 
         setTitle("BorrowDetailFrm - Chi tiết mượn trả: " + bookTitle);
@@ -29,7 +29,7 @@ public class BorrowDetailFrm extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        JLabel head = new JLabel("Lịch sử mượn trả - " + bookTitle + " (Mã: " + bookId + ")",
+        JLabel head = new JLabel("Lịch sử mượn trả - " + bookTitle + " (ISBN: " + isbn + ")",
                                  SwingConstants.CENTER);
         head.setFont(head.getFont().deriveFont(Font.BOLD, 14f));
         head.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
@@ -49,14 +49,14 @@ public class BorrowDetailFrm extends JFrame {
         add(south, BorderLayout.SOUTH);
 
         // Spec §1.b bước 25-33: gọi DAO ngay khi khởi tạo
-        List<BorrowedBook> history = dao.getBorrowHistoryByBook(bookId);
+        List<BorrowedBook> history = dao.getBorrowHistoryByBook(isbn);
         for (BorrowedBook bb : history) {
             tm.addRow(new Object[]{
-                bb.getBorrowing().getStudent().getStudentCode(),
+                bb.getBorrowing().getStudent().getId(),
                 bb.getBorrowing().getStudent().getFullName(),
-                bb.getBorrowing().getBorrowDate().format(DF),
-                bb.getDueDate().format(DF),
-                bb.getReturnDate() == null ? "" : bb.getReturnDate().format(DF),
+                bb.getBorrowing().getCreatedAt().format(DF),
+                bb.getExpectedReturnDate().format(DF),
+                bb.getActualReturnDate() == null ? "" : bb.getActualReturnDate().format(DF),
                 bb.getStatus()
             });
         }

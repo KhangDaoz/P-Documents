@@ -36,7 +36,15 @@ public class AddBookFrm extends JFrame implements ActionListener {
         this.b = b;
         initComponents();
         if (this.b != null) {
-            populateFieldsFromBook();
+            txtISBN.setText(b.getISBN() != null ? b.getISBN() : "");
+            txtTitle.setText(b.getTitle() != null ? b.getTitle() : "");
+            txtAuthor.setText(b.getAuthor() != null ? b.getAuthor() : "");
+            txtGenre.setText(b.getGenre() != null ? b.getGenre() : "");
+            txtPublisher.setText(b.getPublisher() != null ? b.getPublisher() : "");
+            txtPublishYear.setText(b.getPublishYear() > 0 ? String.valueOf(b.getPublishYear()) : "");
+            txtPrice.setText(b.getPrice() > 0 ? String.valueOf(b.getPrice()) : "");
+            txtDescription.setText(b.getDescription() != null ? b.getDescription() : "");
+            txtCopies.setText(String.valueOf(b.getAvailableCopies()));
         }
     }
 
@@ -96,7 +104,7 @@ public class AddBookFrm extends JFrame implements ActionListener {
         row++;
         gbc.gridy = row;
         gbc.gridx = 0;
-        mainPanel.add(new JLabel("Thể loại:"), gbc);
+        mainPanel.add(new JLabel("Thể loại (*):"), gbc);
         txtGenre = new JTextField(25);
         gbc.gridx = 1;
         mainPanel.add(txtGenre, gbc);
@@ -105,7 +113,7 @@ public class AddBookFrm extends JFrame implements ActionListener {
         row++;
         gbc.gridy = row;
         gbc.gridx = 0;
-        mainPanel.add(new JLabel("Nhà xuất bản:"), gbc);
+        mainPanel.add(new JLabel("Nhà xuất bản (*):"), gbc);
         txtPublisher = new JTextField(25);
         gbc.gridx = 1;
         mainPanel.add(txtPublisher, gbc);
@@ -114,7 +122,7 @@ public class AddBookFrm extends JFrame implements ActionListener {
         row++;
         gbc.gridy = row;
         gbc.gridx = 0;
-        mainPanel.add(new JLabel("Năm xuất bản:"), gbc);
+        mainPanel.add(new JLabel("Năm xuất bản (*):"), gbc);
         txtPublishYear = new JTextField(25);
         gbc.gridx = 1;
         mainPanel.add(txtPublishYear, gbc);
@@ -132,7 +140,7 @@ public class AddBookFrm extends JFrame implements ActionListener {
         row++;
         gbc.gridy = row;
         gbc.gridx = 0;
-        mainPanel.add(new JLabel("Mô tả:"), gbc);
+        mainPanel.add(new JLabel("Mô tả (*):"), gbc);
         txtDescription = new JTextField(25);
         gbc.gridx = 1;
         mainPanel.add(txtDescription, gbc);
@@ -304,17 +312,6 @@ public class AddBookFrm extends JFrame implements ActionListener {
     }
 
     
-    private void populateFieldsFromBook() {
-        if (b == null) return;
-        txtISBN.setText(b.getISBN() != null ? b.getISBN() : "");
-        txtTitle.setText(b.getTitle() != null ? b.getTitle() : "");
-        txtAuthor.setText(b.getAuthor() != null ? b.getAuthor() : "");
-        txtGenre.setText(b.getGenre() != null ? b.getGenre() : "");
-        txtPublisher.setText(b.getPublisher() != null ? b.getPublisher() : "");
-        txtPublishYear.setText(b.getPublishYear() > 0 ? String.valueOf(b.getPublishYear()) : "");
-        txtPrice.setText(b.getPrice() > 0 ? String.valueOf(b.getPrice()) : "");
-        txtDescription.setText(b.getDescription() != null ? b.getDescription() : "");
-        txtCopies.setText(String.valueOf(b.getAvailableCopies()));
-    }
+    
 
 }

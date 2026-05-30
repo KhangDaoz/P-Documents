@@ -168,7 +168,7 @@ public class SearchBookFrm extends JFrame implements ActionListener {
                 } else if (mode.equals("delete")) {
                     // Kiểm tra tình trạng mượn
                     BookDAO bookDAO = new BookDAO();
-                    boolean isBeingBorrowed = bookDAO.checkBookStatus(selectedBook.getISBN());
+                    boolean isBeingBorrowed = bookDAO.checkBookStatus(selectedBook.getISBN(), false);
 
                     if (isBeingBorrowed) {
                         JOptionPane.showMessageDialog(this,

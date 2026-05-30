@@ -136,14 +136,6 @@ public class BookDAO extends DAO {
 
     /**
      * Kiểm tra tình trạng mượn của sách.
-     * Trả về true nếu sách đang có phiếu mượn ở trạng thái chưa hoàn tất.
-     */
-    public boolean checkBookStatus(String isbn) {
-        return checkBookStatus(isbn, false);
-    }
-
-    /**
-     * Kiểm tra tình trạng mượn của sách.
      * Nếu includeHistory = true, kiểm tra mọi lịch sử mượn để phục vụ xoá cứng.
      */
     public boolean checkBookStatus(String isbn, boolean includeHistory) {

@@ -17,13 +17,19 @@ package com.ptit.p.documents.model;
 public class BookItem {
     private int    id;
     private String status;       // 'good' | 'damaged' | 'lost'
-    private String tblBookISBN;  // ISBN của đầu sách (tham chiếu tiện ích)
+    private String bookISBN;  // ISBN của đầu sách (tham chiếu tiện ích)
 
     public BookItem() {}
 
     public BookItem(int id, String status) {
         this.id     = id;
         this.status = status;
+    }
+
+    public BookItem(int id, String status, String bookISBN) {
+        this.id = id;
+        this.status = status;
+        this.bookISBN = bookISBN;
     }
 
     public int getId() {
@@ -43,15 +49,27 @@ public class BookItem {
     }
 
     public String getTblBookISBN() {
-        return tblBookISBN;
+        return bookISBN;
     }
 
-    public void setTblBookISBN(String tblBookISBN) {
-        this.tblBookISBN = tblBookISBN;
+    public void setTblBookISBN(String bookISBN) {
+        this.bookISBN = bookISBN;
+    }
+
+    public String getBookISBN() {
+        return bookISBN;
+    }
+
+    public void setBookISBN(String bookISBN) {
+        this.bookISBN = bookISBN;
     }
 
     @Override
     public String toString() {
-        return "BookItem{id=" + id + ", status='" + status + "'}";
+        return "BookItem{" +
+                "id=" + id +
+                ", status='" + status + '\'' +
+                ", bookISBN='" + bookISBN + '\'' +
+                '}';
     }
 }

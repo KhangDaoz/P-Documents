@@ -192,16 +192,13 @@ public class SearchBorrowFrm extends JFrame implements ActionListener {
 
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_MONTH, 14);
-        BorrowedBook bb = new BorrowedBook(selected, cal.getTime(),
-                selected.getPrice() != null ? selected.getPrice() : BigDecimal.ZERO);
+        BorrowedBook bb = new BorrowedBook(selected, cal.getTime(), selected.getPrice());
         currentBorrowing.getBooks().add(bb);
 
         int stt = currentBorrowing.getBooks().size();
         cartModel.addRow(new Object[]{
                 stt, selected.getIsbn(), selected.getTitle(),
-                selected.getAuthor(),
-                selected.getPrice() != null
-                        ? String.format("%,.0f", selected.getPrice().doubleValue()) : "0"
+                selected.getAuthor(), String.format("%,.0f", selected.getPrice())
         });
         updateCartStatus();
     }
@@ -233,8 +230,7 @@ public class SearchBorrowFrm extends JFrame implements ActionListener {
                     bk != null ? bk.getIsbn()   : "",
                     bk != null ? bk.getTitle()  : "",
                     bk != null ? bk.getAuthor() : "",
-                    bk != null && bk.getPrice() != null
-                            ? String.format("%,.0f", bk.getPrice().doubleValue()) : ""
+                    bk != null ? String.format("%,.0f", bk.getPrice()) : ""
             });
         }
         updateCartStatus();

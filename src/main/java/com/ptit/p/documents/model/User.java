@@ -1,7 +1,8 @@
 package com.ptit.p.documents.model;
 
+import java.io.Serializable;
 
-public class User {
+public class User implements Serializable {
     private int    id;
     private String username;
     private String password;
@@ -16,6 +17,15 @@ public class User {
         this.username = username;
         this.fullName = fullName;
         this.role     = role;
+    }
+
+    public User(int id, String username, String password, String fullName, String phone, String role) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.fullName = fullName;
+        this.phone = phone;
+        this.role = role;
     }
 
     // -------- Getters & Setters --------

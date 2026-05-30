@@ -2,6 +2,7 @@ package com.ptit.p.documents.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 /**
  * Lớp DAO cơ sở — quản lý kết nối CSDL dùng chung cho tất cả các lớp DAO.
@@ -28,14 +29,19 @@ public class DAO {
     public DAO() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-        } catch (Exception e) {
-            System.err.println("[DAO] Không thể kết nối CSDL: " + e.getMessage());
-            e.printStackTrace();
+            this.con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("MySQL driver not found", e);
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to establish DB connection", e);
         }
     }
 
+    public Connection getConnection() {
+        return this.con;
+    }
+
     public Connection getCon() {
-        return con;
+        return this.con;
     }
 }

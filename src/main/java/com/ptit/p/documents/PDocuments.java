@@ -6,8 +6,7 @@
 package com.ptit.p.documents;
 
 import com.ptit.p.documents.dao.DatabaseInitializer;
-import com.ptit.p.documents.model.User;
-import com.ptit.p.documents.view.LibrarianHomeFrm;
+import com.ptit.p.documents.view.LoginFrm;
 
 import javax.swing.*;
 
@@ -20,10 +19,16 @@ import javax.swing.*;
 public class PDocuments {
 
     public static void main(String[] args) {
-        // Dùng Look & Feel của hệ điều hành để giao diện đẹp hơn
+        // Dùng FlatLaf để giao diện đẹp hơn
         try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception ignored) {}
+            boolean success = com.formdev.flatlaf.FlatIntelliJLaf.setup();
+            System.out.println("DEBUG: FlatLaf setup success? " + success);
+            UIManager.put("PasswordField.showRevealButton", true);
+            UIManager.put("JPasswordField.showRevealButton", true);
+            System.out.println("DEBUG: Active LookAndFeel is -> " + UIManager.getLookAndFeel().getName());
+        } catch (Exception ex) {
+            System.err.println("FlatLaf Look and Feel setup failed: " + ex.getMessage());
+        }
 
         // ---- Khởi tạo database tự động ----
         boolean dbReady = DatabaseInitializer.init();
@@ -38,12 +43,9 @@ public class PDocuments {
             System.exit(1);
         }
 
-        // Tạo user mẫu (thay bằng màn hình Login thực tế sau)
-        User testUser = new User(1, "librarian1", "Trần Thị Thư", "librarian");
-
         // Khởi chạy trên Event Dispatch Thread (EDT) — bắt buộc với Swing
         SwingUtilities.invokeLater(() -> {
-            new LibrarianHomeFrm(testUser).setVisible(true);
+            new LoginFrm().setVisible(true);
         });
     }
 }

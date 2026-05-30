@@ -7,7 +7,7 @@ import org.junit.Test;
 import com.ptit.p.documents.model.Book;
 
 public class BookDaoTest {
-    private static final String EXISTING_ISBN = "978-604-1-01234-5";
+    private static final String EXISTING_ISBN = "ISBN-CS-04";
     BookDAO bd = new BookDAO();
 
     @Test
@@ -20,7 +20,7 @@ public class BookDaoTest {
 
     @Test
     public void testSearchBookStandard(){
-        String key = "Java";
+        String key = "Software";
         List<Book> listBook = bd.searchBook(key);
         Assert.assertNotNull(listBook);
         for(int i=0; i<listBook.size(); i++){

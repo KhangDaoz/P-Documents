@@ -16,11 +16,11 @@ public class StudentDaoTest {
     // TT7: Tim sinh vien ton tai theo ma SV
     @Test
     public void testSearchStudentStandard1() {
-        String key = "SV220001";
+        String key = "SV001";
         ArrayList<Student> list = sd.searchStudent(key);
         Assert.assertNotNull(list);
         Assert.assertEquals(1, list.size());
-        Assert.assertEquals("SV220001", list.get(0).getStudentId());
+        Assert.assertEquals("SV001", list.get(0).getStudentId());
     }
 
     // TT8: Tim sinh vien khong ton tai
@@ -62,8 +62,8 @@ public class StudentDaoTest {
         try {
             con.setAutoCommit(false);
 
-            // SV220001 da co san trong seed data
-            Student s = new Student("SV220001", "Trung Ma SV", "trung@ptit.edu.vn", "0911111111", "Ha Noi");
+            // SV001 da co san trong seed data
+            Student s = new Student("SV001", "Trung Ma SV", "trung@ptit.edu.vn", "0911111111", "Ha Noi");
             boolean ok = sd.addStudent(s);
             Assert.assertFalse(ok);
 

@@ -39,8 +39,8 @@ class BorrowingStatDAOTest {
         List<BorrowingStat> result = dao.getTopBorrowedBooks(from, to, 10);
         
         assertFalse(result.isEmpty(), "Kết quả không được rỗng (EP-D1)");
-        assertEquals(6, result.size(), "Có 6 đầu sách có lượt mượn trong CSDL");
-        assertEquals("B001", result.get(0).getIsbn(), "Sách B001 (Nhà Giả Kim) mượn nhiều nhất");
+        assertEquals(5, result.size(), "Có 5 đầu sách có lượt mượn trong CSDL");
+        assertEquals("ISBN-CS-01", result.get(0).getIsbn(), "Sách ISBN-CS-01 mượn nhiều nhất");
         assertEquals(7, result.get(0).getBorrowCount());
     }
 
@@ -53,7 +53,7 @@ class BorrowingStatDAOTest {
         List<BorrowingStat> result = dao.getTopBorrowedBooks(from, to, 10);
         
         assertEquals(1, result.size(), "Chỉ có lượt mượn trong ngày 10/01/2026");
-        assertEquals("B001", result.get(0).getIsbn());
+        assertEquals("ISBN-CS-01", result.get(0).getIsbn());
         assertEquals(1, result.get(0).getBorrowCount());
     }
 
@@ -77,7 +77,7 @@ class BorrowingStatDAOTest {
         List<BorrowingStat> result = dao.getTopBorrowedBooks(from, to, 1);
         
         assertEquals(1, result.size(), "Chỉ trả về 1 đầu sách");
-        assertEquals("B001", result.get(0).getIsbn());
+        assertEquals("ISBN-CS-01", result.get(0).getIsbn());
     }
 
     @Test
@@ -88,7 +88,7 @@ class BorrowingStatDAOTest {
         
         List<BorrowingStat> result = dao.getTopBorrowedBooks(from, to, 7);
         
-        assertEquals(6, result.size(), "Vẫn chỉ trả về 6 đầu sách, không lỗi");
+        assertEquals(5, result.size(), "Vẫn chỉ trả về 5 đầu sách, không lỗi");
     }
 
     @Test

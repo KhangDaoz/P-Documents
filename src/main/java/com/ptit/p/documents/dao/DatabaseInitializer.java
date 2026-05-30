@@ -241,15 +241,11 @@ public class DatabaseInitializer {
         if (rs.getInt(1) == 0) {
             st.executeUpdate(
                 "INSERT INTO tblStudent (ID, fullName, email, phone, address) VALUES"
-                + " ('SV220001', 'Le Van An',    'levan.an@student.edu.vn',   '0923456789', 'Ha Noi'),"
-                + " ('SV220002', 'Pham Thi Binh','pham.binh@student.edu.vn',  '0934567890', 'Ha Noi'),"
-                // Seed data from sang branch
-                + " ('1', 'Nguyễn Văn An',  'nguyen.an@student.edu.vn',  '0923456789', 'Hà Nội'),"
-                + " ('2', 'Trần Thị Bình',  'tran.binh@student.edu.vn',  '0934567890', 'Hà Nội'),"
-                + " ('3', 'Lê Văn Cường',   'le.cuong@student.edu.vn',   '0945678901', 'Đà Nẵng'),"
-                + " ('4', 'Phạm Thị Dung',  'pham.dung@student.edu.vn',  '0956789012', 'TP.HCM'),"
-                + " ('5', 'Hoàng Văn Em',   'hoang.em@student.edu.vn',   '0967890123', 'Hải Phòng'),"
-                + " ('6', 'Vũ Minh Sáng',   'vu.sang@student.edu.vn',    '0978901234', 'Hà Nội')"
+                + " ('SV001', 'Do Huy Hoang',     'hoang@ptit.edu.vn', '0911111111', 'Hanoi'),"
+                + " ('SV002', 'Nguyen Minh Kien',  'kien@ptit.edu.vn',  '0922222222', 'Hanoi'),"
+                + " ('SV003', 'Vu Minh Sang',      'sang@ptit.edu.vn',  '0933333333', 'Hanoi'),"
+                + " ('SV004', 'Le Duc Hieu',       'hieu@ptit.edu.vn',  '0944444444', 'Hanoi'),"
+                + " ('SV005', 'Tran Dac Manh',     'manh@ptit.edu.vn',  '0955555555', 'Hanoi')"
             );
         }
 
@@ -258,9 +254,9 @@ public class DatabaseInitializer {
         if (rs.getInt(1) == 0) {
             st.executeUpdate(
                 "INSERT INTO tblUser (username, password, fullName, phone, role) VALUES"
-                + " ('admin',      '123456', 'Nguyen Van Admin', '0901234567', 'admin'),"
-                + " ('manager',    '123456', 'Nguyen Van Manager', '0901234567', 'manager'),"
-                + " ('librarian1', '123456', 'Tran Thi Thu',     '0912345678', 'librarian')"
+                + " ('admin',      '123456', 'Nguyễn Văn Admin',  '0901234567', 'admin'),"
+                + " ('manager',    '123456', 'Nguyễn Văn Manager', '0901234567', 'manager'),"
+                + " ('librarian1', '123456', 'Trần Thị Thư',       '0912345678', 'librarian')"
             );
         }
 
@@ -269,41 +265,33 @@ public class DatabaseInitializer {
         if (rs.getInt(1) == 0) {
             st.executeUpdate(
                 "INSERT INTO tblBook (ISBN, title, author, genre, publisher, publishYear, price, description) VALUES"
-                + " ('978-604-1-01234-5', 'Lap Trinh C Can Ban', 'Nguyen Phu Quy', 'Technology',  'NXB Thong Tin', 2020, 85000.00, 'Sach nhap mon lap trinh C'),"
-                + " ('978-604-1-05678-9', 'Co So Du Lieu',        'Tran Minh Tung', 'Technology',  'NXB DHQG',      2019, 95000.00, 'Giao trinh co so du lieu'),"
-                + " ('978-604-1-09012-3', 'Giai Tich Toan Hoc',   'Le Dinh Phuong', 'Mathematics', 'NXB Giao Duc',  2021, 75000.00, 'Tai lieu giai tich toan hoc'),"
-                // Seed data from sang branch
-                + " ('B001', 'Nhà Giả Kim',                    'Paulo Coelho',                'Tiểu thuyết',         'NXB Văn Học',  2020, 89000.00, 'Tiểu thuyết nổi tiếng thế giới'),"
-                + " ('B002', 'Đắc Nhân Tâm',                   'Dale Carnegie',               'Kỹ năng sống',        'NXB Tổng Hợp', 2019, 76000.00, 'Sách kỹ năng giao tiếp kinh điển'),"
-                + " ('B003', 'Tuổi Trẻ Đáng Giá Bao Nhiêu',    'Rosie Nguyễn',                'Kỹ năng sống',        'NXB Hội Nhà Văn', 2018, 65000.00, 'Sách dành cho giới trẻ'),"
-                + " ('B004', 'Sapiens',                          'Yuval Noah Harari',           'Lịch sử',             'NXB Tri Thức', 2021, 120000.00, 'Lược sử loài người'),"
-                + " ('B005', 'Clean Code',                       'Robert C. Martin',            'Công nghệ thông tin', 'Prentice Hall', 2008, 350000.00, 'Cẩm nang viết code sạch'),"
-                + " ('B006', 'Cây Cam Ngọt Của Tôi',            'José Mauro de Vasconcelos',   'Tiểu thuyết',         'NXB Hội Nhà Văn', 2020, 68000.00, 'Tiểu thuyết Brazil cảm động'),"
-                + " ('B007', 'Tôi Tài Giỏi, Bạn Cũng Thế',     'Adam Khoo',                   'Kỹ năng sống',        'NXB Phụ Nữ',  2017, 72000.00, 'Sách phát triển bản thân')"
+                + " ('ISBN-CS-01', 'Introduction to Software Engineering', 'John Smith',            'Computer Science', 'MIT Press',       2022, 150000.00, 'Essential SE concepts'),"
+                + " ('ISBN-CS-02', 'Data Structures and Algorithms',       'Alice Johnson',          'Computer Science', 'Oxford',          2021, 180000.00, 'Data structures in Java'),"
+                + " ('ISBN-CS-03', 'Database Systems Concepts',            'Abraham Silberschatz',   'Computer Science', 'McGraw-Hill',      2020, 250000.00, 'Comprehensive database guide'),"
+                + " ('ISBN-CS-04', 'Test Delete Book',                      'Test Author',            'Computer Science', 'Test Publisher',    2024, 100000.00, 'For testing delete'),"
+                + " ('ISBN-LIT-01', 'To Kill a Mockingbird',                'Harper Lee',             'Literature',       'J.B. Lippincott',   1960,  90000.00, 'Classic literature'),"
+                + " ('ISBN-LIT-02', 'The Great Gatsby',                     'F. Scott Fitzgerald',    'Literature',       'Scribner',          1925,  80000.00, 'American classic'),"
+                + " ('ISBN-SCI-01', 'A Brief History of Time',             'Stephen Hawking',        'Science',          'Bantam Books',      1988, 120000.00, 'Cosmology for everyone')"
             );
             st.executeUpdate(
                 "INSERT INTO tblBookItem (ID, status, tblBookISBN, createdAt, updatedAt) VALUES"
-                // Seed data from sang branch (IDs 1 to 14)
-                + " (1,  'good',    'B001', '2025-12-01 00:00:00', '2025-12-01 00:00:00'),"
-                + " (2,  'good',    'B001', '2025-12-01 00:00:00', '2025-12-01 00:00:00'),"
-                + " (3,  'damaged', 'B001', '2025-12-01 00:00:00', '2026-02-10 00:00:00'),"
-                + " (4,  'good',    'B002', '2025-12-01 00:00:00', '2025-12-01 00:00:00'),"
-                + " (5,  'good',    'B002', '2025-12-01 00:00:00', '2025-12-01 00:00:00'),"
-                + " (6,  'lost',    'B002', '2025-12-01 00:00:00', '2026-02-20 00:00:00'),"
-                + " (7,  'good',    'B003', '2025-12-01 00:00:00', '2025-12-01 00:00:00'),"
-                + " (8,  'good',    'B003', '2025-12-01 00:00:00', '2025-12-01 00:00:00'),"
-                + " (9,  'good',    'B004', '2025-12-01 00:00:00', '2025-12-01 00:00:00'),"
-                + " (10, 'damaged', 'B004', '2025-12-01 00:00:00', '2026-03-15 00:00:00'),"
-                + " (11, 'good',    'B005', '2025-12-01 00:00:00', '2025-12-01 00:00:00'),"
-                + " (12, 'good',    'B005', '2025-12-01 00:00:00', '2025-12-01 00:00:00'),"
-                + " (13, 'good',    'B006', '2025-12-01 00:00:00', '2025-12-01 00:00:00'),"
-                + " (14, 'lost',    'B007', '2025-12-01 00:00:00', '2026-04-08 00:00:00'),"
-                // Seed data from huy branch (IDs 15 to 19)
-                + " (15, 'good', '978-604-1-01234-5', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),"
-                + " (16, 'good', '978-604-1-01234-5', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),"
-                + " (17, 'good', '978-604-1-01234-5', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),"
-                + " (18, 'good', '978-604-1-05678-9', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),"
-                + " (19, 'good', '978-604-1-05678-9', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)"
+                + " (1,  'good',    'ISBN-CS-01', '2025-12-01 00:00:00', '2025-12-01 00:00:00'),"
+                + " (2,  'good',    'ISBN-CS-01', '2025-12-01 00:00:00', '2025-12-01 00:00:00'),"
+                + " (3,  'damaged', 'ISBN-CS-01', '2025-12-01 00:00:00', '2026-02-10 00:00:00'),"
+                + " (4,  'good',    'ISBN-CS-02', '2025-12-01 00:00:00', '2025-12-01 00:00:00'),"
+                + " (5,  'good',    'ISBN-CS-02', '2025-12-01 00:00:00', '2025-12-01 00:00:00'),"
+                + " (6,  'lost',    'ISBN-CS-02', '2025-12-01 00:00:00', '2026-02-20 00:00:00'),"
+                + " (7,  'good',    'ISBN-LIT-01', '2025-12-01 00:00:00', '2025-12-01 00:00:00'),"
+                + " (8,  'good',    'ISBN-LIT-01', '2025-12-01 00:00:00', '2025-12-01 00:00:00'),"
+                + " (9,  'good',    'ISBN-LIT-02', '2025-12-01 00:00:00', '2025-12-01 00:00:00'),"
+                + " (10, 'damaged', 'ISBN-LIT-02', '2025-12-01 00:00:00', '2026-03-15 00:00:00'),"
+                + " (11, 'good',    'ISBN-SCI-01', '2025-12-01 00:00:00', '2025-12-01 00:00:00'),"
+                + " (12, 'good',    'ISBN-SCI-01', '2025-12-01 00:00:00', '2025-12-01 00:00:00'),"
+                + " (13, 'good',    'ISBN-SCI-01', '2025-12-01 00:00:00', '2025-12-01 00:00:00'),"
+                + " (14, 'lost',    'ISBN-SCI-01', '2025-12-01 00:00:00', '2026-04-08 00:00:00'),"
+                + " (15, 'good',    'ISBN-CS-04', '2025-12-01 00:00:00', '2025-12-01 00:00:00'),"
+                + " (16, 'good',    'ISBN-CS-04', '2025-12-01 00:00:00', '2025-12-01 00:00:00'),"
+                + " (17, 'good',    'ISBN-CS-01', '2025-12-01 00:00:00', '2025-12-01 00:00:00')"
             );
         }
 
@@ -323,16 +311,16 @@ public class DatabaseInitializer {
         if (rs.getInt(1) == 0) {
             st.executeUpdate(
                 "INSERT INTO tblBorrowing (ID, tblStudentID, tblUserID, status, createdAt, updatedAt) VALUES"
-                + " ( 1, '1', 1, 'borrowed', '2026-01-10 00:00:00', '2026-01-10 00:00:00'),"
-                + " ( 2, '2', 1, 'borrowed', '2026-01-15 00:00:00', '2026-01-15 00:00:00'),"
-                + " ( 3, '3', 1, 'borrowed', '2026-02-01 00:00:00', '2026-02-01 00:00:00'),"
-                + " ( 4, '4', 1, 'borrowed', '2026-02-12 00:00:00', '2026-02-12 00:00:00'),"
-                + " ( 5, '5', 1, 'borrowed', '2026-03-05 00:00:00', '2026-03-05 00:00:00'),"
-                + " ( 6, '1', 1, 'borrowed', '2026-03-20 00:00:00', '2026-03-20 00:00:00'),"
-                + " ( 7, '6', 1, 'borrowed', '2026-04-02 00:00:00', '2026-04-02 00:00:00'),"
-                + " ( 8, '2', 1, 'borrowed', '2026-04-15 00:00:00', '2026-04-15 00:00:00'),"
-                + " ( 9, '3', 1, 'borrowed', '2026-04-28 00:00:00', '2026-04-28 00:00:00'),"
-                + " (10, '4', 1, 'borrowed', '2026-05-10 00:00:00', '2026-05-10 00:00:00')"
+                + " ( 1, 'SV001', 3, 'borrowed', '2026-01-10 00:00:00', '2026-01-10 00:00:00'),"
+                + " ( 2, 'SV002', 3, 'borrowed', '2026-01-15 00:00:00', '2026-01-15 00:00:00'),"
+                + " ( 3, 'SV003', 3, 'borrowed', '2026-02-01 00:00:00', '2026-02-01 00:00:00'),"
+                + " ( 4, 'SV004', 3, 'borrowed', '2026-02-12 00:00:00', '2026-02-12 00:00:00'),"
+                + " ( 5, 'SV005', 3, 'borrowed', '2026-03-05 00:00:00', '2026-03-05 00:00:00'),"
+                + " ( 6, 'SV001', 3, 'borrowed', '2026-03-20 00:00:00', '2026-03-20 00:00:00'),"
+                + " ( 7, 'SV001', 3, 'borrowed', '2026-04-02 00:00:00', '2026-04-02 00:00:00'),"
+                + " ( 8, 'SV002', 3, 'borrowed', '2026-04-15 00:00:00', '2026-04-15 00:00:00'),"
+                + " ( 9, 'SV003', 3, 'borrowed', '2026-04-28 00:00:00', '2026-04-28 00:00:00'),"
+                + " (10, 'SV004', 3, 'borrowed', '2026-05-10 00:00:00', '2026-05-10 00:00:00')"
             );
         }
 
@@ -343,21 +331,21 @@ public class DatabaseInitializer {
                 "INSERT INTO tblBorrowedBook (tblBorrowingID, tblBookItemID, expectedReturnDate, actualReturnDate, status) VALUES"
                 + " ( 1,  1, '2026-01-24', '2026-01-22', 'good'),"
                 + " ( 2,  2, '2026-01-29', '2026-01-30', 'good'),"
-                + " ( 3,  1, '2026-02-15', '2026-02-14', 'good'),"
-                + " ( 4,  2, '2026-02-26', NULL,         'good'),"
-                + " ( 5,  1, '2026-03-19', '2026-03-18', 'good'),"
-                + " ( 6,  2, '2026-04-03', '2026-04-05', 'good'),"
-                + " ( 7,  1, '2026-04-16', NULL,         'good'),"
                 + " ( 2,  4, '2026-01-29', '2026-01-28', 'good'),"
-                + " ( 5,  5, '2026-03-19', '2026-03-20', 'good'),"
-                + " ( 8,  4, '2026-04-29', NULL,         'good'),"
+                + " ( 3,  1, '2026-02-15', '2026-02-14', 'good'),"
                 + " ( 3,  7, '2026-02-15', '2026-02-15', 'good'),"
-                + " ( 9,  8, '2026-05-12', NULL,         'good'),"
+                + " ( 4,  2, '2026-02-26', NULL,         'good'),"
                 + " ( 4,  9, '2026-02-26', '2026-02-28', 'good'),"
-                + " (10,  9, '2026-05-24', NULL,         'good'),"
+                + " ( 5,  1, '2026-03-19', '2026-03-18', 'good'),"
+                + " ( 5,  4, '2026-03-19', '2026-03-20', 'good'),"
+                + " ( 6,  2, '2026-04-03', '2026-04-05', 'good'),"
                 + " ( 6, 11, '2026-04-03', '2026-04-02', 'good'),"
+                + " ( 7,  1, '2026-04-16', NULL,         'good'),"
                 + " ( 7, 12, '2026-04-16', NULL,         'good'),"
-                + " ( 8, 13, '2026-04-29', '2026-04-30', 'good')"
+                + " ( 8,  4, '2026-04-29', NULL,         'good'),"
+                + " ( 8, 11, '2026-04-29', '2026-04-30', 'good'),"
+                + " ( 9,  7, '2026-05-12', NULL,         'good'),"
+                + " (10,  9, '2026-05-24', NULL,         'good')"
             );
         }
     }

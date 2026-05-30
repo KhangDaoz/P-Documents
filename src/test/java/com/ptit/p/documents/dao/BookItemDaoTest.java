@@ -1,108 +1,70 @@
 package com.ptit.p.documents.dao;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import java.sql.Connection;
-import org.junit.Assert;
-import org.junit.Test;
-import com.ptit.p.documents.model.BookItem;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-public class BookItemDaoTest {
-    private static final String EXISTING_ISBN = "978-604-1-01234-5";
-    BookItemDAO bid = new BookItemDAO();
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 
-    @Test
-    public void testAddBookItemStandard(){
-        Connection con = bid.getConnection();
-        if(con == null) {
-            Assert.fail("Không thể kết nối CSDL");
-            return;
-        }
-        
-        BookItem item = new BookItem();
-        item.setBookISBN(EXISTING_ISBN); // Dùng ISBN có sẵn trong seed data
-        item.setStatus("good");
-        
-        try {
-            con.setAutoCommit(false);
-            boolean result = bid.addBookItem(item);
-            Assert.assertTrue(result);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Ném ra ngoại lệ khi thêm BookItem");
-        } finally {
-            try {
-                con.rollback(); // Rollback để không lưu vào CSDL thật
-                con.setAutoCommit(true);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
+@ExtendWith(MockitoExtension.class)
+public class BookItemDAOTest {
+
+    @Spy
+    @InjectMocks
+    private BookItemDAO bookItemDAO; // System Under Test
+
+    @Mock
+    private Connection mockConnection;
+    @Mock
+    private PreparedStatement mockStatement;
+    @Mock
+    private ResultSet mockResultSet;
+
+    @BeforeEach
+    void setUp() throws SQLException {
+        // Isolate from actual database
+        bookItemDAO.con = mockConnection;
     }
 
     @Test
-    public void testAddBookItemException(){
-        Connection con = bid.getConnection();
-        if(con == null) return;
-        
-        BookItem item = new BookItem();
-        item.setBookISBN("ISBN_NOT_EXIST"); // Mã sách không có thật
-        item.setStatus("good");
-        
-        try {
-            con.setAutoCommit(false);
-            boolean result = bid.addBookItem(item);
-            // Sẽ trả về false vì vi phạm khóa ngoại (Foreign key)
-            Assert.assertFalse(result);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                con.rollback();
-                con.setAutoCommit(true);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
+    void testUpdateStatus_Success() throws SQLException {
+        // Arrange
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
+        when(mockStatement.executeUpdate()).thenReturn(1); // Simulate 1 row updated
+
+        // Act
+        boolean result = bookItemDAO.updateStatus(1, "borrowed");
+
+        // Assert
+        assertTrue(result);
     }
 
     @Test
-    public void testDeleteBookItemStandard() {
-        Connection con = bid.getConnection();
-        if(con == null) return;
-        String isbn = EXISTING_ISBN;
-        try {
-            con.setAutoCommit(false);
-            boolean result = bid.deleteBookItem(isbn);
-            Assert.assertTrue(result);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                con.rollback();
-                con.setAutoCommit(true);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
+    void testGetBookISBN_Success() throws SQLException {
+        // Arrange
+        String expectedISBN = "978-123456789";
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
+        when(mockStatement.executeQuery()).thenReturn(mockResultSet);
+        when(mockResultSet.next()).thenReturn(true);
+        when(mockResultSet.getString("tblBookISBN")).thenReturn(expectedISBN);
 
-    @Test
-    public void testDeleteBookItemException() {
-        Connection con = bid.getConnection();
-        if(con == null) return;
-        String isbn = "ISBN_NOT_EXIST";
-        try {
-            con.setAutoCommit(false);
-            boolean result = bid.deleteBookItem(isbn);
-            Assert.assertFalse(result);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                con.rollback();
-                con.setAutoCommit(true);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
+        // Act
+        String actualISBN = bookItemDAO.getBookISBN(1);
+
+        // Assert
+        assertEquals(expectedISBN, actualISBN);
     }
 }

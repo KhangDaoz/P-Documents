@@ -30,7 +30,7 @@ public class BookDaoTest {
     // TT2: Tim sach ton tai theo the loai (genre ASCII, tranh loi dau tieng Viet)
     @Test
     public void testSearchBookStandard1() {
-        String key = "Technology";
+        String key = "Computer Science";
         ArrayList<Book> list = bd.searchBook("", "", key, "");
         Assert.assertNotNull(list);
         Assert.assertTrue(list.size() >= 1);
@@ -44,7 +44,7 @@ public class BookDaoTest {
     // TT3: Tim sach theo ISBN cu the — dung 1 ket qua, ISBN khop
     @Test
     public void testSearchBookStandard2() {
-        String isbn = "978-604-1-01234-5";
+        String isbn = "ISBN-CS-01";
         ArrayList<Book> list = bd.searchBook("", "", "", isbn);
         Assert.assertNotNull(list);
         Assert.assertEquals(1, list.size());
@@ -56,13 +56,13 @@ public class BookDaoTest {
     public void testSearchBookAllEmpty() {
         ArrayList<Book> list = bd.searchBook("", "", "", "");
         Assert.assertNotNull(list);
-        Assert.assertEquals(10, list.size());
+        Assert.assertEquals(7, list.size());
     }
 
     // TT5: Sach co ban sao kha dung — availableCopies la thuoc tinh dan xuat >= 0
     @Test
     public void testSearchBookAvailableCopies() {
-        String isbn = "978-604-1-01234-5"; // 3 BookItem status='good' trong seed
+        String isbn = "ISBN-CS-01"; // 3 BookItem status='good' trong seed
         ArrayList<Book> list = bd.searchBook("", "", "", isbn);
         Assert.assertNotNull(list);
         Assert.assertEquals(1, list.size());
@@ -75,7 +75,7 @@ public class BookDaoTest {
     // TT6: Sach khong co ban sao nao (ISBN co sach nhung khong co BookItem)
     @Test
     public void testSearchBookNoCopies() {
-        String isbn = "978-604-1-09012-3"; // 0 BookItem trong seed
+        String isbn = "ISBN-CS-03"; // 0 BookItem trong seed
         ArrayList<Book> list = bd.searchBook("", "", "", isbn);
         Assert.assertNotNull(list);
         Assert.assertEquals(1, list.size());

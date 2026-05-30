@@ -31,9 +31,9 @@ public class ManagerHomeFrm extends JFrame {
         btnStat.setPreferredSize(new Dimension(220, 44));
         g.gridy = 0; center.add(btnStat, g);
 
-        JButton btnExit = new JButton("Thoát");
-        btnExit.setPreferredSize(new Dimension(220, 44));
-        g.gridy = 1; center.add(btnExit, g);
+        JButton btnLogout = new JButton("Đăng xuất");
+        btnLogout.setPreferredSize(new Dimension(220, 44));
+        g.gridy = 1; center.add(btnLogout, g);
 
         add(center, BorderLayout.CENTER);
 
@@ -42,6 +42,9 @@ public class ManagerHomeFrm extends JFrame {
             new StatMenuFrm(this).setVisible(true);
             setVisible(false);
         });
-        btnExit.addActionListener(e -> System.exit(0));
+        btnLogout.addActionListener(e -> {
+            dispose();
+            new LoginFrm().setVisible(true);
+        });
     }
 }

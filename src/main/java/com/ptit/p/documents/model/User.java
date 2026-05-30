@@ -3,14 +3,20 @@ package com.ptit.p.documents.model;
 import java.io.Serializable;
 
 public class User implements Serializable {
-    private int id;
+    private int    id;
     private String username;
     private String password;
     private String fullName;
     private String phone;
     private String role;
 
-    public User() {
+    public User() {}
+
+    public User(int id, String username, String fullName, String role) {
+        this.id       = id;
+        this.username = username;
+        this.fullName = fullName;
+        this.role     = role;
     }
 
     public User(int id, String username, String password, String fullName, String phone, String role) {
@@ -21,6 +27,8 @@ public class User implements Serializable {
         this.phone = phone;
         this.role = role;
     }
+
+    // -------- Getters & Setters --------
 
     public int getId() {
         return id;
@@ -72,12 +80,6 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", fullName='" + fullName + '\'' +
-                ", phone='" + phone + '\'' +
-                ", role='" + role + '\'' +
-                '}';
+        return fullName + " (" + username + ")";
     }
 }

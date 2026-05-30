@@ -117,8 +117,11 @@ public class LoginFrm extends JFrame implements ActionListener {
         if ("admin".equals(role)) {
             new AdminHomeFrm().setVisible(true);
             dispose();
-        } else if ("librarian".equals(role) || "manager".equals(role)) {
+        } else if ("manager".equals(role)) {
             new ManagerHomeFrm(loggedUser).setVisible(true);
+            dispose();
+        } else if ("librarian".equals(role)) {
+            new LibrarianHomeFrm(loggedUser).setVisible(true);
             dispose();
         } else {
             JOptionPane.showMessageDialog(this, "Tài khoản không có quyền truy cập phù hợp.", "Lỗi phân quyền", JOptionPane.ERROR_MESSAGE);

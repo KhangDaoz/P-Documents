@@ -7,22 +7,48 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Lớp DAO cơ sở. Các DAO cụ thể (BorrowingStatDAO, BorrowedBookDAO,
- * StockStatDAO) kế thừa lớp này để dùng chung cơ chế truy cập CSDL
- * (theo spec §1.a: "Các lớp DAO đều kế thừa lớp DAO").
+ * Lớp DAO cơ sở — quản lý kết nối CSDL dùng chung cho tất cả các lớp DAO.
+ * Tất cả các lớp DAO cụ thể kế thừa lớp này và sử dụng chung DatabaseConnection singleton.
  */
-public abstract class DAO {
+public class DAO {
+    protected Connection con;
 
-    protected Connection getConnection() throws SQLException {
-        return DatabaseConnection.getInstance().getConnection();
+    public DAO() {
+        try {
+            // Lấy connection tập trung từ DatabaseConnection singleton
+            this.con = DatabaseConnection.getInstance().getConnection();
+        } catch (SQLException e) {
+            throw new RuntimeException("Không thể thiết lập kết nối CSDL trong DAO", e);
+        }
+    }
+
+    public Connection getConnection() {
+        try {
+            // Đảm bảo connection còn mở
+            return DatabaseConnection.getInstance().getConnection();
+        } catch (SQLException e) {
+            return this.con;
+        }
+    }
+
+    public Connection getCon() {
+        return getConnection();
     }
 
     protected void close(ResultSet rs) {
-        if (rs != null) try { rs.close(); } catch (SQLException ignored) {}
+        if (rs != null) {
+            try {
+                rs.close();
+            } catch (SQLException ignored) {}
+        }
     }
 
     protected void close(PreparedStatement ps) {
-        if (ps != null) try { ps.close(); } catch (SQLException ignored) {}
+        if (ps != null) {
+            try {
+                ps.close();
+            } catch (SQLException ignored) {}
+        }
     }
 
     protected void close(PreparedStatement ps, ResultSet rs) {

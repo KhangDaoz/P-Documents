@@ -1,6 +1,7 @@
 package com.ptit.p.documents.dao;
 
 import com.ptit.p.documents.model.BorrowingStat;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,6 +18,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class BorrowingStatDAOTest {
 
     private BorrowingStatDAO dao;
+
+    @BeforeAll
+    static void initDb() {
+        DatabaseInitializer.init(true);
+    }
 
     @BeforeEach
     void setUp() {

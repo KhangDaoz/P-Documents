@@ -6,7 +6,7 @@ import com.ptit.p.documents.model.BorrowedBook;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class BorrowDetailFrm extends JFrame {
 
-    private static final DateTimeFormatter DF = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
 
     private final BorrowingStatFrm parent;
     private final BorrowedBookDAO dao = new BorrowedBookDAO();
@@ -54,9 +54,9 @@ public class BorrowDetailFrm extends JFrame {
             tm.addRow(new Object[]{
                 bb.getBorrowing().getStudent().getId(),
                 bb.getBorrowing().getStudent().getFullName(),
-                bb.getBorrowing().getCreatedAt().format(DF),
-                bb.getExpectedReturnDate().format(DF),
-                bb.getActualReturnDate() == null ? "" : bb.getActualReturnDate().format(DF),
+                bb.getBorrowing().getCreatedAt() != null ? SDF.format(bb.getBorrowing().getCreatedAt()) : "",
+                bb.getExpectedReturnDate() != null ? SDF.format(bb.getExpectedReturnDate()) : "",
+                bb.getActualReturnDate() == null ? "" : SDF.format(bb.getActualReturnDate()),
                 bb.getStatus()
             });
         }

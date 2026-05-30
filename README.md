@@ -38,7 +38,7 @@ src/main/java/com/ptit/p/documents/
 |-- controller/
 |-- service/
 |-- dao/
-`-- model/
+|`-- model/
 
 src/main/resources/
 |-- templates/

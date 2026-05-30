@@ -1,5 +1,8 @@
 package com.ptit.p.documents.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Book {
     private String ISBN;
     private String title;
@@ -11,6 +14,7 @@ public class Book {
     private String description;
     private int availableCopies;
     private int totalCopies;
+    private List<BookItem> items = new ArrayList<>();
 
     public Book() {
     }
@@ -28,6 +32,13 @@ public class Book {
         this.description = description;
         this.availableCopies = availableCopies;
         this.totalCopies = totalCopies;
+    }
+
+    public Book(String ISBN, String title, String author, String genre,
+                String publisher, int publishYear, double price,
+                String description, int availableCopies, int totalCopies, List<BookItem> items) {
+        this(ISBN, title, author, genre, publisher, publishYear, price, description, availableCopies, totalCopies);
+        setItems(items);
     }
 
     public String getISBN() {
@@ -110,6 +121,14 @@ public class Book {
         this.totalCopies = totalCopies;
     }
 
+    public List<BookItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<BookItem> items) {
+        this.items = items != null ? items : new ArrayList<>();
+    }
+
     @Override
     public String toString() {
         return "Book{" +
@@ -123,6 +142,7 @@ public class Book {
                 ", description='" + description + '\'' +
                 ", availableCopies=" + availableCopies +
                 ", totalCopies=" + totalCopies +
+                ", items=" + items +
                 '}';
     }
 }

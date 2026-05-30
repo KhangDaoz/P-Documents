@@ -1,169 +1,115 @@
 package com.ptit.p.documents.view;
 
 import com.ptit.p.documents.dao.BorrowingDAO;
-import com.ptit.p.documents.dao.BorrowedBookDAO;
-import com.ptit.p.documents.dao.BookDAO;
-import com.ptit.p.documents.dao.BookItemDAO;
-import com.ptit.p.documents.model.Book;
-import com.ptit.p.documents.model.Borrowing;
 import com.ptit.p.documents.model.BorrowedBook;
-import com.ptit.p.documents.model.User;
+import com.ptit.p.documents.model.Borrowing;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
+import java.awt.event.*;
+import java.text.SimpleDateFormat;
 
-public class ConfirmBorrowingFrm extends JFrame {
-    private User currentUser;
-    private Borrowing borrowing;
-    private BorrowingDAO borrowingDAO;
-    private BookDAO bookDAO;
-    private BorrowedBookDAO borrowedBookDAO;
-    private BookItemDAO bookItemDAO;
+/**
+ * Giao dien xac nhan thong tin dat sach — Buoc cuoi cua module Dat Sach.
+ */
+public class ConfirmBorrowingFrm extends JFrame implements ActionListener {
 
-    private JLabel lblStudentName;
-    private JLabel lblStudentId;
-    private JLabel lblBorrowDate;
-    private JTable tblBooks;
-    private DefaultTableModel tbmBooks;
-    private JLabel lblNote;
-    private JLabel lblTotalBooks;
-    private JLabel lblTotalFine;
+    private Borrowing b;
+    private JTextArea outBorrowingInfo;
+    private JButton btnBack;
+    private JButton btnConfirm;
 
-    public ConfirmBorrowingFrm(User user, Borrowing borrowing) {
-        this.currentUser = user;
-        this.borrowing = borrowing;
-        this.borrowingDAO = new BorrowingDAO();
-        this.bookDAO = new BookDAO();
-        this.borrowedBookDAO = new BorrowedBookDAO();
-        this.bookItemDAO = new BookItemDAO();
+    public ConfirmBorrowingFrm(Borrowing b) {
+        this.b = b;
+        initComponents();
+    }
 
-
-        setTitle("Xác nhận phiếu mượn");
-        setSize(800, 500);
+    private void initComponents() {
+        setTitle("Dat sach — Buoc 3: Xac nhan thong tin");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setSize(480, 360);
         setLocationRelativeTo(null);
-        setLayout(new BorderLayout(10, 10));
+        setResizable(false);
+        setLayout(new BorderLayout(6, 6));
 
-        // === UPPER PANEL ===
-        JPanel pnlUpper = new JPanel(new BorderLayout(10, 10));
-        pnlUpper.setBorder(BorderFactory.createTitledBorder("Thông tin phiếu mượn"));
+        // ---- Thông tin xác nhận ----
+        outBorrowingInfo = new JTextArea(buildInfoText());
+        outBorrowingInfo.setEditable(false);
+        outBorrowingInfo.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13));
 
-        JPanel pnlInfo = new JPanel(new GridLayout(3, 2, 10, 10));
-        lblStudentName = new JLabel("Họ tên: ");
-        lblStudentId = new JLabel("Mã sinh viên: ");
-        lblBorrowDate = new JLabel("Ngày mượn: ");
+        JPanel infoPanel = new JPanel(new BorderLayout());
+        infoPanel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
+        infoPanel.add(new JScrollPane(outBorrowingInfo), BorderLayout.CENTER);
+        add(infoPanel, BorderLayout.CENTER);
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        lblBorrowDate.setText("Ngày mượn: " + borrowing.getExpectedReceiveDate().format(formatter));
-        lblStudentId.setText("Mã sinh viên: " + borrowing.getStudent().getId());
-        lblStudentName.setText("Họ tên: " + borrowing.getStudent().getFullName());
-
-        pnlInfo.add(lblStudentName);
-        pnlInfo.add(lblStudentId);
-        pnlInfo.add(lblBorrowDate);
-
-        String[] bookCols = {"#", "Mã sách", "Tên sách", "Hạn trả", "Trạng thái", "Lỗi phạt"};
-        tbmBooks = new DefaultTableModel(bookCols, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-        tblBooks = new JTable(tbmBooks);
-        JScrollPane scrBooks = new JScrollPane(tblBooks);
-
-        pnlUpper.add(pnlInfo, BorderLayout.NORTH);
-        pnlUpper.add(scrBooks, BorderLayout.CENTER);
-
-        // === LOWER PANEL ===
-        JPanel pnlLower = new JPanel(new BorderLayout(10, 10));
-        pnlLower.setBorder(BorderFactory.createTitledBorder("Thông tin xử lý"));
-
-        JPanel pnlStats = new JPanel(new GridLayout(1, 2));
-        lblTotalBooks = new JLabel("Tổng số sách: " + borrowing.getNumberOfBooks());
-        lblTotalFine = new JLabel("Tổng tiền phạt: 0 VNĐ");
-        pnlStats.add(lblTotalBooks);
-        pnlStats.add(lblTotalFine);
-
-        lblNote = new JLabel("Ghi chú: ");
-        JScrollPane scrNote = new JScrollPane(lblNote);
-
-        JPanel pnlBtns = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton btnConfirm = new JButton("Xác nhận phiếu");
-        JButton btnCancel = new JButton("Hủy");
-        btnConfirm.setBackground(Color.GREEN);
-        pnlBtns.add(btnConfirm);
-        pnlBtns.add(btnCancel);
-
-        pnlLower.add(pnlStats, BorderLayout.NORTH);
-        pnlLower.add(scrNote, BorderLayout.CENTER);
-        pnlLower.add(pnlBtns, BorderLayout.SOUTH);
-
-        // === ADD TO MAIN FRAME ===
-        add(pnlUpper, BorderLayout.CENTER);
-        add(pnlLower, BorderLayout.SOUTH);
-
-        // === LOAD DATA ===
-        loadBookData();
-
-        // === LISTENERS ===
-        btnConfirm.addActionListener(e -> confirmAction());
-        btnCancel.addActionListener(e -> dispose());
+        // ---- Nút ----
+        JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 8));
+        btnBack = new JButton("Quay lai");
+        btnConfirm = new JButton("Luu dat sach");
+        btnBack.addActionListener(this);
+        btnConfirm.addActionListener(this);
+        btnPanel.add(btnBack);
+        btnPanel.add(btnConfirm);
+        add(btnPanel, BorderLayout.SOUTH);
     }
 
-    private void loadBookData() {
-        List<BorrowedBook> borrowedBooks = borrowing.getBorrowedBooks();
+    private String buildInfoText() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        StringBuilder sb = new StringBuilder();
+        sb.append("THONG TIN DAT SACH\n");
+        sb.append("-------------------------------------\n\n");
 
-        // Clear existing data
-        tbmBooks.setRowCount(0);
-
-        // Load books
-        for (int i = 0; i < borrowedBooks.size(); i++) {
-            BorrowedBook bb = borrowedBooks.get(i);
-            Book book = bookDAO.findByID(new BookItemDAO().getBookISBN(bb.getBookItem().getId()));
-
-            // Calculate fine for this book
-
-            tbmBooks.addRow(new Object[] {
-                i + 1,
-                book.getId(),
-                book.getTitle(),
-                bb.getExpectedReturnDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-                bb.getStatus()
-            });
-            System.out.println("Added book: " + book.getTitle() + "to table");
+        if (b.getStudent() != null) {
+            sb.append("Sinh vien    :  ").append(b.getStudent().getStudentId())
+                    .append("  -  ").append(b.getStudent().getFullName()).append("\n");
+            if (b.getStudent().getPhone() != null && !b.getStudent().getPhone().isEmpty())
+                sb.append("Dien thoai   :  ").append(b.getStudent().getPhone()).append("\n");
         }
+        sb.append("\n");
+
+        for (BorrowedBook bb : b.getBooks()) {
+            if (bb.getBook() != null) {
+                sb.append("Sach         :  ").append(bb.getBook().getIsbn())
+                        .append("  -  ").append(bb.getBook().getTitle()).append("\n");
+                sb.append("Tac gia      :  ").append(bb.getBook().getAuthor()).append("\n");
+            }
+        }
+        sb.append("\n");
+
+        if (b.getCreatedAt() != null)
+            sb.append("Ngay dat     :  ").append(sdf.format(b.getCreatedAt())).append("\n");
+        if (b.getExpectedReceiveDate() != null)
+            sb.append("Nhan du kien :  ").append(sdf.format(b.getExpectedReceiveDate())).append("\n");
+
+        sb.append("Trang thai   :  ").append(b.getStatus()).append("\n");
+        if (b.getUser() != null)
+            sb.append("Thu thu      :  ").append(b.getUser().getFullName()).append("\n");
+
+        return sb.toString();
     }
 
-    private void confirmAction() {
-        // Validate
-        if (borrowing.getBorrowedBooks().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Phiếu mượn không có sách!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        if(!borrowing.getStatus().equals("pending")) {
-            JOptionPane.showMessageDialog(this, "Phiếu mượn không ở trạng thái chờ xác nhận!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btnConfirm) {
+            btnConfirm.setEnabled(false);
+            BorrowingDAO dao = new BorrowingDAO();
+            boolean ok = dao.addBorrowing(b);
 
-        // Create borrowing record
-        // borrowing.setStatus("BORROWING");
-        // borrowing.setUser(currentUser);
-
-        if (borrowingDAO.updateBorrowingStatus(borrowing.getId(), "borrowed")) {
-            // Update book statuses to BORROWING
-            for (BorrowedBook bb : borrowing.getBorrowedBooks()) {
-                bookItemDAO.updateStatus(bb.getBookItem().getId(), "borrowed");
+            if (ok) {
+                JOptionPane.showMessageDialog(this,
+                        "Dat sach thanh cong!\nMa phieu muon: " + b.getId(),
+                        "Thanh cong", JOptionPane.INFORMATION_MESSAGE);
+                if (b.getUser() != null)
+                    new LibrarianHomeFrm(b.getUser()).setVisible(true);
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "Dat sach that bai!\nKhong con ban sao kha dung hoac xay ra loi he thong.",
+                        "Loi", JOptionPane.ERROR_MESSAGE);
+                btnConfirm.setEnabled(true);
             }
-
-            JOptionPane.showMessageDialog(this, "Xác nhận phiếu mượn thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+        } else if (e.getSource() == btnBack) {
             this.dispose();
-        } else {
-            JOptionPane.showMessageDialog(this, "Lỗi khi xác nhận phiếu mượn!", "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

@@ -5,100 +5,133 @@ import com.ptit.p.documents.model.User;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class LoginFrm extends JFrame {
+public class LoginFrm extends JFrame implements ActionListener {
     public static final String ROLE_LIBRARIAN = "librarian";
     public static final String ROLE_ADMIN = "admin";
+    public static final String ROLE_MANAGER = "manager";
 
-    private JTextField txtUsername;
-    private JPasswordField txtPassword;
-    private JButton btnLogin;
-    private JButton btnCancel;
-    
-    private UserDAO userDAO;
+    private final JTextField txtUsername;
+    private final JPasswordField txtPassword;
+    private final JButton btnLogin;
 
     public LoginFrm() {
-        userDAO = new UserDAO();
-        initComponents();
-    }
-
-    private void initComponents() {
-        setTitle("Đăng nhập hệ thống");
-        setSize(400, 280);
-        setResizable(false);
+        super("Đăng nhập hệ thống");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(560, 450);
         setLocationRelativeTo(null);
-        setLayout(new BorderLayout());
+        setResizable(false);
 
-        // NORTH: pnlHeader
-        JPanel pnlHeader = new JPanel();
-        JLabel lblTitle = new JLabel("HỆ THỐNG QUẢN LÝ THƯ VIỆN");
-        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
-        pnlHeader.add(lblTitle);
-        add(pnlHeader, BorderLayout.NORTH);
+        JPanel pnlMain = new JPanel(new GridBagLayout());
+        setContentPane(pnlMain);
 
-        // CENTER: pnlForm
-        JPanel pnlForm = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        JPanel pnl = new JPanel(null);
+        pnl.setPreferredSize(new Dimension(500, 380));
+        pnl.setBackground(Color.WHITE);
+        pnl.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240), 1));
+        pnlMain.add(pnl);
 
-        JLabel lblUsername = new JLabel("Tên đăng nhập:");
-        txtUsername = new JTextField(20);
-        
-        JLabel lblPassword = new JLabel("Mật khẩu:");
-        txtPassword = new JPasswordField(20);
+        JLabel lblLogin = new JLabel("Login", JLabel.CENTER);
+        lblLogin.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        lblLogin.setForeground(new Color(30, 41, 59));
+        lblLogin.setBounds(150, 50, 200, 40);
+        pnl.add(lblLogin);
 
-        gbc.gridx = 0; gbc.gridy = 0;
-        pnlForm.add(lblUsername, gbc);
-        gbc.gridx = 1; gbc.gridy = 0;
-        pnlForm.add(txtUsername, gbc);
+        JLabel lblUser = new JLabel("Username:", JLabel.RIGHT);
+        lblUser.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        lblUser.setForeground(new Color(71, 85, 105));
+        lblUser.setBounds(60, 130, 90, 30);
+        pnl.add(lblUser);
 
-        gbc.gridx = 0; gbc.gridy = 1;
-        pnlForm.add(lblPassword, gbc);
-        gbc.gridx = 1; gbc.gridy = 1;
-        pnlForm.add(txtPassword, gbc);
-        
-        add(pnlForm, BorderLayout.CENTER);
+        txtUsername = new JTextField(15);
+        txtUsername.setBackground(Color.WHITE);
+        txtUsername.setForeground(Color.BLACK);
+        txtUsername.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        txtUsername.setBounds(160, 130, 280, 30);
+        pnl.add(txtUsername);
 
-        // SOUTH: pnlButtons
-        JPanel pnlButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        btnLogin = new JButton("Đăng nhập");
-        btnCancel = new JButton("Thoát");
-        
-        pnlButtons.add(btnLogin);
-        pnlButtons.add(btnCancel);
-        add(pnlButtons, BorderLayout.SOUTH);
+        JLabel lblPass = new JLabel("Password:", JLabel.RIGHT);
+        lblPass.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        lblPass.setForeground(new Color(71, 85, 105));
+        lblPass.setBounds(60, 200, 90, 30);
+        pnl.add(lblPass);
 
-        // ACTIONS
-        btnLogin.addActionListener(e -> loginAction());
-        btnCancel.addActionListener(e -> System.exit(0));
+        txtPassword = new JPasswordField(15);
+        txtPassword.putClientProperty("JPasswordField.showRevealButton", true);
+        txtPassword.setBackground(Color.WHITE);
+        txtPassword.setForeground(Color.BLACK);
+        txtPassword.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        txtPassword.setBounds(160, 200, 280, 30);
+        pnl.add(txtPassword);
+
+        btnLogin = new JButton("Login");
+        btnLogin.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnLogin.setBackground(new Color(96, 165, 250));
+        btnLogin.setForeground(Color.WHITE);
+        btnLogin.setFocusPainted(false);
+        btnLogin.setBorder(BorderFactory.createEmptyBorder());
+        btnLogin.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btnLogin.setBounds(195, 290, 110, 35);
+        btnLogin.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                btnLogin.setBackground(new Color(59, 130, 246));
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                btnLogin.setBackground(new Color(96, 165, 250));
+            }
+        });
+        btnLogin.addActionListener(this);
+        pnl.add(btnLogin);
     }
 
-    private void loginAction() {
-        String username = txtUsername.getText().trim();
-        String password = new String(txtPassword.getPassword());
-
-        if (username.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu", "Lỗi", JOptionPane.ERROR_MESSAGE);
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() != btnLogin) {
             return;
         }
 
-        User user = userDAO.checkLogin(username, password);
-        if (user != null) {
-            String role = user.getRole();
-            if (ROLE_LIBRARIAN.equals(role)) {
-                new LibrarianHomeFrm(user).setVisible(true);
-            } else if (ROLE_ADMIN.equals(role)) {
-                new AdminHomeFrm(user).setVisible(true);
-            } else {
-                JOptionPane.showMessageDialog(this, "Không nhận diện được vai trò!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            this.dispose();
-        } else {
-            JOptionPane.showMessageDialog(this, "Sai tên đăng nhập hoặc mật khẩu", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        String username = txtUsername.getText().trim();
+        String password = new String(txtPassword.getPassword()).trim();
+
+        if (username.isEmpty() || password.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu!", "Lỗi", JOptionPane.WARNING_MESSAGE);
+            return;
         }
+
+        UserDAO userDAO = new UserDAO();
+        User loggedUser = userDAO.checkLogin(username, password);
+
+        if (loggedUser == null) {
+            JOptionPane.showMessageDialog(this, "Tên đăng nhập hoặc mật khẩu không đúng!", "Lỗi đăng nhập", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String role = loggedUser.getRole() == null ? "" : loggedUser.getRole().trim().toLowerCase();
+        if (ROLE_ADMIN.equals(role)) {
+            new AdminHomeFrm(loggedUser).setVisible(true);
+            dispose();
+        } else if (ROLE_MANAGER.equals(role)) {
+            new ManagerHomeFrm(loggedUser).setVisible(true);
+            dispose();
+        } else if (ROLE_LIBRARIAN.equals(role)) {
+            new LibrarianHomeFrm(loggedUser).setVisible(true);
+            dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Tài khoản không có quyền truy cập phù hợp.", "Lỗi phân quyền", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public static void main(String[] args) {
+        try {
+            com.formdev.flatlaf.FlatIntelliJLaf.setup();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        SwingUtilities.invokeLater(() -> new LoginFrm().setVisible(true));
     }
 }

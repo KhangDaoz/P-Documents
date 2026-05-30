@@ -1,29 +1,31 @@
 package com.ptit.p.documents.model;
 
 public class Student {
-    private String id;
+    private String studentId;
     private String fullName;
     private String email;
     private String phone;
     private String address;
 
-    public Student() {
+    public Student() {}
+
+    public Student(String studentId, String fullName, String email,
+                   String phone, String address) {
+        this.studentId = studentId;
+        this.fullName  = fullName;
+        this.email     = email;
+        this.phone     = phone;
+        this.address   = address;
     }
 
-    public Student(String id, String fullName, String email, String phone, String address) {
-        this.id = id;
-        this.fullName = fullName;
-        this.email = email;
-        this.phone = phone;
-        this.address = address;
+    // -------- Getters & Setters --------
+
+    public String getStudentId() {
+        return studentId;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+    public void setStudentId(String studentId) {
+        this.studentId = studentId;
     }
 
     public String getFullName() {
@@ -56,5 +58,10 @@ public class Student {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    @Override
+    public String toString() {
+        return studentId + " - " + fullName;
     }
 }

@@ -11,7 +11,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class SearchBorrowingFrm extends JFrame {
@@ -52,7 +52,11 @@ public class SearchBorrowingFrm extends JFrame {
     }
 
     private void initComponents() {
-        setTitle("Tìm kiếm phiếu mượn");
+        String title = "Tìm kiếm phiếu mượn";
+        if (mode == SearchMode.CONFIRM_BORROW) title = "Xử lý nhận sách";
+        if (mode == SearchMode.RETURN_BOOK) title = "Xử lý trả sách";
+        if (mode == SearchMode.CANCEL_BORROW) title = "Hủy đặt sách";
+        setTitle(title);
         setSize(850, 550);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -86,7 +90,7 @@ public class SearchBorrowingFrm extends JFrame {
         add(pnlSearch, BorderLayout.NORTH);
 
         // CENTER: tblResult inside JSplitPane
-        String[] columns = {"#", "Mã PM", "Tên sinh viên", "Ngày mượn", "Ngày hẹn nhận", "Trạng thái"};
+        String[] columns = {"#", "Mã PM", "Tên sinh viên", "Ngày tạo", "Ngày hẹn nhận", "Trạng thái"};
         tbmResult = new DefaultTableModel(columns, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -99,7 +103,11 @@ public class SearchBorrowingFrm extends JFrame {
 
         // SOUTH: pnlActions
         JPanel pnlActions = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        btnSelect = new JButton(mode == SearchMode.RETURN_BOOK ? "Chọn phiếu trả" : "Chọn phiếu mượn");
+        String btnSelectText = "Chọn phiếu";
+        if (mode == SearchMode.RETURN_BOOK) btnSelectText = "Chọn phiếu trả";
+        if (mode == SearchMode.CANCEL_BORROW) btnSelectText = "Chọn phiếu hủy";
+        btnSelect = new JButton(btnSelectText);
+        
         btnBack = new JButton("Quay lại");
         pnlActions.add(btnSelect);
         pnlActions.add(btnBack);
@@ -169,27 +177,26 @@ public class SearchBorrowingFrm extends JFrame {
                 return;
             }
             new ReturnConfirmFrm(currentUser, selectedBorrowing).setVisible(true);
-            // this.dispose();
+            this.dispose();
         });
     }
 
     private void searchAction() {
-        System.out.println("Search action");
         String studentId = txtStudentId.getText().trim();
         String studentName = txtStudentName.getText().trim();
 
-        if (mode == SearchMode.CONFIRM_BORROW) {
+        if (mode == SearchMode.CONFIRM_BORROW || mode == SearchMode.CANCEL_BORROW) {
             searchResults = borrowingDAO.searchBorrowing(studentId, studentName, "pending");
         } else {
             searchResults = borrowingDAO.searchBorrowing(studentId, studentName, "borrowed", "overdue");
         }
 
         tbmResult.setRowCount(0);
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         int idx = 1;
         for (Borrowing b : searchResults) {
-            String bDate = b.getBorrowDate() != null ? b.getBorrowDate().format(dtf) : "";
-            String eDate = b.getExpectedReceiveDate() != null ? b.getExpectedReceiveDate().format(dtf) : "";
+            String bDate = b.getCreatedAt() != null ? sdf.format(b.getCreatedAt()) : "";
+            String eDate = b.getExpectedReceiveDate() != null ? sdf.format(b.getExpectedReceiveDate()) : "";
             tbmResult.addRow(new Object[]{
                 idx++,
                 b.getId(),
@@ -198,8 +205,6 @@ public class SearchBorrowingFrm extends JFrame {
                 eDate,
                 b.getStatus()
             });
-            System.out.println("Loaded borrowing's ID: " + b.getId());
-            System.out.println("Books in borrowing: " + b.toString());
         }
     }
 
@@ -219,8 +224,11 @@ public class SearchBorrowingFrm extends JFrame {
         selectedBorrowing = searchResults.get(selectedRow);
 
         if (mode == SearchMode.CONFIRM_BORROW) {
-            new ConfirmBorrowingFrm(currentUser, selectedBorrowing).setVisible(true);
-            // this.dispose();
+            new AcceptBorrowingFrm(currentUser, selectedBorrowing).setVisible(true);
+            this.dispose();
+        } else if (mode == SearchMode.CANCEL_BORROW) {
+            new ConfirmCancelFrm(selectedBorrowing, currentUser).setVisible(true);
+            this.dispose();
         } else {
             // INLINE DETAIL for RETURN_BOOK
             showInlineDetail();
@@ -228,22 +236,17 @@ public class SearchBorrowingFrm extends JFrame {
     }
 
     private void showInlineDetail() {
-        // Load books if needed (DAO logic needed to be called maybe? borrowing.getBooks() could be empty)
-        // if (selectedBorrowing.getBooks() == null || selectedBorrowing.getBooks().isEmpty()) {
-        //     selectedBorrowing.setBooks(borrowingDAO.loadBorrowedBooks(selectedBorrowing.getId()));
-
         lblDetailName.setText("Họ tên: " + selectedBorrowing.getStudent().getFullName());
-        lblDetailId.setText("Mã SV: " + selectedBorrowing.getStudent().getId());
+        lblDetailId.setText("Mã SV: " + selectedBorrowing.getStudent().getStudentId());
         
         ((TitledBorder)pnlBorrowingDetail.getBorder()).setTitle("Chi tiết phiếu mượn #" + selectedBorrowing.getId());
 
         tbmBorrowedBooks.setRowCount(0);
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
         int idx = 1;
         for (BorrowedBook bb : selectedBorrowing.getBooks()) {
-            String expDate = bb.getExpectedReturnDate() != null ? bb.getExpectedReturnDate().format(dtf) : "";
-            // Simplified name fallback since BookItem currently lacks a Book reference in model
+            String expDate = bb.getExpectedReturnDate() != null ? sdf.format(bb.getExpectedReturnDate()) : "";
             String bookName = "Sách ID: " + (bb.getBookItem() != null ? bb.getBookItem().getId() : "N/A");
             int bookItemId = bb.getBookItem() != null ? bb.getBookItem().getId() : -1;
             

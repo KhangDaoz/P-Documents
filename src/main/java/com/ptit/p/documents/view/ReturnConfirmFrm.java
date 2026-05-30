@@ -19,9 +19,9 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.text.DecimalFormat;
 import java.text.Normalizer;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,9 +60,43 @@ public class ReturnConfirmFrm extends JFrame {
     private double totalDamageFine;
     private final Map<Integer, Double> borrowedBookFineTotals = new HashMap<>();
 
+    public ReturnConfirmFrm(User currentUser, Borrowing borrowing) {
+        this.currentUser = currentUser;
+        this.borrowing = borrowing;
+        this.borrowingDAO = new BorrowingDAO();
+        this.borrowedBookDAO = new BorrowedBookDAO();
+        this.bookItemDAO = new BookItemDAO();
+        this.billDAO = new BillDAO();
+        this.bookDAO = new BookDAO();
+        this.fineDAO = new FineDAO();
 
-        private JPanel buildStudentInfoPanel() {
-        // Student info header panel with read-only fields.
+        initComponents();
+        loadBorrowingData();
+    }
+
+    private void initComponents() {
+        System.out.println("ReturnConfirmFrm intialized");
+        setTitle("Xác nhận trả sách - Phiếu #" + borrowing.getId());
+        setSize(850, 600);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setLayout(new BorderLayout(10, 10));
+
+        JPanel pnlStudentInfo = buildStudentInfoPanel();
+        JPanel pnlBookDetail = buildBookDetailPanel();
+        JPanel pnlBillSummary = buildBillSummaryPanel();
+        JPanel pnlActions = buildActionsPanel();
+
+        add(pnlStudentInfo, BorderLayout.NORTH);
+        add(pnlBookDetail, BorderLayout.CENTER);
+
+        JPanel pnlBottom = new JPanel(new BorderLayout(10, 10));
+        pnlBottom.add(pnlBillSummary, BorderLayout.CENTER);
+        pnlBottom.add(pnlActions, BorderLayout.SOUTH);
+        add(pnlBottom, BorderLayout.SOUTH);
+    }
+
+    private JPanel buildStudentInfoPanel() {
         JPanel pnlStudentInfo = new JPanel(new GridBagLayout());
         pnlStudentInfo.setBorder(BorderFactory.createTitledBorder("Thông tin sinh viên"));
         GridBagConstraints gbc = new GridBagConstraints();
@@ -78,40 +112,27 @@ public class ReturnConfirmFrm extends JFrame {
         JLabel lblPhone = new JLabel("SĐT:");
         txtPhone = createReadOnlyField(15);
 
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        pnlStudentInfo.add(lblId, gbc);
-        gbc.gridx = 1;
-        pnlStudentInfo.add(txtStudentId, gbc);
-        gbc.gridx = 2;
-        pnlStudentInfo.add(lblName, gbc);
-        gbc.gridx = 3;
-        pnlStudentInfo.add(txtStudentName, gbc);
+        gbc.gridx = 0; gbc.gridy = 0; pnlStudentInfo.add(lblId, gbc);
+        gbc.gridx = 1; pnlStudentInfo.add(txtStudentId, gbc);
+        gbc.gridx = 2; pnlStudentInfo.add(lblName, gbc);
+        gbc.gridx = 3; pnlStudentInfo.add(txtStudentName, gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        pnlStudentInfo.add(lblEmail, gbc);
-        gbc.gridx = 1;
-        pnlStudentInfo.add(txtEmail, gbc);
-        gbc.gridx = 2;
-        pnlStudentInfo.add(lblPhone, gbc);
-        gbc.gridx = 3;
-        pnlStudentInfo.add(txtPhone, gbc);
+        gbc.gridx = 0; gbc.gridy = 1; pnlStudentInfo.add(lblEmail, gbc);
+        gbc.gridx = 1; pnlStudentInfo.add(txtEmail, gbc);
+        gbc.gridx = 2; pnlStudentInfo.add(lblPhone, gbc);
+        gbc.gridx = 3; pnlStudentInfo.add(txtPhone, gbc);
 
         return pnlStudentInfo;
     }
 
     private JPanel buildBookDetailPanel() {
-        // Table panel listing returned books and fine details.
         JPanel pnlBookDetail = new JPanel(new BorderLayout());
         pnlBookDetail.setBorder(BorderFactory.createTitledBorder("Chi tiết sách trả"));
 
         String[] columns = {"#", "Mã sách", "Tên sách", "Hạn trả", "Trạng thái", "Lỗi phạt", "Tiền phạt", "Ghi chú"};
         tbmReturnBooks = new DefaultTableModel(columns, 0) {
             @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
+            public boolean isCellEditable(int row, int column) { return false; }
         };
         tblReturnBooks = new JTable(tbmReturnBooks);
         pnlBookDetail.add(new JScrollPane(tblReturnBooks), BorderLayout.CENTER);
@@ -120,7 +141,6 @@ public class ReturnConfirmFrm extends JFrame {
     }
 
     private JPanel buildBillSummaryPanel() {
-        // Bill summary panel with totals and payment inputs.
         JPanel pnlBillSummary = new JPanel(new GridBagLayout());
         pnlBillSummary.setBorder(BorderFactory.createTitledBorder("Tóm tắt hóa đơn"));
         GridBagConstraints gbc = new GridBagConstraints();
@@ -147,138 +167,61 @@ public class ReturnConfirmFrm extends JFrame {
         JLabel lblNote = new JLabel("Ghi chú:");
         txtNote = new JTextField(20);
 
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        pnlBillSummary.add(lblBorrowDate, gbc);
-        gbc.gridx = 1;
-        pnlBillSummary.add(txtBorrowDate, gbc);
-
-        gbc.gridx = 2;
-        pnlBillSummary.add(lblReturnDate, gbc);
-        gbc.gridx = 3;
-        pnlBillSummary.add(txtReturnDate, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        pnlBillSummary.add(lblOverdueDays, gbc);
-        gbc.gridx = 1;
-        pnlBillSummary.add(txtOverdueDays, gbc);
-
-        gbc.gridx = 2;
-        pnlBillSummary.add(lblOverdueFine, gbc);
-        gbc.gridx = 3;
-        pnlBillSummary.add(txtOverdueFine, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        pnlBillSummary.add(lblDamageFine, gbc);
-        gbc.gridx = 1;
-        pnlBillSummary.add(txtDamageFine, gbc);
-
-        gbc.gridx = 2;
-        pnlBillSummary.add(lblTotalAmount, gbc);
-        gbc.gridx = 3;
-        pnlBillSummary.add(txtTotalAmount, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        pnlBillSummary.add(lblPaymentType, gbc);
-        gbc.gridx = 1;
-        pnlBillSummary.add(cmbPaymentType, gbc);
-
-        gbc.gridx = 2;
-        pnlBillSummary.add(lblNote, gbc);
-        gbc.gridx = 3;
-        pnlBillSummary.add(txtNote, gbc);
+        gbc.gridx = 0; gbc.gridy = 0; pnlBillSummary.add(lblBorrowDate, gbc);
+        gbc.gridx = 1; pnlBillSummary.add(txtBorrowDate, gbc);
+        gbc.gridx = 2; pnlBillSummary.add(lblReturnDate, gbc);
+        gbc.gridx = 3; pnlBillSummary.add(txtReturnDate, gbc);
+        gbc.gridx = 0; gbc.gridy = 1; pnlBillSummary.add(lblOverdueDays, gbc);
+        gbc.gridx = 1; pnlBillSummary.add(txtOverdueDays, gbc);
+        gbc.gridx = 2; pnlBillSummary.add(lblOverdueFine, gbc);
+        gbc.gridx = 3; pnlBillSummary.add(txtOverdueFine, gbc);
+        gbc.gridx = 0; gbc.gridy = 2; pnlBillSummary.add(lblDamageFine, gbc);
+        gbc.gridx = 1; pnlBillSummary.add(txtDamageFine, gbc);
+        gbc.gridx = 2; pnlBillSummary.add(lblTotalAmount, gbc);
+        gbc.gridx = 3; pnlBillSummary.add(txtTotalAmount, gbc);
+        gbc.gridx = 0; gbc.gridy = 3; pnlBillSummary.add(lblPaymentType, gbc);
+        gbc.gridx = 1; pnlBillSummary.add(cmbPaymentType, gbc);
+        gbc.gridx = 2; pnlBillSummary.add(lblNote, gbc);
+        gbc.gridx = 3; pnlBillSummary.add(txtNote, gbc);
 
         return pnlBillSummary;
     }
 
     private JPanel buildActionsPanel() {
-        // Action buttons for saving or canceling the return process.
         JPanel pnlActions = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton btnSaveBill = new JButton("Lưu hóa đơn & Xác nhận trả");
         JButton btnCancel = new JButton("Hủy");
-
         btnSaveBill.addActionListener(e -> saveBillAction());
         btnCancel.addActionListener(e -> dispose());
-
         pnlActions.add(btnSaveBill);
         pnlActions.add(btnCancel);
-
         return pnlActions;
     }
 
-    public ReturnConfirmFrm(User currentUser, Borrowing borrowing) {
-        this.currentUser = currentUser;
-        this.borrowing = borrowing;
-        this.borrowingDAO = new BorrowingDAO();
-        this.borrowedBookDAO = new BorrowedBookDAO();
-        this.bookItemDAO = new BookItemDAO();
-        this.billDAO = new BillDAO();
-        this.bookDAO = new BookDAO();
-        this.fineDAO = new FineDAO();
-
-        initComponents();
-        loadBorrowingData();
-    }
-
-    private void initComponents() {
-        System.out.println("ReturnConfirmFrm intialized");
-        // Build and arrange all UI sections for the return confirmation screen.
-        setTitle("Xác nhận trả sách - Phiếu #" + borrowing.getId());
-        setSize(850, 600);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
-        setLayout(new BorderLayout(10, 10));
-
-        JPanel pnlStudentInfo = buildStudentInfoPanel();
-        JPanel pnlBookDetail = buildBookDetailPanel();
-        JPanel pnlBillSummary = buildBillSummaryPanel();
-        JPanel pnlActions = buildActionsPanel();
-
-        add(pnlStudentInfo, BorderLayout.NORTH);
-        add(pnlBookDetail, BorderLayout.CENTER);
-
-        JPanel pnlBottom = new JPanel(new BorderLayout(10, 10));
-        pnlBottom.add(pnlBillSummary, BorderLayout.CENTER);
-        pnlBottom.add(pnlActions, BorderLayout.SOUTH);
-        add(pnlBottom, BorderLayout.SOUTH);
-    }
-
-
     private JTextField createReadOnlyField(int columns) {
-        // Helper to create a disabled text field used for display-only data.
         JTextField field = new JTextField(columns);
         field.setEditable(false);
         return field;
     }
 
     private void loadBorrowingData() {
-        // Load borrowing details and refresh UI tables and totals.
-        // if (borrowing.getBooks() == null || borrowing.getBooks().isEmpty()) {
-        //     borrowing.setBooks(borrowingDAO.loadBorrowedBooks(borrowing.getId()));
-        // }
-
         if (borrowing.getStudent() != null) {
-            txtStudentId.setText(String.valueOf(borrowing.getStudent().getId()));
+            txtStudentId.setText(borrowing.getStudent().getStudentId());
             txtStudentName.setText(borrowing.getStudent().getFullName());
             txtEmail.setText(borrowing.getStudent().getEmail());
             txtPhone.setText(borrowing.getStudent().getPhone());
         }
-
         populateBookTable();
         calculateSummary();
     }
 
     private void populateBookTable() {
-        // Populate the return books table and compute per-book fines.
         tbmReturnBooks.setRowCount(0);
         borrowedBookFineTotals.clear();
 
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         DecimalFormat moneyFormat = new DecimalFormat("#,##0");
-        LocalDate today = LocalDate.now();
+        Date today = new Date();
         double overdueRatePerDay = resolveOverdueRate();
 
         totalOverdueDays = 0;
@@ -287,9 +230,8 @@ public class ReturnConfirmFrm extends JFrame {
 
         int idx = 1;
         for (BorrowedBook bb : borrowing.getBorrowedBooks()) {
-            String expDate = bb.getExpectedReturnDate() != null ? bb.getExpectedReturnDate().format(dtf) : "";
+            String expDate = bb.getExpectedReturnDate() != null ? sdf.format(bb.getExpectedReturnDate()) : "";
             String status = bb.getStatus() != null ? bb.getStatus() : "good";
-
             String title = resolveBookTitle(bb);
             int bookItemId = bb.getBookItem() != null ? bb.getBookItem().getId() : -1;
 
@@ -297,7 +239,7 @@ public class ReturnConfirmFrm extends JFrame {
             double overdueFine = 0.0;
             long overdueDays = 0;
             if (bb.getExpectedReturnDate() != null) {
-                overdueDays = ChronoUnit.DAYS.between(bb.getExpectedReturnDate(), today);
+                overdueDays = (today.getTime() - bb.getExpectedReturnDate().getTime()) / (1000 * 60 * 60 * 24);
                 if (overdueDays > 0) {
                     overdueFine = overdueDays * overdueRatePerDay;
                 } else {
@@ -308,39 +250,26 @@ public class ReturnConfirmFrm extends JFrame {
             totalOverdueDays += (int) overdueDays;
             totalOverdueFine += overdueFine;
             totalDamageFine += damageFine;
-
             double totalBookFine = overdueFine + damageFine;
             borrowedBookFineTotals.put(bb.getId(), totalBookFine);
 
-            String fineSummary = buildFineSummary(bb);
-            String note = bb.getNote() != null ? bb.getNote() : "";
-
             tbmReturnBooks.addRow(new Object[] {
-                idx++,
-                bookItemId,
-                title,
-                expDate,
-                status,
-                fineSummary,
-                moneyFormat.format(totalBookFine),
-                note
+                idx++, bookItemId, title, expDate, status, buildFineSummary(bb),
+                moneyFormat.format(totalBookFine), bb.getNote() != null ? bb.getNote() : ""
             });
         }
     }
 
     private void calculateSummary() {
-        // Compute and display the bill summary totals.
         bill = billDAO.calculateFine(borrowing);
-        if (bill == null) {
-            bill = new Bill();
-        }
+        if (bill == null) bill = new Bill();
 
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         DecimalFormat moneyFormat = new DecimalFormat("#,##0");
-        LocalDate today = LocalDate.now();
+        Date today = new Date();
 
-        txtBorrowDate.setText(borrowing.getBorrowDate() != null ? borrowing.getBorrowDate().format(dtf) : "");
-        txtReturnDate.setText(today.format(dtf));
+        txtBorrowDate.setText(borrowing.getCreatedAt() != null ? sdf.format(borrowing.getCreatedAt()) : "");
+        txtReturnDate.setText(sdf.format(today));
 
         double totalAmount = totalOverdueFine + totalDamageFine;
 
@@ -355,32 +284,22 @@ public class ReturnConfirmFrm extends JFrame {
     }
 
     private void saveBillAction() {
-        // Persist return updates and create the final bill after confirmation.
-        if(!borrowing.getStatus().equals("borrowed")) {
+        if (!borrowing.getStatus().equals("borrowed")) {
             JOptionPane.showMessageDialog(this, "Phiếu mượn không ở trạng thái chờ trả", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        int confirm = JOptionPane.showConfirmDialog(this,
-            "Xác nhận trả sách và lưu hóa đơn?",
-            "Xác nhận",
-            JOptionPane.YES_NO_OPTION
-        );
-        if (confirm != JOptionPane.YES_OPTION) {
-            return;
-        }
+        int confirm = JOptionPane.showConfirmDialog(this, "Xác nhận trả sách và lưu hóa đơn?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+        if (confirm != JOptionPane.YES_OPTION) return;
 
-        LocalDate today = LocalDate.now();
+        Date today = new Date();
+        LocalDate localToday = LocalDate.now();
 
         for (BorrowedBook bb : borrowing.getBorrowedBooks()) {
             bb.setActualReturnDate(today);
-            if (bb.getStatus() == null || bb.getStatus().isBlank()) {
-                bb.setStatus("good");
-            }
+            if (bb.getStatus() == null || bb.getStatus().isBlank()) bb.setStatus("good");
 
             Double totalFine = borrowedBookFineTotals.get(bb.getId());
-            if (totalFine != null) {
-                bb.setPrice(totalFine);
-            }
+            if (totalFine != null) bb.setPrice(totalFine);
 
             if (!borrowedBookDAO.updateReturnStatus(bb)) {
                 JOptionPane.showMessageDialog(this, "Lỗi khi cập nhật sách trả", "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -388,21 +307,20 @@ public class ReturnConfirmFrm extends JFrame {
             }
 
             if (bb.getBookItem() != null) {
-                String itemStatus = mapBookItemStatus(bb.getStatus());
-                if (!bookItemDAO.updateStatus(bb.getBookItem().getId(), itemStatus)) {
+                if (!bookItemDAO.updateStatus(bb.getBookItem().getId(), mapBookItemStatus(bb.getStatus()))) {
                     JOptionPane.showMessageDialog(this, "Lỗi khi cập nhật trạng thái sách", "Lỗi", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
             }
         }
 
-        if (!borrowingDAO.updateBorrowingStatus(borrowing.getId(), today, "returned")) {
+        if (!borrowingDAO.updateBorrowingStatus(borrowing.getId(), "returned")) {
             JOptionPane.showMessageDialog(this, "Lỗi khi cập nhật phiếu mượn", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         bill.setBorrowing(borrowing);
-        bill.setPaymentDate(today);
+        bill.setPaymentDate(localToday);
         bill.setPaymentType((String) cmbPaymentType.getSelectedItem());
         bill.setNote(txtNote.getText().trim());
         bill.setAmount(totalOverdueFine + totalDamageFine);
@@ -419,25 +337,17 @@ public class ReturnConfirmFrm extends JFrame {
     }
 
     private String resolveBookTitle(BorrowedBook bb) {
-        // Resolve book title from its ISBN for display purposes.
-        if (bb.getBookItem() == null) {
-            return "Không xác định";
-        }
+        if (bb.getBookItem() == null) return "Không xác định";
         Book book = bookDAO.findByID(new BookItemDAO().getBookISBN(bb.getBookItem().getId()));
         return book != null ? book.getTitle() : "Không xác định";
     }
 
     private String buildFineSummary(BorrowedBook bb) {
-        // Build a comma-separated summary of fine names for a borrowed book.
-        if (bb.getBorrowedBookFines() == null || bb.getBorrowedBookFines().isEmpty()) {
-            return "Không có";
-        }
+        if (bb.getBorrowedBookFines() == null || bb.getBorrowedBookFines().isEmpty()) return "Không có";
         StringBuilder summary = new StringBuilder();
         for (BorrowedBookFine fine : bb.getBorrowedBookFines()) {
             if (fine.getFine() != null) {
-                if (summary.length() > 0) {
-                    summary.append(", ");
-                }
+                if (summary.length() > 0) summary.append(", ");
                 summary.append(fine.getFine().getName());
             }
         }
@@ -445,7 +355,6 @@ public class ReturnConfirmFrm extends JFrame {
     }
 
     private double sumDamageFine(BorrowedBook bb) {
-        // Sum damage-related fine rates for a borrowed book.
         double total = 0.0;
         if (bb.getBorrowedBookFines() != null) {
             for (BorrowedBookFine fine : bb.getBorrowedBookFines()) {
@@ -456,7 +365,6 @@ public class ReturnConfirmFrm extends JFrame {
     }
 
     private double resolveOverdueRate() {
-        // Find the overdue fine rate from the configured fine list.
         List<Fine> fines = fineDAO.findAll();
         for (Fine fine : fines) {
             if (fine.getName() != null && isOverdueFineName(fine.getName())) {
@@ -467,24 +375,16 @@ public class ReturnConfirmFrm extends JFrame {
     }
 
     private boolean isOverdueFineName(String name) {
-        // Heuristic match for fine names related to overdue penalties.
-        String normalized = Normalizer.normalize(name, Normalizer.Form.NFD).replaceAll("\\p{M}", "");
-        normalized = normalized.toLowerCase();
+        String normalized = Normalizer.normalize(name, Normalizer.Form.NFD).replaceAll("\\p{M}", "").toLowerCase();
         return normalized.contains("tra tre") || normalized.contains("qua han") || normalized.contains("overdue");
     }
 
     private String mapBookItemStatus(String status) {
-        // Map borrowed book status to a book item status.
-        if (status == null) {
-            return "good";
-        }
+        if (status == null) return "good";
         switch (status.toLowerCase()) {
-            case "lost":
-                return "lost";
-            case "damaged":
-                return "damaged";
-            default:
-                return "good";
+            case "lost": return "lost";
+            case "damaged": return "damaged";
+            default: return "good";
         }
     }
 }

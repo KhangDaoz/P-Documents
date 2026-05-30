@@ -2,8 +2,6 @@ package test.unit;
 
 import com.ptit.p.documents.dao.BookDAO;
 import com.ptit.p.documents.model.Book;
-import com.ptit.p.documents.dao.DatabaseInitializer;
-
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -14,7 +12,6 @@ public class BookDaoTest {
 
     @BeforeClass
     public static void initDb() {
-        DatabaseInitializer.init(true);
     }
 
     BookDAO bd = new BookDAO();

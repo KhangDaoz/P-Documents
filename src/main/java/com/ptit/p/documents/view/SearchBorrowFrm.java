@@ -49,6 +49,7 @@ public class SearchBorrowFrm extends JFrame implements ActionListener {
     }
 
     private void initComponents() {
+        System.out.println("SearchBorrowFrm intialized");
         setTitle("Dat sach — Buoc 1: Chon sach");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(800, 580);
@@ -249,6 +250,6 @@ public class SearchBorrowFrm extends JFrame implements ActionListener {
             return;
         }
         new SearchStudentFrm(currentBorrowing).setVisible(true);
-        this.dispose();
+        // this.dispose();
     }
 }

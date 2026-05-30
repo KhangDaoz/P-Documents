@@ -20,8 +20,7 @@ public class BillDAO extends DAO {
 
     public boolean createBill(Bill bill, User user) {
         String sql = "INSERT INTO tblBill (paymentDate, note, paymentType, tblBorrowingID, tblUserID) VALUES (?, ?, ?, ?, ?)";
-        try (Connection connection = getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql,
+        try (PreparedStatement statement = getConnection().prepareStatement(sql,
                         PreparedStatement.RETURN_GENERATED_KEYS)) {
 
             statement.setDate(1, bill.getPaymentDate() != null ? java.sql.Date.valueOf(bill.getPaymentDate()) : null);
@@ -73,6 +72,18 @@ public class BillDAO extends DAO {
                         totalFine += days * overdueRatePerDay;
                     }
                 }
+                
+                // Save overdue fine to BorrowedBookFine
+                Fine fineOverdue = new Fine();
+                fineOverdue.setName("Trả muộn");
+                fineOverdue.setFineRate(overdueRatePerDay);
+                
+                BorrowedBookFine overdueFine = new BorrowedBookFine();
+                overdueFine.setFine(fineOverdue);
+                overdueFine.setFineRate(overdueRatePerDay);
+                overdueFine.setTotalFine(totalFine);
+                bb.addBorrowedBookFine(overdueFine);
+                
                 // Add damage fines
                 if (bb.getBorrowedBookFines() != null) {
                     for (BorrowedBookFine fine : bb.getBorrowedBookFines()) {

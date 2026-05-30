@@ -31,6 +31,7 @@ public class SearchStudentFrm extends JFrame implements ActionListener {
     }
 
     private void initComponents() {
+        System.out.println("SearchStudentFrm initialized");
         setTitle("Dat sach — Buoc 2: Tim kiem sinh vien");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(680, 440);

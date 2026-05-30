@@ -32,8 +32,7 @@ public class BorrowedBookDAO extends DAO {
                 + "JOIN tblBookItem bi ON bb.tblBookItemID = bi.ID "
                 + "WHERE bb.tblBorrowingID = ?";
 
-        try (Connection connection = getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (PreparedStatement statement = getConnection().prepareStatement(sql)) {
             statement.setInt(1, borrowingId);
 
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -69,13 +68,12 @@ public class BorrowedBookDAO extends DAO {
     /** Cập nhật trạng thái trả của từng cuốn sách */
     public boolean updateReturnStatus(BorrowedBook bb) {
         String sql = "UPDATE tblBorrowedBook SET actualReturnDate = ?, status = ?, note = ?, price = ? WHERE ID = ?";
-        try (Connection connection = getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (PreparedStatement statement = getConnection().prepareStatement(sql)) {
             statement.setDate(1,
                     bb.getActualReturnDate() != null ? java.sql.Date.valueOf(bb.getActualReturnDate()) : null);
             statement.setString(2, bb.getStatus() != null ? bb.getStatus() : "good");
             statement.setString(3, bb.getNote());
-            statement.setObject(4, bb.getPrice() != 0.0 ? bb.getPrice() : null);
+            statement.setDouble(4, bb.getPrice());
             statement.setInt(5, bb.getId());
 
             return statement.executeUpdate() > 0;
@@ -88,8 +86,7 @@ public class BorrowedBookDAO extends DAO {
     /** Thiết lập phạt áp dụng cho lượt mượn sách hỏng/mất */
     public boolean setBorrowedBookFine(BorrowedBookFine fine, BorrowedBook bb) {
         String sql = "INSERT INTO tblBorrowedBookFine (fineRate, tblBorrowedBookID, tblFineID) VALUES (?, ?, ?)";
-        try (Connection connection = getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (PreparedStatement statement = getConnection().prepareStatement(sql)) {
             statement.setDouble(1, fine.getFineRate());
             statement.setInt(2, bb.getId());
             statement.setInt(3, fine.getFine().getId());
@@ -119,8 +116,7 @@ public class BorrowedBookDAO extends DAO {
                 "WHERE bi.tblBookISBN = ? " +
                 "ORDER BY br.createdAt DESC";
 
-        try (Connection connection = getConnection();
-                PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             ps.setString(1, isbn);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {

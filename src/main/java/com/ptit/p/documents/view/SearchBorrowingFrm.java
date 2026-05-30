@@ -13,6 +13,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.time.LocalDate;
 
 public class SearchBorrowingFrm extends JFrame {
     private User currentUser;
@@ -255,8 +256,7 @@ public class SearchBorrowingFrm extends JFrame {
             if (bb.getBorrowedBookFines() != null) {
                 fineCount = bb.getBorrowedBookFines().size();
             }
-            String finesSum = fineCount > 0 ? fineCount + " lỗi" : "Không có";
-
+            String finesSum = fineCount > 0 ? fineCount + " lỗi" : "Không có"; 
             tbmBorrowedBooks.addRow(new Object[]{
                 idx++,
                 bookItemId,

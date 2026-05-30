@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import com.ptit.p.documents.model.User;
@@ -65,7 +66,10 @@ public class BillDAO extends DAO {
             for (BorrowedBook bb : borrowedBooks) {
                 // Calculate overdue fine
                 if (bb.getExpectedReturnDate() != null) {
-                    long days = ChronoUnit.DAYS.between(bb.getExpectedReturnDate(), LocalDate.now());
+                    long days = ChronoUnit.DAYS.between(bb.getExpectedReturnDate()
+                        .toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate(), LocalDate.now());
                     if (days > 0) {
                         totalOverdueDays += (int) days;
                         totalFine += days * overdueRatePerDay;

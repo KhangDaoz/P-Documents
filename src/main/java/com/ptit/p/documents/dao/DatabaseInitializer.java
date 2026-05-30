@@ -22,7 +22,7 @@ public class DatabaseInitializer {
             + "&characterEncoding=UTF-8"
             + "&allowPublicKeyRetrieval=true";
     private static final String DB_USER     = "root";
-    private static final String DB_PASSWORD = "hieun0l0ve";
+    private static final String DB_PASSWORD = "1812";
 
     /**
      * Tạo database và tất cả bảng nếu chưa tồn tại.

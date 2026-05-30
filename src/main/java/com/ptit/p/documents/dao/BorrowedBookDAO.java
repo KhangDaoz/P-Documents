@@ -60,8 +60,8 @@ public class BorrowedBookDAO extends DAO {
 
                     BorrowedBook borrowedBook = new BorrowedBook(
                         resultSet.getInt("ID"),
-                        toLocalDate(resultSet.getDate("expectedReturnDate")),
-                        toLocalDate(resultSet.getDate("actualReturnDate")),
+                        resultSet.getTimestamp("expectedReturnDate") != null ? new java.util.Date(resultSet.getTimestamp("expectedReturnDate").getTime()) : null,
+                        resultSet.getTimestamp("actualReturnDate") != null ? new java.util.Date(resultSet.getTimestamp("actualReturnDate").getTime()) : null,
                         resultSet.getString("status"),
                         resultSet.getString("note"),
                         resultSet.getDouble("price"),
@@ -90,7 +90,7 @@ public class BorrowedBookDAO extends DAO {
         String sql = "UPDATE tblBorrowedBook SET actualReturnDate = ?, status = ?, note = ?, price = ? WHERE ID = ?";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setDate(1, bb.getActualReturnDate() != null ? Date.valueOf(bb.getActualReturnDate()) : null);
+            statement.setDate(1, bb.getActualReturnDate() != null ? new java.sql.Date(bb.getActualReturnDate().getTime()) : null);
             statement.setString(2, bb.getStatus() != null ? bb.getStatus() : "good");
             statement.setString(3, bb.getNote());
             statement.setObject(4, bb.getPrice() != 0.0 ? bb.getPrice() : null);
@@ -118,7 +118,5 @@ public class BorrowedBookDAO extends DAO {
         }
     }
 
-    private LocalDate toLocalDate(Date date) {
-        return date != null ? date.toLocalDate() : null;
-    }
+
 }

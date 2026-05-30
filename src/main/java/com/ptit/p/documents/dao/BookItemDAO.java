@@ -34,7 +34,7 @@ public class BookItemDAO extends DAO {
         Connection conn = getConnection();
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, isbn);
-            return ps.executeUpdate() >= 0;
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }

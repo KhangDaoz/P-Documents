@@ -4,6 +4,8 @@
 --  thêm UNIQUE, thêm timestamps, chuẩn hoá quan hệ
 -- ============================================================
 
+DROP DATABASE IF EXISTS p_documents;
+
 CREATE DATABASE IF NOT EXISTS p_documents
   CHARACTER SET utf8mb4
   COLLATE utf8mb4_unicode_ci;
@@ -14,14 +16,14 @@ USE p_documents;
 -- 1. tblStudent
 -- ============================================================
 CREATE TABLE tblStudent (
-    ID          INT(10)      NOT NULL AUTO_INCREMENT,
+    studentId          VARCHAR(20)  NOT NULL,
     fullName    VARCHAR(255) NOT NULL,
     email       VARCHAR(255) NOT NULL,
-    phone       VARCHAR(15) NOT NULL,
+    phone       VARCHAR(15)  NOT NULL,
     address     VARCHAR(255),
     createdAt   TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updatedAt   TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (ID)
+    PRIMARY KEY (studentId)
 ) ENGINE=InnoDB;
 
 -- ============================================================
@@ -80,13 +82,13 @@ CREATE TABLE tblBorrowing (
     actualReceiveDate   DATE,
     note                VARCHAR(255),
     status              ENUM('borrowed', 'returned', 'overdue', 'pending', 'cancelled') NOT NULL DEFAULT 'pending',
-    tblStudentID        INT(10)      NOT NULL,
+    tblStudentID        VARCHAR(20)  NOT NULL,
     tblUserID           INT(10)      NOT NULL,
     createdAt           TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updatedAt           TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (ID),
     CONSTRAINT fk_borrowing_student
-        FOREIGN KEY (tblStudentID) REFERENCES tblStudent(ID)
+        FOREIGN KEY (tblStudentID) REFERENCES tblStudent(studentId)
         ON UPDATE CASCADE ON DELETE RESTRICT,
     CONSTRAINT fk_borrowing_user
         FOREIGN KEY (tblUserID) REFERENCES tblUser(ID)
@@ -179,9 +181,9 @@ INSERT INTO tblUser (username, password, fullName, phone, role) VALUES
 ('librarian1','123456', 'Trần Thị Thư',      '0912345678', 'librarian');
 
 -- Students
-INSERT INTO tblStudent (fullName, email, phone, address) VALUES
-('Lê Văn An',   'levan.an@student.edu.vn',   '0923456789', 'Hà Nội'),
-('Phạm Thị Bình','pham.binh@student.edu.vn', '0934567890', 'Hà Nội');
+INSERT INTO tblStudent (studentId, fullName, email, phone, address) VALUES
+('SV220001', 'Lê Văn An',    'levan.an@student.edu.vn',   '0923456789', 'Hà Nội'),
+('SV220002', 'Phạm Thị Bình','pham.binh@student.edu.vn', '0934567890', 'Hà Nội');
 
 -- Books
 INSERT INTO tblBook (ISBN, title, author, genre, publisher, publishYear, price, description) VALUES

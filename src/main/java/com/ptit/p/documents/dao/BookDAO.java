@@ -123,11 +123,16 @@ public class BookDAO extends DAO {
      * Lưu ý: phải xóa BookItem trước khi gọi hàm này (do FK constraint).
      */
     public boolean deleteBook(String isbn) {
-        String sql = "DELETE FROM tblBook WHERE ISBN = ?";
         Connection conn = getConnection();
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, isbn);
-            return ps.executeUpdate() > 0;
+        String deleteItemsSql = "DELETE FROM tblBookItem WHERE tblBookISBN = ?";
+        String deleteBookSql = "DELETE FROM tblBook WHERE ISBN = ?";
+        try (PreparedStatement itemPs = conn.prepareStatement(deleteItemsSql);
+             PreparedStatement bookPs = conn.prepareStatement(deleteBookSql)) {
+            itemPs.setString(1, isbn);
+            itemPs.executeUpdate();
+
+            bookPs.setString(1, isbn);
+            return bookPs.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }

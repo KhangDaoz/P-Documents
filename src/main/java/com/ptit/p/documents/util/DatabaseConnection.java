@@ -13,7 +13,7 @@ import java.sql.SQLException;
 public class DatabaseConnection {
 
     private static final String URL =
-            "jdbc:mysql://localhost:3306/p_documents?useSSL=false&serverTimezone=UTC&characterEncoding=utf8";
+            "jdbc:mysql://localhost:3306/p_documents?useSSL=false&serverTimezone=UTC&characterEncoding=utf8&allowPublicKeyRetrieval=true";
     private static final String USER     = "root";
     private static final String PASSWORD = "123456";   // chỉnh theo môi trường
 

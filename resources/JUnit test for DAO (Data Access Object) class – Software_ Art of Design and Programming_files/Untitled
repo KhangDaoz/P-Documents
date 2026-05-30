@@ -1,0 +1,585 @@
+// listen for rlt authentication events and pass them to children of this document.
+( function() {
+	var currentToken;
+	var parentOrigin;
+	var iframeOrigins;
+	var registeredIframes = [];
+	var initializationListeners = [];
+	var hasBeenInitialized = false;
+	var RLT_KEY = 'jetpack:wpcomRLT';
+
+	// should we inject RLT into this iframe?
+	function rltShouldAuthorizeIframe( frameOrigin ) {
+		if ( ! Array.isArray( iframeOrigins ) ) {
+			return false;
+		}
+		return iframeOrigins.includes( frameOrigin );
+	}
+
+	function rltInvalidateWindowToken( token, target, origin ) {
+		if ( target && typeof target.postMessage === 'function' ) {
+			try {
+				target.postMessage( JSON.stringify( {
+					type: 'rltMessage',
+					data: {
+						event: 'invalidate',
+						token: token,
+						sourceOrigin: window.location.origin,
+					},
+				} ), origin );
+			} catch ( err ) {
+				return;
+			}
+		}
+	}
+
+	/**
+	 * PUBLIC METHODS
+	 */
+	window.rltInvalidateToken = function( token, sourceOrigin ) {
+		// invalidate in current context
+		if ( token === currentToken ) {
+			currentToken = null;
+		}
+
+		// remove from localstorage, but only if in a top level window, not iframe
+		try {
+			if ( window.location === window.parent.location && window.localStorage ) {
+				if ( window.localStorage.getItem(RLT_KEY) === token ) {
+					window.localStorage.removeItem(RLT_KEY);
+				}
+			}
+		} catch( e ) {
+			console.info("localstorage access for invalidate denied - probably blocked third-party access", window.location.href);
+		}
+
+		// invalidate in registered iframes
+		for ( const [ frameOrigin, frameWindow ] of registeredIframes ) {
+			if ( frameOrigin !== sourceOrigin ) {
+				rltInvalidateWindowToken( token, frameWindow, frameOrigin );
+			}
+		}
+
+		// invalidate in parent
+		if ( parentOrigin && parentOrigin !== sourceOrigin && window.parent ) {
+			rltInvalidateWindowToken( token, window.parent, parentOrigin );
+		}
+	}
+
+	window.rltInjectToken = function( token, target, origin ) {
+		if ( target && typeof target.postMessage === 'function' ) {
+			try {
+				target.postMessage( JSON.stringify( {
+					type: 'loginMessage',
+					data: {
+						event: 'login',
+						success: true,
+						type: 'rlt',
+						token: token,
+						sourceOrigin: window.location.origin,
+					},
+				} ), origin );
+			} catch ( err ) {
+				return;
+			}
+		}
+	};
+
+	window.rltIsAuthenticated = function() {
+		return !! currentToken;
+	};
+
+	window.rltGetToken = function() {
+		return currentToken;
+	};
+
+	window.rltAddInitializationListener = function( listener ) {
+		// if RLT is already initialized, call the listener immediately
+		if ( hasBeenInitialized ) {
+			listener( currentToken );
+		} else {
+			initializationListeners.push( listener );
+		}
+	};
+
+	// store the token in localStorage
+	window.rltStoreToken = function( token ) {
+		currentToken = token;
+		try {
+			if ( window.location === window.parent.location && window.localStorage ) {
+				window.localStorage.setItem( RLT_KEY, token );
+			}
+		} catch( e ) {
+			console.info("localstorage access denied - probably blocked third-party access", window.location.href);
+		}
+	}
+
+	window.rltInitialize = function( config ) {
+		if ( ! config || typeof window.postMessage !== 'function' ) {
+			return;
+		}
+
+		currentToken  = config.token;
+		iframeOrigins = config.iframeOrigins;
+		parentOrigin  = config.parentOrigin; // needed?
+
+		// load token from localStorage if possible, but only in top level window
+		try {
+			if ( ! currentToken && window.location === window.parent.location && window.localStorage ) {
+				currentToken = window.localStorage.getItem(RLT_KEY);
+			}
+		} catch( e ) {
+			console.info("localstorage access denied - probably blocked third-party access", window.location.href);
+		}
+
+		// listen for RLT events from approved origins
+		window.addEventListener( 'message', function( e ) {
+			var message = e && e.data;
+			if ( typeof message === 'string' ) {
+				try {
+					message = JSON.parse( message );
+				} catch ( err ) {
+					return;
+				}
+			}
+
+			var type = message && message.type;
+			var data = message && message.data;
+
+			if ( type === 'loginMessage' ) {
+				if ( data && data.type === 'rlt' && data.token !== currentToken ) {
+					// put into localStorage if running in top-level window (not iframe)
+					rltStoreToken( data.token );
+
+					// send to registered iframes
+					for ( const [ frameOrigin, frameWindow ] of registeredIframes ) {
+						rltInjectToken( currentToken, frameWindow, frameOrigin );
+					}
+
+					// send to the parent, unless the event was sent _by_ the parent
+					if ( parentOrigin && parentOrigin !== data.sourceOrigin && window.parent ) {
+						rltInjectToken( currentToken, window.parent, parentOrigin );
+					}
+				}
+			}
+
+			if ( type === 'rltMessage' ) {
+				if ( data && data.event === 'invalidate' && data.token === currentToken ) {
+					rltInvalidateToken( data.token );
+				}
+
+				if ( data && data.event === 'register' ) {
+					if ( rltShouldAuthorizeIframe( e.origin ) ) {
+						registeredIframes.push( [ e.origin, e.source ] );
+						if ( currentToken ) {
+							rltInjectToken( currentToken, e.source, e.origin );
+						}
+					}
+				}
+			}
+		} );
+
+		initializationListeners.forEach( function( listener ) {
+			listener( currentToken );
+		} );
+
+		initializationListeners = [];
+
+		// inform the parent that we are ready to receive the RLT token
+		window.parent.postMessage( {
+			type: 'rltMessage',
+			data: {
+				event: 'register'
+			},
+		}, '*' );
+
+		hasBeenInitialized = true;
+	};
+} )();
+;
+( function () {
+	let cookies = document.cookie.split( /;\s*/ );
+	let cookie = false;
+
+	for ( let i = 0; i < cookies.length; i++ ) {
+		if ( cookies[ i ].match( /^wp_api=/ ) ) {
+			cookies = cookies[ i ].split( '=' );
+			cookie = cookies[ 1 ];
+			break;
+		}
+	}
+
+	function setAllLinks( followId, wasFollowing ) {
+		const allLinks = document.querySelectorAll( `a.f-${ followId }` );
+
+		if ( wasFollowing ) {
+			allLinks.forEach( ( el ) => {
+				el.classList.remove( 'wpcom-following' );
+				el.classList.add( 'wpcom-follow' );
+				el.textContent = 'Follow';
+			} );
+		} else {
+			allLinks.forEach( ( el ) => {
+				el.classList.add( 'wpcom-following' );
+				el.classList.remove( 'wpcom-follow' );
+				el.textContent = 'Following';
+			} );
+		}
+	}
+
+	function setAllRestLinks( followId, wasFollowing, followText, followingText ) {
+		const sel = `data-blog-id="${ followId }"`;
+		const allLinks = document.querySelectorAll(
+			`a.wpcom-follow-rest[${ sel }], a.wpcom-following-rest[${ sel }]`
+		);
+
+		if ( wasFollowing ) {
+			allLinks.forEach( ( el ) => {
+				el.classList.remove( 'wpcom-following-rest' );
+				el.classList.add( 'wpcom-follow-rest' );
+				el.textContent = followText;
+			} );
+		} else {
+			allLinks.forEach( ( el ) => {
+				el.classList.add( 'wpcom-following-rest' );
+				el.classList.remove( 'wpcom-follow-rest' );
+				el.textContent = followingText;
+			} );
+		}
+	}
+
+	let bubbleInitDone = false;
+	let isBubbleVisible = false;
+	let bubbleTimeout;
+
+	window.wpFollowButton = {
+		enable: function () {
+			document.querySelectorAll( 'a.wpcom-follow, a.wpcom-following' ).forEach( ( link ) =>
+				link.addEventListener( 'click', ( e ) => {
+					e.preventDefault();
+
+					const blogId = link.getAttribute( 'data-id' );
+					const blogUrl = link.getAttribute( 'data-url' );
+					const isFollowing = link.classList.contains( 'wpcom-following' );
+
+					let followId;
+
+					if ( blogId ) {
+						followId = blogId;
+					} else {
+						const fClass = Array.from( link.classList ).find( ( c ) => c.startsWith( 'f-' ) );
+						if ( fClass ) {
+							followId = fClass.slice( 2 );
+						}
+					}
+
+					if ( ! followId ) {
+						return;
+					}
+
+					// Ensure followId represents a number.
+					followId = String( parseInt( followId, 10 ) || 0 );
+
+					// Preemptively update all links (assume success).
+					setAllLinks( followId, isFollowing );
+
+					const href = link.getAttribute( 'href' );
+					if ( ! href ) {
+						return;
+					}
+
+					const url = new URL( href, window.location );
+
+					fetch( url.origin + '/wp-admin/admin-ajax.php', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+							Accept: 'application/json',
+						},
+						body: new URLSearchParams( {
+							action: isFollowing ? 'ab_unsubscribe_from_blog' : 'ab_subscribe_to_blog',
+							_wpnonce: url.searchParams.get( '_wpnonce' ) || undefined,
+							blog_id: blogId,
+							blog_url: blogUrl,
+							source: url.searchParams.get( 'src' ) || undefined,
+						} ).toString(),
+					} )
+						.then( ( response ) => {
+							if ( ! response.ok ) {
+								throw new Error();
+							}
+							return response.json();
+						} )
+						.then( ( json ) => {
+							if ( typeof json.errors === 'object' ) {
+								throw new Error();
+							}
+						} )
+						.catch( () => {
+							// Error; toggle back.
+							setAllLinks( followId, ! isFollowing );
+						} );
+				} )
+			);
+		},
+
+		enable_rest: function ( link ) {
+			link.addEventListener( 'click', ( e ) => {
+				e.preventDefault();
+				let blogId = link.getAttribute( 'data-blog-id' );
+				const followText = link.getAttribute( 'data-follow-text' );
+				const followingText = link.getAttribute( 'data-following-text' );
+				const wasFollowing = link.classList.contains( 'wpcom-following-rest' );
+				let restPath = `/sites/${ blogId }/follows/new`;
+
+				if ( wasFollowing ) {
+					restPath = `/sites/${ blogId }/follows/mine/delete`;
+				}
+				// Ensure followId represents a number.
+				blogId = String( parseInt( blogId, 10 ) || 0 );
+
+				// Select and update ALL follow buttons on the page (could be more than one).
+				setAllRestLinks( blogId, wasFollowing, followText, followingText );
+
+				this.ajax( {
+					type: 'POST',
+					path: restPath,
+					success: function ( res ) {
+						if ( ! res.success ) {
+							// Error; toggle back.
+							setAllRestLinks( blogId, ! wasFollowing, followText, followingText );
+							this.hideBubble();
+						}
+					},
+					error: function () {
+						// Error; toggle back.
+						setAllRestLinks( blogId, ! wasFollowing, followText, followingText );
+						this.hideBubble();
+					},
+				} );
+
+				// Show post-follow bubble.
+				if ( ! wasFollowing ) {
+					e.stopPropagation();
+					this.showBubble( link );
+					this.bumpStat( link.getAttribute( 'data-stat-src' ) );
+				}
+			} );
+
+			// Show unfollow text on hover.
+			link.addEventListener( 'mouseenter', () => {
+				const isFollowing = link.classList.contains( 'wpcom-following-rest' );
+				if ( isFollowing ) {
+					link.textContent = link.getAttribute( 'data-following-hover-text' );
+				}
+			} );
+			link.addEventListener( 'mouseleave', () => {
+				const isFollowing = link.classList.contains( 'wpcom-following-rest' );
+				if ( isFollowing ) {
+					link.textContent = link.getAttribute( 'data-following-text' );
+				}
+			} );
+		},
+
+		showBubble: function ( link ) {
+			const pos = {
+				left: link.offsetLeft,
+				top: link.offsetTop,
+			};
+
+			let bubble = document.querySelector( 'div.follow-bubble' );
+			if ( ! bubble ) {
+				bubble = document.createElement( 'div' );
+				bubble.classList.add( 'wpcom-bubble', 'action-bubble', 'follow-bubble' );
+			}
+			bubble.innerHTML = `
+				<div class="bubble-txt">
+					New posts from this blog will now appear in
+					<a style='float:none;' href='http://wordpress.com/reader/'>your reader</a>.
+				</div>
+			`;
+			link.parentElement.appendChild( bubble );
+
+			bubble.style.display = 'block';
+			const left = pos.left + link.offsetWidth / 2 - bubble.offsetWidth / 2;
+			const top = pos.top + link.offsetHeight + 8;
+
+			bubble.style.left = left + 'px';
+			bubble.style.top = top + 'px';
+			bubble.classList.add( 'fadein' );
+			isBubbleVisible = true;
+
+			bubbleTimeout = setTimeout( this.hideBubble, 10000 );
+
+			if ( bubbleInitDone ) {
+				return;
+			}
+
+			const clickHandler = ( e ) => {
+				if (
+					! e.target.classList.contains( 'follow-bubble' ) &&
+					! e.target.closest( 'div.follow-bubble' )
+				) {
+					this.hideBubble();
+				}
+			};
+
+			document.body.addEventListener( 'click', clickHandler );
+			document.body.addEventListener( 'touchstart', clickHandler );
+
+			document.addEventListener( 'scroll', () => {
+				if ( ! isBubbleVisible ) {
+					return;
+				}
+				this.hideBubble();
+			} );
+
+			bubbleInitDone = true;
+		},
+
+		hideBubble: function () {
+			const bubble = document.querySelector( 'div.follow-bubble' );
+			bubble.style.display = 'none';
+			isBubbleVisible = false;
+			clearTimeout( bubbleTimeout );
+		},
+
+		// Common method for rendering a follow button from the object data
+		create: function ( { params }, source ) {
+			const isFollowing = params.is_following;
+
+			const followLink = document.createElement( 'a' );
+			followLink.classList.add( isFollowing ? 'wpcom-following-rest' : 'wpcom-follow-rest' );
+
+			Object.entries( {
+				href: `http://public-api.wordpress.com/sites/${ encodeURIComponent(
+					params.site_id
+				) }/follows`,
+				title: `${ params.blog_title } (${ params.blog_domain })`,
+				'data-blog-id': params.site_id,
+				'data-stat-src': params[ 'stat-source' ],
+				'data-follow-text': params[ 'follow-text' ],
+				'data-following-text': params[ 'following-text' ],
+				'data-following-hover-text': params[ 'following-hover-text' ],
+			} ).forEach( ( [ key, val ] ) => followLink.setAttribute( key, val ) );
+
+			followLink.textContent = isFollowing ? params[ 'following-text' ] : params[ 'follow-text' ];
+
+			const followButton = document.createElement( 'div' );
+			followButton.classList.add( 'wpcom-follow-container' );
+			followButton.classList.add( 'wpcom-follow-attached' );
+			followButton.style.display = 'inline-block';
+			followButton.appendChild( followLink );
+
+			this.enable_rest( followLink, source );
+			return followButton;
+		},
+
+		createAll: function () {
+			document
+				.querySelectorAll( '.wpcom-follow-container:not(.wpcom-follow-attached)' )
+				.forEach( ( el ) => {
+					const json = JSON.parse( el.getAttribute( 'data-json' ) || '{}' );
+					el.replaceWith(
+						this.create( json, el.getAttribute( 'data-follow-source' ) )
+					);
+				} );
+		},
+
+		ajax: function ( options ) {
+			if ( document.location.host === 'public-api.wordpress.com' ) {
+				// Regular AJAX call.
+				fetch( 'https://public-api.wordpress.com/rest/v1' + options.path, {
+					method: options.type,
+					headers: {
+						Authorization: `X-WPCOOKIE ${ cookie }:1:${ document.location.host }`,
+						Accept: 'application/json',
+					}
+				} )
+					.then( ( response ) => {
+						if ( ! response.ok ) {
+							throw new Error();
+						}
+						return response.json();
+					} )
+					.then( ( json ) => {
+						if ( typeof json.errors === 'object' ) {
+							throw new Error();
+						}
+						options.success( json );
+					} )
+					.catch( () => {
+						options.error();
+					} );
+			} else {
+				// Proxied AJAX call.
+				const request = {
+					path: options.path,
+					method: options.type,
+				};
+
+				const proxyRequestHandler =
+					window.WPCOM_Proxy_Request || ( window.jQuery && window.jQuery.wpcom_proxy_request );
+
+				if ( ! proxyRequestHandler ) {
+					console.error( 'Cannot make AJAX call: missing proxy request handler.' );
+					setTimeout( () => options.error() );
+					return;
+				}
+
+				proxyRequestHandler( request ).done( ( response, statusCode ) => {
+					if ( statusCode === 200 ) {
+						options.success( response );
+					} else {
+						options.error( statusCode );
+					}
+				} );
+			}
+		},
+
+		bumpStat: function ( source ) {
+			new Image().src = `${
+				document.location.protocol
+			}//pixel.wp.com/g.gif?v=wpcom-no-pv&x_follow_source=${ encodeURIComponent(
+				source
+			) }&baba=${ Math.random() }`;
+		},
+	};
+
+	function init() {
+		window.wpFollowButton.enable();
+		window.wpFollowButton.createAll();
+	}
+
+	if ( document.readyState !== 'loading' ) {
+		init();
+	} else {
+		document.addEventListener( 'DOMContentLoaded', init );
+	}
+} )();
+;
+( function () {
+	'use strict';
+
+	function init() {
+		document.querySelectorAll( '.bump-view' ).forEach( function ( el ) {
+			el.addEventListener( 'click', function ( e ) {
+				var statarg = 'wref=';
+				var statval = el.getAttribute( 'data-bump-view' );
+				var href = el.getAttribute( 'href' );
+				el.setAttribute(
+					'href',
+					href + ( href.indexOf( '?' ) !== -1 ? '&' : '?' ) + statarg + statval
+				);
+			} );
+		} );
+	}
+
+	if ( document.readyState !== 'loading' ) {
+		init();
+	} else {
+		document.addEventListener( 'DOMContentLoaded', init );
+	}
+} )();
+;
+!function(){function e(){const e=document.createElement("iframe");e.style.cssText="display:none",e.name="__tcfapiLocator",document.body.appendChild(e)}window.__tcfapi=function(){let e=[].slice.call(arguments),t=e[0],n=e[2];"ping"===t?"function"==typeof n&&n({gdprApplies:!1,cmpLoaded:!1,cmpStatus:"stub",displayStatus:"disabled",apiVersion:"2"}):"getTCData"!==t&&"addEventListener"!==t||"function"==typeof n&&n({gdprApplies:!1,tcfPolicyVersion:4,cmpId:258,cmpVersion:1},!0)},window.addEventListener("message",(function(e){let t="string"==typeof e.data,n={};try{n=t?JSON.parse(e.data):e.data}catch(e){}let a=n.__tcfapiCall;a&&window.__tcfapi(a.command,a.version,(function(n,c){let i={__tcfapiReturn:{returnValue:n,success:c,callId:a.callId}};t&&(i=JSON.stringify(i)),e&&e.source&&e.source.postMessage&&e.source.postMessage(i,"*")}),a.parameter)}),!1),"loading"!==document.readyState?e():document.addEventListener("DOMContentLoaded",e)}();;

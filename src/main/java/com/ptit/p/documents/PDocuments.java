@@ -1,25 +1,22 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
-
 package com.ptit.p.documents;
 
-import com.ptit.p.documents.dao.BookDAO;
-import com.ptit.p.documents.model.Book;
-import com.ptit.p.documents.view.BookFrm;
-import java.util.List;
+import com.ptit.p.documents.view.LibrarianHomeFrm;
+import com.ptit.p.documents.view.LoginFrm;
+import javax.swing.SwingUtilities;
+import com.ptit.p.documents.model.User;
 
-/**
- *
- * @author ADMIN
- */
+
 public class PDocuments {
 
     public static void main(String[] args) {
-        BookDAO bookDAO = new BookDAO();
-        List<Book> books = bookDAO.findAll();
-
-        BookFrm bookView = new BookFrm();
-        bookView.renderBookList(books);
+        SwingUtilities.invokeLater(() -> {
+            User user = new User();
+            user.setId(2); // Must match a valid ID in tblUser
+            user.setUsername("Librarian1");
+            user.setPassword("123456");
+            user.setFullName("Librarian 1");
+            LibrarianHomeFrm librarianHomeFrm = new LibrarianHomeFrm(user);
+            librarianHomeFrm.setVisible(true);
+        });
     }
 }

@@ -1,6 +1,6 @@
 package com.ptit.p.documents.dao;
 
-import com.ptit.p.documents.model.Borrowing;
+import com.ptit.p.documents.model.Fine;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,17 +16,16 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class BorrowingDAOTest {
+public class FineDAOTest {
 
     @Spy
     @InjectMocks
-    private BorrowingDAO borrowingDAO;
+    private FineDAO fineDAO;
 
     @Mock private Connection mockConnection;
     @Mock private PreparedStatement mockStatement;
@@ -34,19 +33,26 @@ public class BorrowingDAOTest {
 
     @BeforeEach
     void setUp() throws SQLException {
-        doReturn(mockConnection).when(borrowingDAO).getConnection();
+        doReturn(mockConnection).when(fineDAO).getConnection();
     }
 
     @Test
-    void testUpdateBorrowingStatus_Success() throws SQLException {
+    void testFindAll_ReturnsList() throws SQLException {
         // Arrange
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
-        when(mockStatement.executeUpdate()).thenReturn(1);
+        when(mockStatement.executeQuery()).thenReturn(mockResultSet);
+        when(mockResultSet.next()).thenReturn(true, false); // 1 result, then stop
+        
+        org.mockito.Mockito.lenient().when(mockResultSet.getInt(anyString())).thenReturn(1);
+        org.mockito.Mockito.lenient().when(mockResultSet.getString(anyString())).thenReturn("Trả trễ");
+        org.mockito.Mockito.lenient().when(mockResultSet.getDouble(anyString())).thenReturn(5000.0);
 
         // Act
-        boolean result = borrowingDAO.updateBorrowingStatus(10, "returned");
+        List<Fine> result = fineDAO.findAll();
 
         // Assert
-        assertTrue(result);
+        assertEquals(1, result.size());
+        assertEquals("Trả trễ", result.get(0).getName());
+        assertEquals(5000.0, result.get(0).getFineRate());
     }
 }

@@ -16,14 +16,14 @@ USE p_documents;
 -- 1. tblStudent
 -- ============================================================
 CREATE TABLE tblStudent (
-    ID          VARCHAR(20)  NOT NULL,
+    studentId          VARCHAR(20)  NOT NULL,
     fullName    VARCHAR(255) NOT NULL,
     email       VARCHAR(255) NOT NULL,
     phone       VARCHAR(15)  NOT NULL,
     address     VARCHAR(255),
     createdAt   TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updatedAt   TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (ID)
+    PRIMARY KEY (studentId)
 ) ENGINE=InnoDB;
 
 -- ============================================================
@@ -88,7 +88,7 @@ CREATE TABLE tblBorrowing (
     updatedAt           TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (ID),
     CONSTRAINT fk_borrowing_student
-        FOREIGN KEY (tblStudentID) REFERENCES tblStudent(ID)
+        FOREIGN KEY (tblStudentID) REFERENCES tblStudent(studentId)
         ON UPDATE CASCADE ON DELETE RESTRICT,
     CONSTRAINT fk_borrowing_user
         FOREIGN KEY (tblUserID) REFERENCES tblUser(ID)
@@ -181,7 +181,7 @@ INSERT INTO tblUser (username, password, fullName, phone, role) VALUES
 ('librarian1','123456', 'Trần Thị Thư',      '0912345678', 'librarian');
 
 -- Students
-INSERT INTO tblStudent (ID, fullName, email, phone, address) VALUES
+INSERT INTO tblStudent (studentId, fullName, email, phone, address) VALUES
 ('SV220001', 'Lê Văn An',    'levan.an@student.edu.vn',   '0923456789', 'Hà Nội'),
 ('SV220002', 'Phạm Thị Bình','pham.binh@student.edu.vn', '0934567890', 'Hà Nội');
 

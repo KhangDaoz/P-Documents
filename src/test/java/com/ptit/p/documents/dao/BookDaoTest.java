@@ -7,6 +7,7 @@ import org.junit.Test;
 import com.ptit.p.documents.model.Book;
 
 public class BookDaoTest {
+    private static final String EXISTING_ISBN = "978-604-1-01234-5";
     BookDAO bd = new BookDAO();
 
     @Test
@@ -40,7 +41,7 @@ public class BookDaoTest {
         
         String newTitle = "Java Core Updated";
         double newPrice = 250000;
-        String key = "ISBN001";
+        String key = EXISTING_ISBN;
         
         try{
             con.setAutoCommit(false);
@@ -127,7 +128,7 @@ public class BookDaoTest {
         Connection con = bd.getConnection();
         if(con == null) return;
         Book book = new Book();
-        book.setISBN("ISBN001"); // Đã tồn tại
+        book.setISBN(EXISTING_ISBN); // Đã tồn tại trong seed data
         book.setTitle("Sách Trùng ISBN");
         try {
             con.setAutoCommit(false);
@@ -149,7 +150,7 @@ public class BookDaoTest {
     public void testDeleteBookStandard() {
         Connection con = bd.getConnection();
         if(con == null) return;
-        String isbn = "ISBN001";
+        String isbn = EXISTING_ISBN;
         try {
             con.setAutoCommit(false);
             boolean result = bd.deleteBook(isbn);

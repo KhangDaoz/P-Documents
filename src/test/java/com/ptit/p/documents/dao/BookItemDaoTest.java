@@ -6,6 +6,7 @@ import org.junit.Test;
 import com.ptit.p.documents.model.BookItem;
 
 public class BookItemDaoTest {
+    private static final String EXISTING_ISBN = "978-604-1-01234-5";
     BookItemDAO bid = new BookItemDAO();
 
     @Test
@@ -17,7 +18,7 @@ public class BookItemDaoTest {
         }
         
         BookItem item = new BookItem();
-        item.setBookISBN("ISBN001"); // Giả sử ISBN001 đã có trong bảng tblBook
+        item.setBookISBN(EXISTING_ISBN); // Dùng ISBN có sẵn trong seed data
         item.setStatus("good");
         
         try {
@@ -67,7 +68,7 @@ public class BookItemDaoTest {
     public void testDeleteBookItemStandard() {
         Connection con = bid.getConnection();
         if(con == null) return;
-        String isbn = "ISBN001";
+        String isbn = EXISTING_ISBN;
         try {
             con.setAutoCommit(false);
             boolean result = bid.deleteBookItem(isbn);

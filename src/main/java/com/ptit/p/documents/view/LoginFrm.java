@@ -9,100 +9,128 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class LoginFrm extends JFrame implements ActionListener {
-    private User u;
-    private JTextField txtUsername;
-    private JPasswordField txtPassword;
-    private JButton btnLogin;
+    private final JTextField txtUsername;
+    private final JPasswordField txtPassword;
+    private final JButton btnLogin;
 
-    public LoginFrm(User u) {
-        this.u = u;
-        initComponents();
-    }
-
-    private void initComponents() {
-        setTitle("Đăng nhập hệ thống");
-        setSize(420, 280);
+    public LoginFrm() {
+        super("LoginFrm");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(560, 450);
         setLocationRelativeTo(null);
-        setResizable(false);
 
-        // Main panel
-        JPanel mainPanel = new JPanel(new GridBagLayout());
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(8, 8, 8, 8);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        JPanel pnlMain = new JPanel(new GridBagLayout());
+        setContentPane(pnlMain);
 
-        // Title
-        JLabel lblTitle = new JLabel("HỆ THỐNG QUẢN LÝ THƯ VIỆN", SwingConstants.CENTER);
-        lblTitle.setFont(new Font("Arial", Font.BOLD, 16));
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        mainPanel.add(lblTitle, gbc);
+        JPanel pnl = new JPanel(null);
+        pnl.setPreferredSize(new Dimension(500, 380));
+        pnl.setBackground(Color.WHITE);
+        pnl.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240), 1));
+        pnlMain.add(pnl);
 
-        // Username
-        gbc.gridwidth = 1;
-        gbc.gridy = 1;
-        gbc.gridx = 0;
-        mainPanel.add(new JLabel("Tên đăng nhập:"), gbc);
+        JLabel lblLogin = new JLabel("Login", JLabel.CENTER);
+        lblLogin.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        lblLogin.setForeground(new Color(30, 41, 59));
+        lblLogin.setBounds(150, 50, 200, 40);
+        pnl.add(lblLogin);
 
-        txtUsername = new JTextField(20);
-        gbc.gridx = 1;
-        mainPanel.add(txtUsername, gbc);
+        JLabel lblUser = new JLabel("Username:", JLabel.RIGHT);
+        lblUser.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        lblUser.setForeground(new Color(71, 85, 105));
+        lblUser.setBounds(60, 130, 90, 30);
+        pnl.add(lblUser);
 
-        // Password
-        gbc.gridy = 2;
-        gbc.gridx = 0;
-        mainPanel.add(new JLabel("Mật khẩu:"), gbc);
+        txtUsername = new JTextField(15);
+        txtUsername.setBackground(Color.WHITE);
+        txtUsername.setForeground(Color.BLACK);
+        txtUsername.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        txtUsername.setBounds(160, 130, 280, 30);
+        pnl.add(txtUsername);
 
-        txtPassword = new JPasswordField(20);
-        gbc.gridx = 1;
-        mainPanel.add(txtPassword, gbc);
+        JLabel lblPass = new JLabel("Password:", JLabel.RIGHT);
+        lblPass.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        lblPass.setForeground(new Color(71, 85, 105));
+        lblPass.setBounds(60, 200, 90, 30);
+        pnl.add(lblPass);
 
-        // Buttons
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 0));
-        btnLogin = new JButton("Đăng nhập");
-        btnLogin.setPreferredSize(new Dimension(120, 35));
-        buttonPanel.add(btnLogin);
+        txtPassword = new JPasswordField(15);
+        txtPassword.putClientProperty("JPasswordField.showRevealButton", true);
+        txtPassword.putClientProperty("PasswordField.showRevealButton", true);
+        txtPassword.putClientProperty("showRevealButton", true);
+        txtPassword.putClientProperty("FlatLaf.style", "showRevealButton: true");
+        txtPassword.setBackground(Color.WHITE);
+        txtPassword.setForeground(Color.BLACK);
+        txtPassword.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        txtPassword.setBounds(160, 200, 280, 30);
+        pnl.add(txtPassword);
 
-        gbc.gridy = 3;
-        gbc.gridx = 0;
-        gbc.gridwidth = 2;
-        mainPanel.add(buttonPanel, gbc);
+        btnLogin = new JButton("Login");
+        btnLogin.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnLogin.setBackground(new Color(96, 165, 250));
+        btnLogin.setForeground(Color.WHITE);
+        btnLogin.setFocusPainted(false);
+        btnLogin.setBorder(BorderFactory.createEmptyBorder());
+        btnLogin.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btnLogin.setBounds(195, 290, 110, 35);
+        btnLogin.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                btnLogin.setBackground(new Color(59, 130, 246));
+            }
 
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                btnLogin.setBackground(new Color(96, 165, 250));
+            }
+        });
         btnLogin.addActionListener(this);
-
-        add(mainPanel);
+        pnl.add(btnLogin);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == btnLogin) {
-            String username = txtUsername.getText().trim();
-            String password = new String(txtPassword.getPassword()).trim();
-
-            if (username.isEmpty() || password.isEmpty()) {
-                JOptionPane.showMessageDialog(this,
-                        "Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu!",
-                        "Lỗi", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-
-            UserDAO userDAO = new UserDAO();
-            User user = userDAO.checkLogin(username, password);
-
-            if (user != null) {
-                // JOptionPane.showMessageDialog(this,
-                //         "Đăng nhập thành công! Xin chào " + user.getFullName(),
-                //         "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                new ManagerHomeFrm(user).setVisible(true);
-                this.dispose();
-            } else {
-                JOptionPane.showMessageDialog(this,
-                        "Tên đăng nhập hoặc mật khẩu không đúng!",
-                        "Lỗi đăng nhập", JOptionPane.ERROR_MESSAGE);
-            }
+        if (e.getSource() != btnLogin) {
+            return;
         }
+
+        String username = txtUsername.getText().trim();
+        String password = new String(txtPassword.getPassword()).trim();
+
+        if (username.isEmpty() || password.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu!", "Lỗi", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        User loginUser = new User();
+        loginUser.setUsername(username);
+        loginUser.setPassword(password);
+
+        UserDAO userDAO = new UserDAO();
+        User loggedUser = userDAO.checkLogin(loginUser);
+
+        if (loggedUser == null) {
+            JOptionPane.showMessageDialog(this, "Tên đăng nhập hoặc mật khẩu không đúng!", "Lỗi đăng nhập", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String role = loggedUser.getRole() == null ? "" : loggedUser.getRole().trim().toLowerCase();
+        if ("admin".equals(role)) {
+            new AdminHomeFrm().setVisible(true);
+            dispose();
+        } else if ("librarian".equals(role) || "manager".equals(role)) {
+            new ManagerHomeFrm(loggedUser).setVisible(true);
+            dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Tài khoản không có quyền truy cập phù hợp.", "Lỗi phân quyền", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public static void main(String[] args) {
+        try {
+            com.formdev.flatlaf.FlatIntelliJLaf.setup();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        SwingUtilities.invokeLater(() -> new LoginFrm().setVisible(true));
     }
 }

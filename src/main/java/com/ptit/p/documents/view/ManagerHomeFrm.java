@@ -80,7 +80,7 @@ public class ManagerHomeFrm extends JFrame implements ActionListener {
                     "Bạn có chắc muốn đăng xuất?", "Xác nhận",
                     JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
-                new LoginFrm(null).setVisible(true);
+                new LoginFrm().setVisible(true);
                 this.dispose();
             }
         }

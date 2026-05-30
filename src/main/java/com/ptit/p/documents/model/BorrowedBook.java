@@ -1,41 +1,37 @@
 package com.ptit.p.documents.model;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
- * Chi tiết một dòng mượn - Tầng thực thể.
- * Ánh xạ bảng tblBorrowedBook.
+ * Đại diện cho một cuốn sách cụ thể trong một phiếu mượn.
+ * Tương ứng với bảng tblBorrowedBook trong CSDL.
  */
 public class BorrowedBook {
     private int id;
-    private Borrowing borrowing;
-    private BookItem bookItem;
-    private Book book;
-    private Date expectedReturnDate;
-    private Date actualReturnDate;
+    private LocalDate expectedReturnDate;
+    private LocalDate actualReturnDate;
     private String status;
     private String note;
     private double price;
+    private BookItem bookItem;
+    private Book book;
     private ArrayList<BorrowedBookFine> borrowedBookFine;
+    private Borrowing borrowing;
 
     public BorrowedBook() {
         this.borrowedBookFine = new ArrayList<>();
     }
 
-    /** Constructor từ sang branch */
-    public BorrowedBook(Borrowing borrowing, BookItem bookItem,
-                        Date expectedReturnDate, Date actualReturnDate, String status) {
-        this.borrowing = borrowing;
-        this.bookItem = bookItem;
+    public BorrowedBook(int id, LocalDate expectedReturnDate, LocalDate actualReturnDate, String status) {
+        this.id = id;
         this.expectedReturnDate = expectedReturnDate;
         this.actualReturnDate = actualReturnDate;
         this.status = status;
         this.borrowedBookFine = new ArrayList<>();
     }
 
-    /** Constructors từ huy branch */
-    public BorrowedBook(Book book, Date expectedReturnDate, double price) {
+    public BorrowedBook(Book book, LocalDate expectedReturnDate, double price) {
         this.book = book;
         this.expectedReturnDate = expectedReturnDate;
         this.price = price;
@@ -43,15 +39,15 @@ public class BorrowedBook {
         this.borrowedBookFine = new ArrayList<>();
     }
 
-    public BorrowedBook(Book book, Date expectedReturnDate, java.math.BigDecimal price) {
+    public BorrowedBook(Book book, LocalDate expectedReturnDate, java.math.BigDecimal price) {
         this.book = book;
         this.expectedReturnDate = expectedReturnDate;
-        this.price = price != null ? price.doubleValue() : 0.0;
+        this.price = price.doubleValue();
         this.status = "good";
         this.borrowedBookFine = new ArrayList<>();
     }
 
-    public BorrowedBook(int id, Date expectedReturnDate, Date actualReturnDate, String status,
+    public BorrowedBook(int id, LocalDate expectedReturnDate, LocalDate actualReturnDate, String status,
                         String note, double price, BookItem bookItem, ArrayList<BorrowedBookFine> borrowedBookFine) {
         this.id = id;
         this.expectedReturnDate = expectedReturnDate;
@@ -73,43 +69,19 @@ public class BorrowedBook {
         this.id = id;
     }
 
-    public Borrowing getBorrowing() {
-        return borrowing;
-    }
-
-    public void setBorrowing(Borrowing borrowing) {
-        this.borrowing = borrowing;
-    }
-
-    public BookItem getBookItem() {
-        return bookItem;
-    }
-
-    public void setBookItem(BookItem bookItem) {
-        this.bookItem = bookItem;
-    }
-
-    public Book getBook() {
-        return book;
-    }
-
-    public void setBook(Book book) {
-        this.book = book;
-    }
-
-    public Date getExpectedReturnDate() {
+    public LocalDate getExpectedReturnDate() {
         return expectedReturnDate;
     }
 
-    public void setExpectedReturnDate(Date expectedReturnDate) {
+    public void setExpectedReturnDate(LocalDate expectedReturnDate) {
         this.expectedReturnDate = expectedReturnDate;
     }
 
-    public Date getActualReturnDate() {
+    public LocalDate getActualReturnDate() {
         return actualReturnDate;
     }
 
-    public void setActualReturnDate(Date actualReturnDate) {
+    public void setActualReturnDate(LocalDate actualReturnDate) {
         this.actualReturnDate = actualReturnDate;
     }
 
@@ -137,12 +109,36 @@ public class BorrowedBook {
         this.price = price;
     }
 
+    public BookItem getBookItem() {
+        return bookItem;
+    }
+
+    public void setBookItem(BookItem bookItem) {
+        this.bookItem = bookItem;
+    }
+
+    public Book getBook() {
+        return book;
+    }
+
+    public void setBook(Book book) {
+        this.book = book;
+    }
+
+    public Borrowing getBorrowing() {
+        return borrowing;
+    }
+
+    public void setBorrowing(Borrowing borrowing) {
+        this.borrowing = borrowing;
+    }
+
     public ArrayList<BorrowedBookFine> getBorrowedBookFines() {
         return borrowedBookFine;
     }
 
     public void addBorrowedBookFine(BorrowedBookFine fine) {
-        if (this.borrowedBookFine == null) {
+        if(this.borrowedBookFine == null) {
             this.borrowedBookFine = new ArrayList<>();
         }
         this.borrowedBookFine.add(fine);

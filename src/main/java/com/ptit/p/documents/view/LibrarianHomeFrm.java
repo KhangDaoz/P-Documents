@@ -92,26 +92,26 @@ public class LibrarianHomeFrm extends JFrame {
         // ACTIONS
         btnBookBorrow.addActionListener(e -> {
             new SearchBorrowFrm(currentUser).setVisible(true);
-            this.dispose();
+            // this.dispose();
         });
 
         btnCancelBorrow.addActionListener(e -> {
             new SearchBorrowingFrm(currentUser, SearchMode.CANCEL_BORROW).setVisible(true);
-            this.dispose();
+            // this.dispose();
         });
 
         btnConfirmBorrowing.addActionListener(e -> {
             new SearchBorrowingFrm(currentUser, SearchMode.CONFIRM_BORROW).setVisible(true);
-            this.dispose();
+            // this.dispose();
         });
 
         btnReturnBook.addActionListener(e -> {
             new SearchBorrowingFrm(currentUser, SearchMode.RETURN_BOOK).setVisible(true);
-            this.dispose();
+            // this.dispose();
         });
 
         btnLogout.addActionListener(e -> {
-            this.dispose();
+            // this.dispose();
             new LoginFrm().setVisible(true);
         });
     }

@@ -11,7 +11,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class SearchBorrowingFrm extends JFrame {
@@ -192,11 +192,11 @@ public class SearchBorrowingFrm extends JFrame {
         }
 
         tbmResult.setRowCount(0);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        DateTimeFormatter sdf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         int idx = 1;
         for (Borrowing b : searchResults) {
-            String bDate = b.getCreatedAt() != null ? sdf.format(b.getCreatedAt()) : "";
-            String eDate = b.getExpectedReceiveDate() != null ? sdf.format(b.getExpectedReceiveDate()) : "";
+            String bDate = b.getCreatedAt() != null ? b.getCreatedAt().format(sdf) : "";
+            String eDate = b.getExpectedReceiveDate() != null ? b.getExpectedReceiveDate().format(sdf) : "";
             tbmResult.addRow(new Object[]{
                 idx++,
                 b.getId(),
@@ -225,7 +225,7 @@ public class SearchBorrowingFrm extends JFrame {
 
         if (mode == SearchMode.CONFIRM_BORROW) {
             new AcceptBorrowingFrm(currentUser, selectedBorrowing).setVisible(true);
-            this.dispose();
+            // this.dispose();
         } else if (mode == SearchMode.CANCEL_BORROW) {
             new ConfirmCancelFrm(selectedBorrowing, currentUser).setVisible(true);
             this.dispose();
@@ -242,11 +242,11 @@ public class SearchBorrowingFrm extends JFrame {
         ((TitledBorder)pnlBorrowingDetail.getBorder()).setTitle("Chi tiết phiếu mượn #" + selectedBorrowing.getId());
 
         tbmBorrowedBooks.setRowCount(0);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        DateTimeFormatter sdf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         int idx = 1;
         for (BorrowedBook bb : selectedBorrowing.getBooks()) {
-            String expDate = bb.getExpectedReturnDate() != null ? sdf.format(bb.getExpectedReturnDate()) : "";
+            String expDate = bb.getExpectedReturnDate() != null ? bb.getExpectedReturnDate().format(sdf) : "";
             String bookName = "Sách ID: " + (bb.getBookItem() != null ? bb.getBookItem().getId() : "N/A");
             int bookItemId = bb.getBookItem() != null ? bb.getBookItem().getId() : -1;
             

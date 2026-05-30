@@ -2,7 +2,7 @@ package com.ptit.p.documents.model;
 
 import com.ptit.p.documents.dao.BookItemDAO;
 import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -11,11 +11,11 @@ import java.util.List;
  */
 public class Borrowing {
     private int id;
-    private Date expectedReceiveDate;
-    private Date actualReceiveDate;
+    private LocalDate expectedReceiveDate;
+    private LocalDate actualReceiveDate;
     private String note;
     private String status;
-    private Date createdAt;
+    private LocalDate createdAt;
     private List<BorrowedBook> books = new ArrayList<>();
     private Student student;
     private User user;
@@ -25,7 +25,7 @@ public class Borrowing {
     }
 
     /** Constructor rút gọn từ sang branch */
-    public Borrowing(int id, Student student, Date createdAt) {
+    public Borrowing(int id, Student student, LocalDate createdAt) {
         this.id = id;
         this.student = student;
         this.createdAt = createdAt;
@@ -33,7 +33,7 @@ public class Borrowing {
     }
 
     /** Constructors từ huy branch */
-    public Borrowing(int id, Date expectedReceiveDate, Date actualReceiveDate, 
+    public Borrowing(int id, LocalDate expectedReceiveDate, LocalDate actualReceiveDate, 
                      String status, List<BorrowedBook> books, Student student, User user) {
         this.id = id;
         this.expectedReceiveDate = expectedReceiveDate;
@@ -44,7 +44,7 @@ public class Borrowing {
         this.user = user;
     }
 
-    public Borrowing(Student student, User user, Date expectedReceiveDate, String note) {
+    public Borrowing(Student student, User user, LocalDate expectedReceiveDate, String note) {
         this.student = student;
         this.user = user;
         this.expectedReceiveDate = expectedReceiveDate;
@@ -53,7 +53,7 @@ public class Borrowing {
         this.books = new ArrayList<>();
     }
 
-    public Borrowing(Student student, User user, Date borrowDate, Date expectedReceiveDate) {
+    public Borrowing(Student student, User user, LocalDate borrowDate, LocalDate expectedReceiveDate) {
         this.student = student;
         this.user = user;
         this.createdAt = borrowDate;
@@ -72,19 +72,19 @@ public class Borrowing {
         this.id = id;
     }
 
-    public Date getExpectedReceiveDate() {
+    public LocalDate getExpectedReceiveDate() {
         return expectedReceiveDate;
     }
 
-    public void setExpectedReceiveDate(Date expectedReceiveDate) {
+    public void setExpectedReceiveDate(LocalDate expectedReceiveDate) {
         this.expectedReceiveDate = expectedReceiveDate;
     }
 
-    public Date getActualReceiveDate() {
+    public LocalDate getActualReceiveDate() {
         return actualReceiveDate;
     }
 
-    public void setActualReceiveDate(Date actualReceiveDate) {
+    public void setActualReceiveDate(LocalDate actualReceiveDate) {
         this.actualReceiveDate = actualReceiveDate;
     }
 
@@ -104,21 +104,21 @@ public class Borrowing {
         this.status = status;
     }
 
-    public Date getCreatedAt() {
+    public LocalDate getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
     }
 
     @Deprecated
-    public Date getBorrowDate() {
+    public LocalDate getBorrowDate() {
         return createdAt;
     }
 
     @Deprecated
-    public void setBorrowDate(Date borrowDate) {
+    public void setBorrowDate(LocalDate borrowDate) {
         this.createdAt = borrowDate;
     }
 

@@ -21,14 +21,15 @@ public class BillDAO extends DAO {
     public boolean createBill(Bill bill, User user) {
         String sql = "INSERT INTO tblBill (paymentDate, note, paymentType, tblBorrowingID, tblUserID) VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-             
+                PreparedStatement statement = connection.prepareStatement(sql,
+                        PreparedStatement.RETURN_GENERATED_KEYS)) {
+
             statement.setDate(1, bill.getPaymentDate() != null ? java.sql.Date.valueOf(bill.getPaymentDate()) : null);
             statement.setString(2, bill.getNote());
             statement.setString(3, bill.getPaymentType());
             statement.setInt(4, bill.getBorrowing().getId());
             statement.setInt(5, user.getId());
-            
+
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0) {
                 return false;
@@ -66,10 +67,7 @@ public class BillDAO extends DAO {
             for (BorrowedBook bb : borrowedBooks) {
                 // Calculate overdue fine
                 if (bb.getExpectedReturnDate() != null) {
-                    long days = ChronoUnit.DAYS.between(bb.getExpectedReturnDate()
-                        .toInstant()
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDate(), LocalDate.now());
+                    long days = ChronoUnit.DAYS.between(bb.getExpectedReturnDate(), LocalDate.now());
                     if (days > 0) {
                         totalOverdueDays += (int) days;
                         totalFine += days * overdueRatePerDay;
@@ -107,24 +105,24 @@ public class BillDAO extends DAO {
         return normalized.contains("tra tre") || normalized.contains("qua han") || normalized.contains("overdue");
     }
     // public Bill findById(int id, Borrowing borrowing) {
-    //     String sql = "SELECT * FROM tblBill WHERE id = ?";
-    //     try (Connection connection = getConnection();
-    //          PreparedStatement statement = connection.prepareStatement(sql)) {
-             
-    //         statement.setInt(1, id);
-    //         java.sql.ResultSet resultSet = statement.executeQuery();
-    //         if (resultSet.next()) {
-    //             Bill bill = new Bill();
-    //             bill.setId(resultSet.getInt("id"));
-    //             bill.setPaymentDate(resultSet.getDate("paymentDate").toLocalDate());
-    //             bill.setNote(resultSet.getString("note"));
-    //             bill.setPaymentType(resultSet.getString("paymentType"));
-    //             bill.setBorrowing(borrowing);
-    //             return bill;
-    //         }
-    //     } catch (SQLException ex) {
-    //         ex.printStackTrace();
-    //     }
-    //     return null;
+    // String sql = "SELECT * FROM tblBill WHERE id = ?";
+    // try (Connection connection = getConnection();
+    // PreparedStatement statement = connection.prepareStatement(sql)) {
+
+    // statement.setInt(1, id);
+    // java.sql.ResultSet resultSet = statement.executeQuery();
+    // if (resultSet.next()) {
+    // Bill bill = new Bill();
+    // bill.setId(resultSet.getInt("id"));
+    // bill.setPaymentDate(resultSet.getDate("paymentDate").toLocalDate());
+    // bill.setNote(resultSet.getString("note"));
+    // bill.setPaymentType(resultSet.getString("paymentType"));
+    // bill.setBorrowing(borrowing);
+    // return bill;
+    // }
+    // } catch (SQLException ex) {
+    // ex.printStackTrace();
+    // }
+    // return null;
     // }
 }

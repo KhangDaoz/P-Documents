@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * Giao diện chon sach cho phieu muon — Buoc 1 cua module Dat Sach.
@@ -41,10 +42,9 @@ public class SearchBorrowFrm extends JFrame implements ActionListener {
 
     public SearchBorrowFrm(User u) {
         this.u = u;
-        Date today = new Date();
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_MONTH, 2);
-        currentBorrowing = new Borrowing(null, u, today, cal.getTime());
+        LocalDate today = LocalDate.now();
+        LocalDate receiveDate = today.plusDays(2);
+        currentBorrowing = new Borrowing(null, u, today, receiveDate);
         initComponents();
     }
 
@@ -190,9 +190,8 @@ public class SearchBorrowFrm extends JFrame implements ActionListener {
             }
         }
 
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_MONTH, 14);
-        BorrowedBook bb = new BorrowedBook(selected, cal.getTime(), selected.getPrice());
+        LocalDate returnDate = LocalDate.now().plusDays(14);
+        BorrowedBook bb = new BorrowedBook(selected, returnDate, selected.getPrice());
         currentBorrowing.getBooks().add(bb);
 
         int stt = currentBorrowing.getBooks().size();

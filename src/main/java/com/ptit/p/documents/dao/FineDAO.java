@@ -16,8 +16,8 @@ public class FineDAO extends DAO {
         String sql = "SELECT ID, name, fineRate, description FROM tblFine";
 
         try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql);
-             ResultSet resultSet = statement.executeQuery()) {
+                PreparedStatement statement = connection.prepareStatement(sql);
+                ResultSet resultSet = statement.executeQuery()) {
 
             while (resultSet.next()) {
                 Fine fine = new Fine();
@@ -25,7 +25,7 @@ public class FineDAO extends DAO {
                 fine.setName(resultSet.getString("name"));
                 fine.setFineRate(resultSet.getDouble("fineRate"));
                 fine.setDescription(resultSet.getString("description"));
-                
+
                 fines.add(fine);
             }
 

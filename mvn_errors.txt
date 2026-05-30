@@ -1,0 +1,114 @@
+[[1;34mINFO[m] Scanning for projects...
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m------------------------< [0;36mcom.ptit:P-Documents[0;1m >------------------------[m
+[[1;34mINFO[m] [1mBuilding P-Documents 1.0-SNAPSHOT[m
+[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-clean-plugin:2.5:clean[m [1m(default-clean)[m @ [36mP-Documents[0;1m ---[m
+[[1;34mINFO[m] Deleting /home/huycao/Desktop/PDocs/P-Documents/target
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-resources-plugin:2.6:resources[m [1m(default-resources)[m @ [36mP-Documents[0;1m ---[m
+[[1;34mINFO[m] Using 'UTF-8' encoding to copy filtered resources.
+[[1;34mINFO[m] Copying 1 resource
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-compiler-plugin:3.13.0:compile[m [1m(default-compile)[m @ [36mP-Documents[0;1m ---[m
+[[1;34mINFO[m] Recompiling the module because of [1mchanged source code[m.
+[[1;34mINFO[m] Compiling 54 source files with javac [debug release 17] to target/classes
+[[1;34mINFO[m] Some messages have been simplified; recompile with -Xdiags:verbose to get full output
+[[1;34mINFO[m] -------------------------------------------------------------
+[[1;31mERROR[m] COMPILATION ERROR : 
+[[1;34mINFO[m] -------------------------------------------------------------
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/dao/BillDAO.java:[70,25] cannot find symbol
+  symbol:   method toInstant()
+  location: class java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/dao/BorrowedBookDAO.java:[48,80] incompatible types: bad type in conditional expression
+    java.util.Date cannot be converted to java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/dao/BorrowedBookDAO.java:[71,111] cannot find symbol
+  symbol:   method getTime()
+  location: class java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/dao/BorrowedBookDAO.java:[134,59] incompatible types: java.sql.Timestamp cannot be converted to java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/dao/BorrowedBookDAO.java:[140,61] incompatible types: java.sql.Timestamp cannot be converted to java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/dao/BorrowedBookDAO.java:[141,59] incompatible types: java.sql.Timestamp cannot be converted to java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/dao/BorrowingDAO.java:[146,71] incompatible types: java.sql.Date cannot be converted to java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/dao/BorrowingDAO.java:[147,69] incompatible types: java.sql.Date cannot be converted to java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/dao/BorrowingDAO.java:[152,48] incompatible types: java.util.Date cannot be converted to java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/dao/BorrowingDAO.java:[206,46] incompatible types: java.sql.Date cannot be converted to java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/dao/BorrowingDAO.java:[207,56] incompatible types: java.sql.Date cannot be converted to java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/dao/BorrowingDAO.java:[208,54] incompatible types: java.sql.Date cannot be converted to java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/dao/BorrowingDAO.java:[246,56] incompatible types: java.sql.Date cannot be converted to java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/dao/BorrowingDAO.java:[247,54] incompatible types: java.sql.Date cannot be converted to java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/view/ReturnConfirmFrm.java:[290,93] cannot find symbol
+  symbol:   method toInstant()
+  location: class java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/view/ReturnConfirmFrm.java:[300,81] cannot find symbol
+  symbol:   method toInstant()
+  location: class java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/view/ReturnConfirmFrm.java:[342,55] cannot find symbol
+  symbol:   method toInstant()
+  location: class java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/view/ReturnConfirmFrm.java:[375,45] incompatible types: java.util.Date cannot be converted to java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/view/SearchBorrowFrm.java:[47,28] no suitable constructor found for Borrowing(<nulltype>,com.ptit.p.documents.model.User,java.util.Date,java.util.Date)
+    constructor com.ptit.p.documents.model.Borrowing.Borrowing(com.ptit.p.documents.model.Student,com.ptit.p.documents.model.User,java.time.LocalDate,java.lang.String) is not applicable
+      (argument mismatch; java.util.Date cannot be converted to java.time.LocalDate)
+    constructor com.ptit.p.documents.model.Borrowing.Borrowing(com.ptit.p.documents.model.Student,com.ptit.p.documents.model.User,java.time.LocalDate,java.time.LocalDate) is not applicable
+      (argument mismatch; java.util.Date cannot be converted to java.time.LocalDate)
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/view/SearchBorrowFrm.java:[195,27] no suitable constructor found for BorrowedBook(com.ptit.p.documents.model.Book,java.util.Date,double)
+    constructor com.ptit.p.documents.model.BorrowedBook.BorrowedBook(com.ptit.p.documents.model.Book,java.time.LocalDate,double) is not applicable
+      (argument mismatch; java.util.Date cannot be converted to java.time.LocalDate)
+    constructor com.ptit.p.documents.model.BorrowedBook.BorrowedBook(com.ptit.p.documents.model.Book,java.time.LocalDate,java.math.BigDecimal) is not applicable
+      (argument mismatch; java.util.Date cannot be converted to java.time.LocalDate)
+[[1;34mINFO[m] 20 errors 
+[[1;34mINFO[m] -------------------------------------------------------------
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] [1;31mBUILD FAILURE[m
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] Total time:  1.805 s
+[[1;34mINFO[m] Finished at: 2026-05-30T21:26:44+07:00
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;31mERROR[m] Failed to execute goal [32morg.apache.maven.plugins:maven-compiler-plugin:3.13.0:compile[m [1m(default-compile)[m on project [36mP-Documents[m: [1;31mCompilation failure[m: Compilation failure: 
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/dao/BillDAO.java:[70,25] cannot find symbol
+[[1;31mERROR[m]   symbol:   method toInstant()
+[[1;31mERROR[m]   location: class java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/dao/BorrowedBookDAO.java:[48,80] incompatible types: bad type in conditional expression
+[[1;31mERROR[m]     java.util.Date cannot be converted to java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/dao/BorrowedBookDAO.java:[71,111] cannot find symbol
+[[1;31mERROR[m]   symbol:   method getTime()
+[[1;31mERROR[m]   location: class java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/dao/BorrowedBookDAO.java:[134,59] incompatible types: java.sql.Timestamp cannot be converted to java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/dao/BorrowedBookDAO.java:[140,61] incompatible types: java.sql.Timestamp cannot be converted to java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/dao/BorrowedBookDAO.java:[141,59] incompatible types: java.sql.Timestamp cannot be converted to java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/dao/BorrowingDAO.java:[146,71] incompatible types: java.sql.Date cannot be converted to java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/dao/BorrowingDAO.java:[147,69] incompatible types: java.sql.Date cannot be converted to java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/dao/BorrowingDAO.java:[152,48] incompatible types: java.util.Date cannot be converted to java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/dao/BorrowingDAO.java:[206,46] incompatible types: java.sql.Date cannot be converted to java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/dao/BorrowingDAO.java:[207,56] incompatible types: java.sql.Date cannot be converted to java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/dao/BorrowingDAO.java:[208,54] incompatible types: java.sql.Date cannot be converted to java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/dao/BorrowingDAO.java:[246,56] incompatible types: java.sql.Date cannot be converted to java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/dao/BorrowingDAO.java:[247,54] incompatible types: java.sql.Date cannot be converted to java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/view/ReturnConfirmFrm.java:[290,93] cannot find symbol
+[[1;31mERROR[m]   symbol:   method toInstant()
+[[1;31mERROR[m]   location: class java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/view/ReturnConfirmFrm.java:[300,81] cannot find symbol
+[[1;31mERROR[m]   symbol:   method toInstant()
+[[1;31mERROR[m]   location: class java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/view/ReturnConfirmFrm.java:[342,55] cannot find symbol
+[[1;31mERROR[m]   symbol:   method toInstant()
+[[1;31mERROR[m]   location: class java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/view/ReturnConfirmFrm.java:[375,45] incompatible types: java.util.Date cannot be converted to java.time.LocalDate
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/view/SearchBorrowFrm.java:[47,28] no suitable constructor found for Borrowing(<nulltype>,com.ptit.p.documents.model.User,java.util.Date,java.util.Date)
+[[1;31mERROR[m]     constructor com.ptit.p.documents.model.Borrowing.Borrowing(com.ptit.p.documents.model.Student,com.ptit.p.documents.model.User,java.time.LocalDate,java.lang.String) is not applicable
+[[1;31mERROR[m]       (argument mismatch; java.util.Date cannot be converted to java.time.LocalDate)
+[[1;31mERROR[m]     constructor com.ptit.p.documents.model.Borrowing.Borrowing(com.ptit.p.documents.model.Student,com.ptit.p.documents.model.User,java.time.LocalDate,java.time.LocalDate) is not applicable
+[[1;31mERROR[m]       (argument mismatch; java.util.Date cannot be converted to java.time.LocalDate)
+[[1;31mERROR[m] /home/huycao/Desktop/PDocs/P-Documents/src/main/java/com/ptit/p/documents/view/SearchBorrowFrm.java:[195,27] no suitable constructor found for BorrowedBook(com.ptit.p.documents.model.Book,java.util.Date,double)
+[[1;31mERROR[m]     constructor com.ptit.p.documents.model.BorrowedBook.BorrowedBook(com.ptit.p.documents.model.Book,java.time.LocalDate,double) is not applicable
+[[1;31mERROR[m]       (argument mismatch; java.util.Date cannot be converted to java.time.LocalDate)
+[[1;31mERROR[m]     constructor com.ptit.p.documents.model.BorrowedBook.BorrowedBook(com.ptit.p.documents.model.Book,java.time.LocalDate,java.math.BigDecimal) is not applicable
+[[1;31mERROR[m]       (argument mismatch; java.util.Date cannot be converted to java.time.LocalDate)
+[[1;31mERROR[m] -> [1m[Help 1][m
+[[1;31mERROR[m] 
+[[1;31mERROR[m] To see the full stack trace of the errors, re-run Maven with the [1m-e[m switch.
+[[1;31mERROR[m] Re-run Maven using the [1m-X[m switch to enable full debug logging.
+[[1;31mERROR[m] 
+[[1;31mERROR[m] For more information about the errors and possible solutions, please read the following articles:
+[[1;31mERROR[m] [1m[Help 1][m http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

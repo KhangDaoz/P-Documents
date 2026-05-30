@@ -8,7 +8,7 @@ import com.ptit.p.documents.model.User;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Giao dien xac nhan huy dat sach — Buoc cuoi cua module Huy Dat Sach.
@@ -67,7 +67,7 @@ public class ConfirmCancelFrm extends JFrame implements ActionListener {
     }
 
     private String buildInfoText() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        DateTimeFormatter sdf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         StringBuilder sb = new StringBuilder();
         sb.append("THONG TIN HUY DAT SACH\n");
         sb.append("-------------------------------------\n\n");
@@ -86,7 +86,7 @@ public class ConfirmCancelFrm extends JFrame implements ActionListener {
         }
 
         if (b.getCreatedAt() != null)
-            sb.append("Ngay dat muon   :  ").append(sdf.format(b.getCreatedAt())).append("\n");
+            sb.append("Ngay dat muon   :  ").append(b.getCreatedAt().format(sdf)).append("\n");
 
         sb.append("Trang thai hien :  ").append(b.getStatus()).append("\n");
         return sb.toString();

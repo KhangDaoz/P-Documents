@@ -26,8 +26,7 @@ public class BorrowingDAO extends DAO {
     }
 
     // Tìm bản sao status='good' chưa nằm trong phiếu pending/borrowed
-    private static final String SQL_FIND_BOOK_ITEM =
-            "SELECT ID FROM tblBookItem"
+    private static final String SQL_FIND_BOOK_ITEM = "SELECT ID FROM tblBookItem"
             + " WHERE tblBookISBN = ? AND status = 'good'"
             + " AND ID NOT IN ("
             + "   SELECT bb.tblBookItemID FROM tblBorrowedBook bb"
@@ -36,11 +35,9 @@ public class BorrowingDAO extends DAO {
             + " ) LIMIT 1";
 
     public boolean addBorrowing(Borrowing b) {
-        String sqlAddBorrowing =
-                "INSERT INTO tblBorrowing(expectedReceiveDate, note, status, tblStudentID, tblUserID)"
+        String sqlAddBorrowing = "INSERT INTO tblBorrowing(expectedReceiveDate, note, status, tblStudentID, tblUserID)"
                 + " VALUES(?,?,?,?,?)";
-        String sqlAddBorrowedBook =
-                "INSERT INTO tblBorrowedBook(expectedReturnDate, status, note, price, tblBookItemID, tblBorrowingID)"
+        String sqlAddBorrowedBook = "INSERT INTO tblBorrowedBook(expectedReturnDate, status, note, price, tblBookItemID, tblBorrowingID)"
                 + " VALUES(?,?,?,?,?,?)";
 
         boolean result = true;
@@ -48,7 +45,8 @@ public class BorrowingDAO extends DAO {
             con.setAutoCommit(false);
 
             PreparedStatement ps = con.prepareStatement(sqlAddBorrowing, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, b.getExpectedReceiveDate() != null ? SDF_DATE.format(b.getExpectedReceiveDate()) : null);
+            ps.setDate(1,
+                    b.getExpectedReceiveDate() != null ? java.sql.Date.valueOf(b.getExpectedReceiveDate()) : null);
             ps.setString(2, b.getNote());
             ps.setString(3, b.getStatus() != null ? b.getStatus() : "pending");
             ps.setString(4, b.getStudent().getStudentId());
@@ -59,7 +57,9 @@ public class BorrowingDAO extends DAO {
             if (generatedKeys.next()) {
                 b.setId(generatedKeys.getInt(1));
             } else {
-                con.rollback(); con.setAutoCommit(true); return false;
+                con.rollback();
+                con.setAutoCommit(true);
+                return false;
             }
 
             for (BorrowedBook bb : b.getBooks()) {
@@ -75,14 +75,19 @@ public class BorrowingDAO extends DAO {
                     if (rs.next()) {
                         bookItemId = rs.getInt("ID");
                     } else {
-                        con.rollback(); con.setAutoCommit(true); return false;
+                        con.rollback();
+                        con.setAutoCommit(true);
+                        return false;
                     }
                 } else {
-                    con.rollback(); con.setAutoCommit(true); return false;
+                    con.rollback();
+                    con.setAutoCommit(true);
+                    return false;
                 }
 
                 ps = con.prepareStatement(sqlAddBorrowedBook, Statement.RETURN_GENERATED_KEYS);
-                ps.setString(1, bb.getExpectedReturnDate() != null ? SDF_DATE.format(bb.getExpectedReturnDate()) : null);
+                ps.setDate(1,
+                        bb.getExpectedReturnDate() != null ? java.sql.Date.valueOf(bb.getExpectedReturnDate()) : null);
                 ps.setString(2, bb.getStatus() != null ? bb.getStatus() : "good");
                 ps.setString(3, bb.getNote());
                 ps.setDouble(4, bb.getPrice());
@@ -91,7 +96,8 @@ public class BorrowingDAO extends DAO {
                 ps.executeUpdate();
 
                 ResultSet bbKeys = ps.getGeneratedKeys();
-                if (bbKeys.next()) bb.setId(bbKeys.getInt(1));
+                if (bbKeys.next())
+                    bb.setId(bbKeys.getInt(1));
 
                 if (bb.getBookItem() == null) {
                     BookItem bi = new BookItem();
@@ -105,7 +111,12 @@ public class BorrowingDAO extends DAO {
 
         } catch (Exception e) {
             result = false;
-            try { con.rollback(); con.setAutoCommit(true); } catch (Exception ex) { ex.printStackTrace(); }
+            try {
+                con.rollback();
+                con.setAutoCommit(true);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             e.printStackTrace();
         }
         return result;
@@ -116,12 +127,12 @@ public class BorrowingDAO extends DAO {
 
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT b.ID, b.expectedReceiveDate, b.actualReceiveDate, b.status, b.createdAt, ")
-           .append("s.ID AS studentId, s.fullName AS studentName, s.email, s.phone AS studentPhone, s.address, ")
-           .append("u.ID AS userId, u.username, u.password, u.fullName AS userFullName, u.phone AS userPhone, u.role ")
-           .append("FROM tblBorrowing b ")
-           .append("JOIN tblStudent s ON b.tblStudentID = s.ID ")
-           .append("JOIN tblUser u ON b.tblUserID = u.ID ")
-           .append("WHERE 1=1 ");
+                .append("s.ID AS studentId, s.fullName AS studentName, s.email, s.phone AS studentPhone, s.address, ")
+                .append("u.ID AS userId, u.username, u.password, u.fullName AS userFullName, u.phone AS userPhone, u.role ")
+                .append("FROM tblBorrowing b ")
+                .append("JOIN tblStudent s ON b.tblStudentID = s.ID ")
+                .append("JOIN tblUser u ON b.tblUserID = u.ID ")
+                .append("WHERE 1=1 ");
 
         List<Object> params = new ArrayList<>();
 
@@ -133,7 +144,7 @@ public class BorrowingDAO extends DAO {
             sql.append("AND s.fullName LIKE ? ");
             params.add("%" + studentName + "%");
         }
-        
+
         try (PreparedStatement statement = con.prepareStatement(sql.toString())) {
             for (int i = 0; i < params.size(); i++) {
                 statement.setObject(i + 1, params.get(i));
@@ -143,13 +154,17 @@ public class BorrowingDAO extends DAO {
                 while (resultSet.next()) {
                     Borrowing borrowing = new Borrowing();
                     borrowing.setId(resultSet.getInt("ID"));
-                    borrowing.setExpectedReceiveDate(resultSet.getDate("expectedReceiveDate"));
-                    borrowing.setActualReceiveDate(resultSet.getDate("actualReceiveDate"));
+                    borrowing.setExpectedReceiveDate(resultSet.getDate("expectedReceiveDate") != null
+                            ? resultSet.getDate("expectedReceiveDate").toLocalDate()
+                            : null);
+                    borrowing.setActualReceiveDate(resultSet.getDate("actualReceiveDate") != null
+                            ? resultSet.getDate("actualReceiveDate").toLocalDate()
+                            : null);
                     borrowing.setStatus(resultSet.getString("status"));
 
                     Timestamp createdAt = resultSet.getTimestamp("createdAt");
                     if (createdAt != null) {
-                        borrowing.setCreatedAt(new java.util.Date(createdAt.getTime()));
+                        borrowing.setCreatedAt(createdAt.toLocalDateTime().toLocalDate());
                     }
 
                     Student student = new Student();
@@ -169,7 +184,7 @@ public class BorrowingDAO extends DAO {
                     user.setRole(resultSet.getString("role"));
                     borrowing.setUser(user);
 
-                    //Get BorrowedBooks using the master method
+                    // Get BorrowedBooks using the master method
                     List<BorrowedBook> books = loadBorrowedBooks(borrowing.getId());
                     borrowing.setBooks(books);
 
@@ -185,8 +200,7 @@ public class BorrowingDAO extends DAO {
 
     public ArrayList<Borrowing> searchBorrowing(String key) {
         ArrayList<Borrowing> result = new ArrayList<>();
-        String sql =
-                "SELECT br.ID, br.expectedReceiveDate, br.actualReceiveDate,"
+        String sql = "SELECT br.ID, br.expectedReceiveDate, br.actualReceiveDate,"
                 + " br.note, br.status, br.tblStudentID, br.createdAt,"
                 + " st.fullName, st.email, st.phone, st.address"
                 + " FROM tblBorrowing br"
@@ -203,9 +217,13 @@ public class BorrowingDAO extends DAO {
                 while (rs.next()) {
                     Borrowing b = new Borrowing();
                     b.setId(rs.getInt("ID"));
-                    b.setCreatedAt(rs.getDate("createdAt"));
-                    b.setExpectedReceiveDate(rs.getDate("expectedReceiveDate"));
-                    b.setActualReceiveDate(rs.getDate("actualReceiveDate"));
+                    b.setCreatedAt(rs.getDate("createdAt") != null ? rs.getDate("createdAt").toLocalDate() : null);
+                    b.setExpectedReceiveDate(
+                            rs.getDate("expectedReceiveDate") != null ? rs.getDate("expectedReceiveDate").toLocalDate()
+                                    : null);
+                    b.setActualReceiveDate(
+                            rs.getDate("actualReceiveDate") != null ? rs.getDate("actualReceiveDate").toLocalDate()
+                                    : null);
                     b.setNote(rs.getString("note"));
                     b.setStatus(rs.getString("status"));
 
@@ -229,8 +247,7 @@ public class BorrowingDAO extends DAO {
 
     public ArrayList<BorrowedBook> loadBorrowedBooks(int borrowingId) {
         ArrayList<BorrowedBook> list = new ArrayList<>();
-        String sql =
-                "SELECT bb.ID, bb.expectedReturnDate, bb.actualReturnDate, bb.status,"
+        String sql = "SELECT bb.ID, bb.expectedReturnDate, bb.actualReturnDate, bb.status,"
                 + " bb.note, bb.price, bb.tblBookItemID,"
                 + " bi.tblBookISBN, bk.ISBN, bk.title, bk.author, bk.genre"
                 + " FROM tblBorrowedBook bb"
@@ -243,8 +260,12 @@ public class BorrowingDAO extends DAO {
                 while (rs.next()) {
                     BorrowedBook bb = new BorrowedBook();
                     bb.setId(rs.getInt("ID"));
-                    bb.setExpectedReturnDate(rs.getDate("expectedReturnDate"));
-                    bb.setActualReturnDate(rs.getDate("actualReturnDate"));
+                    bb.setExpectedReturnDate(
+                            rs.getDate("expectedReturnDate") != null ? rs.getDate("expectedReturnDate").toLocalDate()
+                                    : null);
+                    bb.setActualReturnDate(
+                            rs.getDate("actualReturnDate") != null ? rs.getDate("actualReturnDate").toLocalDate()
+                                    : null);
                     bb.setStatus(rs.getString("status"));
                     bb.setNote(rs.getString("note"));
                     bb.setPrice(rs.getDouble("price"));
@@ -271,7 +292,7 @@ public class BorrowingDAO extends DAO {
     }
 
     public boolean cancelBorrowing(int borrowingId) {
-        String sqlCheck  = "SELECT status FROM tblBorrowing WHERE ID = ?";
+        String sqlCheck = "SELECT status FROM tblBorrowing WHERE ID = ?";
         String sqlCancel = "UPDATE tblBorrowing SET status = 'cancelled' WHERE ID = ? AND status = 'pending'";
         String sqlCancelBooks = "UPDATE tblBorrowedBook SET status = 'good' WHERE tblBorrowingID = ?";
 
@@ -290,7 +311,9 @@ public class BorrowingDAO extends DAO {
             ps = con.prepareStatement(sqlCancel);
             ps.setInt(1, borrowingId);
             if (ps.executeUpdate() == 0) {
-                con.rollback(); con.setAutoCommit(true); return false;
+                con.rollback();
+                con.setAutoCommit(true);
+                return false;
             }
 
             ps = con.prepareStatement(sqlCancelBooks);
@@ -302,7 +325,12 @@ public class BorrowingDAO extends DAO {
 
         } catch (Exception e) {
             result = false;
-            try { con.rollback(); con.setAutoCommit(true); } catch (Exception ex) { ex.printStackTrace(); }
+            try {
+                con.rollback();
+                con.setAutoCommit(true);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             e.printStackTrace();
         }
         return result;
@@ -320,10 +348,10 @@ public class BorrowingDAO extends DAO {
         }
     }
 
-    public boolean updateBorrowingStatus(int borrowingId, java.util.Date actualReceiveDate, String status) {
+    public boolean updateBorrowingStatus(int borrowingId, java.time.LocalDate actualReceiveDate, String status) {
         String sql = "UPDATE tblBorrowing SET actualReceiveDate = ?, status = ? WHERE ID = ?";
         try (PreparedStatement statement = getConnection().prepareStatement(sql)) {
-            statement.setDate(1, actualReceiveDate != null ? new java.sql.Date(actualReceiveDate.getTime()) : null);
+            statement.setDate(1, actualReceiveDate != null ? java.sql.Date.valueOf(actualReceiveDate) : null);
             statement.setString(2, status);
             statement.setInt(3, borrowingId);
             return statement.executeUpdate() > 0;

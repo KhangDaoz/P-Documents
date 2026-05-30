@@ -287,7 +287,7 @@ public class ReturnConfirmFrm extends JFrame {
 
         int idx = 1;
         for (BorrowedBook bb : borrowing.getBorrowedBooks()) {
-            String expDate = bb.getExpectedReturnDate() != null ? bb.getExpectedReturnDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(dtf) : "";
+            String expDate = bb.getExpectedReturnDate() != null ? bb.getExpectedReturnDate().format(dtf) : "";
             String status = bb.getStatus() != null ? bb.getStatus() : "good";
 
             String title = resolveBookTitle(bb);
@@ -297,7 +297,7 @@ public class ReturnConfirmFrm extends JFrame {
             double overdueFine = 0.0;
             long overdueDays = 0;
             if (bb.getExpectedReturnDate() != null) {
-                overdueDays = ChronoUnit.DAYS.between(bb.getExpectedReturnDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), today);
+                overdueDays = ChronoUnit.DAYS.between(bb.getExpectedReturnDate(), today);
                 if (overdueDays > 0) {
                     overdueFine = overdueDays * overdueRatePerDay;
                 } else {
@@ -339,7 +339,7 @@ public class ReturnConfirmFrm extends JFrame {
         DecimalFormat moneyFormat = new DecimalFormat("#,##0");
         LocalDate today = LocalDate.now();
 
-        txtBorrowDate.setText(borrowing.getCreatedAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(dtf));
+        txtBorrowDate.setText(borrowing.getCreatedAt().format(dtf));
         txtReturnDate.setText(today.format(dtf));
 
         double totalAmount = totalOverdueFine + totalDamageFine;
@@ -372,7 +372,7 @@ public class ReturnConfirmFrm extends JFrame {
         LocalDate today = LocalDate.now();
 
         for (BorrowedBook bb : borrowing.getBorrowedBooks()) {
-            bb.setActualReturnDate(Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            bb.setActualReturnDate(today);
             if (bb.getStatus() == null || bb.getStatus().isBlank()) {
                 bb.setStatus("good");
             }
@@ -397,7 +397,7 @@ public class ReturnConfirmFrm extends JFrame {
             }
         }
 
-        if (!borrowingDAO.updateBorrowingStatus(borrowing.getId(), Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant()), "returned")) {
+        if (!borrowingDAO.updateBorrowingStatus(borrowing.getId(), today, "returned")) {
             JOptionPane.showMessageDialog(this, "Lỗi khi cập nhật phiếu mượn", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }

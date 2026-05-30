@@ -7,7 +7,7 @@ import com.ptit.p.documents.model.Borrowing;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Giao dien xac nhan thong tin dat sach — Buoc cuoi cua module Dat Sach.
@@ -54,7 +54,7 @@ public class ConfirmBorrowingFrm extends JFrame implements ActionListener {
     }
 
     private String buildInfoText() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        DateTimeFormatter sdf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         StringBuilder sb = new StringBuilder();
         sb.append("THONG TIN DAT SACH\n");
         sb.append("-------------------------------------\n\n");
@@ -77,9 +77,9 @@ public class ConfirmBorrowingFrm extends JFrame implements ActionListener {
         sb.append("\n");
 
         if (b.getCreatedAt() != null)
-            sb.append("Ngay dat     :  ").append(sdf.format(b.getCreatedAt())).append("\n");
+            sb.append("Ngay dat     :  ").append(b.getCreatedAt().format(sdf)).append("\n");
         if (b.getExpectedReceiveDate() != null)
-            sb.append("Nhan du kien :  ").append(sdf.format(b.getExpectedReceiveDate())).append("\n");
+            sb.append("Nhan du kien :  ").append(b.getExpectedReceiveDate().format(sdf)).append("\n");
 
         sb.append("Trang thai   :  ").append(b.getStatus()).append("\n");
         if (b.getUser() != null)

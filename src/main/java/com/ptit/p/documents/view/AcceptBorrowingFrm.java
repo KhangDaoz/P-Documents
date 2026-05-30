@@ -13,7 +13,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.time.format.DateTimeFormatter;
-import java.text.SimpleDateFormat;
+
 import java.util.List;
 
 public class AcceptBorrowingFrm extends JFrame {
@@ -56,9 +56,9 @@ public class AcceptBorrowingFrm extends JFrame {
         lblStudentId = new JLabel("Mã sinh viên: ");
         lblBorrowDate = new JLabel("Ngày hẹn nhận: ");
 
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         if (borrowing.getExpectedReceiveDate() != null) {
-            lblBorrowDate.setText("Ngày hẹn nhận: " + formatter.format(borrowing.getExpectedReceiveDate()));
+            lblBorrowDate.setText("Ngày hẹn nhận: " + borrowing.getExpectedReceiveDate().format(formatter));
         }
         if (borrowing.getStudent() != null) {
             lblStudentId.setText("Mã sinh viên: " + borrowing.getStudent().getStudentId());
@@ -123,7 +123,7 @@ public class AcceptBorrowingFrm extends JFrame {
 
         // Clear existing data
         tbmBooks.setRowCount(0);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        DateTimeFormatter sdf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         // Load books
         for (int i = 0; i < borrowedBooks.size(); i++) {
@@ -134,7 +134,7 @@ public class AcceptBorrowingFrm extends JFrame {
                 book = bookDAO.findByID(bookItemDAO.getBookISBN(bb.getBookItem().getId()));
             }
 
-            String expectedReturn = bb.getExpectedReturnDate() != null ? sdf.format(bb.getExpectedReturnDate()) : "";
+            String expectedReturn = bb.getExpectedReturnDate() != null ? bb.getExpectedReturnDate().format(sdf) : "";
             
             tbmBooks.addRow(new Object[] {
                 i + 1,

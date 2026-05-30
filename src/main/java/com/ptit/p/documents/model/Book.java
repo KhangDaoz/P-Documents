@@ -18,8 +18,7 @@ public class Book {
     private String description;
     private int availableCopies; // Thuộc tính dẫn xuất — tính động, không lưu trong DB
     private int totalCopies;
-    private BookItem[] bookItems; // Các bản sao vật lý (nạp theo nhu cầu)
-    private List<BookItem> items = new ArrayList<>(); // from master & sang branches
+    private List<BookItem> items = new ArrayList<>(); // Các bản sao vật lý mà đầu sách sở hữu (Book OWNS a List<BookItem>)
 
     public Book() {}
 
@@ -81,11 +80,6 @@ public class Book {
     }
 
     // -------- Getters & Setters --------
-
-    /** Alias của getIsbn() — giữ tương thích với code cũ sử dụng getId() */
-    public String getId() {
-        return isbn;
-    }
 
     public String getISBN() {
         return isbn;
@@ -165,14 +159,6 @@ public class Book {
 
     public void setAvailableCopies(int availableCopies) {
         this.availableCopies = availableCopies;
-    }
-
-    public BookItem[] getBookItems() {
-        return bookItems;
-    }
-
-    public void setBookItems(BookItem[] bookItems) {
-        this.bookItems = bookItems;
     }
 
     public int getTotalCopies() {

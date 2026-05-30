@@ -272,7 +272,7 @@ public class BorrowingDAO extends DAO {
 
                     BookItem bi = new BookItem();
                     bi.setId(rs.getInt("tblBookItemID"));
-                    bi.setTblBookISBN(rs.getString("tblBookISBN"));
+                    bi.setBookISBN(rs.getString("tblBookISBN"));
                     bb.setBookItem(bi);
 
                     Book book = new Book();
@@ -359,5 +359,21 @@ public class BorrowingDAO extends DAO {
             ex.printStackTrace();
             return false;
         }
+    }
+
+    /**
+     * Xác nhận nhận sách (module nhận sách trong CNPM.md): cập nhật trạng thái
+     * phiếu mượn sang "borrowed" và ghi nhận ngày nhận thực tế.
+     */
+    public boolean confirmBorrowing(int borrowingId, java.time.LocalDate actualReceiveDate) {
+        return updateBorrowingStatus(borrowingId, actualReceiveDate, "borrowed");
+    }
+
+    /**
+     * Cập nhật phiếu mượn khi trả sách (module trả sách trong CNPM.md): ghi nhận
+     * ngày trả thực tế và trạng thái mới của phiếu.
+     */
+    public boolean updateBorrowing(int borrowingId, java.time.LocalDate actualReceiveDate, String status) {
+        return updateBorrowingStatus(borrowingId, actualReceiveDate, status);
     }
 }

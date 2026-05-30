@@ -286,7 +286,7 @@ public class ReturnConfirmFrm extends JFrame {
         totalDamageFine = 0.0;
 
         int idx = 1;
-        for (BorrowedBook bb : borrowing.getBorrowedBooks()) {
+        for (BorrowedBook bb : borrowing.getBooks()) {
             String expDate = bb.getExpectedReturnDate() != null ? bb.getExpectedReturnDate().format(dtf) : "";
             String status = bb.getStatus() != null ? bb.getStatus() : "good";
 
@@ -371,7 +371,7 @@ public class ReturnConfirmFrm extends JFrame {
 
         LocalDate today = LocalDate.now();
 
-        for (BorrowedBook bb : borrowing.getBorrowedBooks()) {
+        for (BorrowedBook bb : borrowing.getBooks()) {
             bb.setActualReturnDate(today);
             if (bb.getStatus() == null || bb.getStatus().isBlank()) {
                 bb.setStatus("good");
@@ -397,7 +397,7 @@ public class ReturnConfirmFrm extends JFrame {
             }
         }
 
-        if (!borrowingDAO.updateBorrowingStatus(borrowing.getId(), today, "returned")) {
+        if (!borrowingDAO.updateBorrowing(borrowing.getId(), today, "returned")) {
             JOptionPane.showMessageDialog(this, "Lỗi khi cập nhật phiếu mượn", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }

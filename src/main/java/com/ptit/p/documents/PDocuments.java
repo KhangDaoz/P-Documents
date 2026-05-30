@@ -5,7 +5,7 @@
 
 package com.ptit.p.documents;
 
-import com.ptit.p.documents.dao.DatabaseInitializer;
+import com.ptit.p.documents.dao.DAO;
 import com.ptit.p.documents.view.LoginFrm;
 
 import javax.swing.*;
@@ -27,13 +27,16 @@ public class PDocuments {
             System.err.println("FlatLaf Look and Feel setup failed: " + ex.getMessage());
         }
 
-        // ---- Khởi tạo database tự động ----
-        boolean dbReady = DatabaseInitializer.init();
-        if (!dbReady) {
+        // ---- Kiểm tra kết nối CSDL (việc mở kết nối nằm hoàn toàn trong DAO) ----
+        // Schema + dữ liệu mẫu: chạy src/main/resources/schema.sql trong MySQL một lần trước khi chạy app.
+        try {
+            new DAO();
+        } catch (RuntimeException ex) {
             JOptionPane.showMessageDialog(null,
-                    "Không thể kết nối hoặc khởi tạo database!\n"
+                    "Không thể kết nối database p_documents!\n"
                     + "Vui lòng kiểm tra:\n"
                     + "  • MySQL đang chạy trên localhost:3306\n"
+                    + "  • Đã chạy src/main/resources/schema.sql để tạo CSDL\n"
                     + "  • Username/password của root đã được thử (1812 và 123456)",
                     "Lỗi kết nối Database",
                     JOptionPane.ERROR_MESSAGE);

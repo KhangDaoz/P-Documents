@@ -62,7 +62,7 @@ public class BillDAO extends DAO {
         int totalOverdueDays = 0;
         double totalFine = 0.0;
 
-        List<BorrowedBook> borrowedBooks = borrowing.getBorrowedBooks();
+        List<BorrowedBook> borrowedBooks = borrowing.getBooks();
         if (borrowedBooks != null) {
             for (BorrowedBook bb : borrowedBooks) {
                 // Calculate overdue fine

@@ -112,12 +112,11 @@ public class Borrowing {
         this.createdAt = createdAt;
     }
 
-    @Deprecated
+    /** Ngày đặt mượn (borrowDate trong CNPM.md) — ánh xạ tới cột createdAt. */
     public LocalDate getBorrowDate() {
         return createdAt;
     }
 
-    @Deprecated
     public void setBorrowDate(LocalDate borrowDate) {
         this.createdAt = borrowDate;
     }
@@ -128,10 +127,6 @@ public class Borrowing {
 
     public void setBooks(List<BorrowedBook> books) {
         this.books = books != null ? books : new ArrayList<>();
-    }
-    
-    public List<BorrowedBook> getBorrowedBooks() {
-        return this.books;
     }
 
     public int getNumberOfBooks() {

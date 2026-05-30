@@ -41,14 +41,6 @@ public class BookItem {
         this.status = status;
     }
 
-    public String getTblBookISBN() {
-        return bookISBN;
-    }
-
-    public void setTblBookISBN(String bookISBN) {
-        this.bookISBN = bookISBN;
-    }
-
     public String getBookISBN() {
         return bookISBN;
     }

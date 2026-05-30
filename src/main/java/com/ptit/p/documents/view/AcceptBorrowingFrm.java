@@ -119,7 +119,7 @@ public class AcceptBorrowingFrm extends JFrame {
     }
 
     private void loadBookData() {
-        List<BorrowedBook> borrowedBooks = borrowing.getBorrowedBooks();
+        List<BorrowedBook> borrowedBooks = borrowing.getBooks();
 
         // Clear existing data
         tbmBooks.setRowCount(0);
@@ -138,7 +138,7 @@ public class AcceptBorrowingFrm extends JFrame {
             
             tbmBooks.addRow(new Object[] {
                 i + 1,
-                book != null ? book.getId() : (bb.getBookItem() != null ? bb.getBookItem().getId() : ""),
+                book != null ? book.getISBN() : (bb.getBookItem() != null ? bb.getBookItem().getId() : ""),
                 book != null ? book.getTitle() : "",
                 expectedReturn,
                 bb.getStatus(),
@@ -152,7 +152,7 @@ public class AcceptBorrowingFrm extends JFrame {
 
     private void confirmAction() {
         // Validate
-        if (borrowing.getBorrowedBooks() == null || borrowing.getBorrowedBooks().isEmpty()) {
+        if (borrowing.getBooks() == null || borrowing.getBooks().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Phiếu mượn không có sách!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -161,9 +161,9 @@ public class AcceptBorrowingFrm extends JFrame {
             return;
         }
 
-        if (borrowingDAO.updateBorrowingStatus(borrowing.getId(), "borrowed")) {
+        if (borrowingDAO.confirmBorrowing(borrowing.getId(), java.time.LocalDate.now())) {
             // Update book statuses to BORROWING
-            for (BorrowedBook bb : borrowing.getBorrowedBooks()) {
+            for (BorrowedBook bb : borrowing.getBooks()) {
                 if (bb.getBookItem() != null) {
                     bookItemDAO.updateStatus(bb.getBookItem().getId(), "borrowed");
                 }

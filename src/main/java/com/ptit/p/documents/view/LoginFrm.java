@@ -22,7 +22,6 @@ public class LoginFrm extends JFrame implements ActionListener {
         JPanel pnlMain = new JPanel(new GridBagLayout());
         setContentPane(pnlMain);
 
-        // Card panel chứa nội dung form với vị trí tuyệt đối như thiết kế
         JPanel pnl = new JPanel(null);
         pnl.setPreferredSize(new Dimension(500, 380));
         pnl.setBackground(Color.WHITE);
@@ -78,6 +77,7 @@ public class LoginFrm extends JFrame implements ActionListener {
             public void mouseEntered(java.awt.event.MouseEvent e) {
                 btnLogin.setBackground(new Color(59, 130, 246));
             }
+
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
                 btnLogin.setBackground(new Color(96, 165, 250));
@@ -89,48 +89,48 @@ public class LoginFrm extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == btnLogin) {
-            String username = txtUsername.getText().trim();
-            String password = new String(txtPassword.getPassword());
+        if (e.getSource() != btnLogin) {
+            return;
+        }
 
-            if (username.isEmpty() || password.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please enter both username and password!", "Warning", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
+        String username = txtUsername.getText().trim();
+        String password = new String(txtPassword.getPassword()).trim();
 
-            // Gọi lớp User để đóng gói thông tin đăng nhập
-            User user = new User();
-            user.setUsername(username);
-            user.setPassword(password);
+        if (username.isEmpty() || password.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu!", "Lỗi", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-            // Gọi phương thức checkLogin() của lớp UserDAO
-            UserDAO userDAO = new UserDAO();
-            User loggedUser = userDAO.checkLogin(user);
+        User loginUser = new User();
+        loginUser.setUsername(username);
+        loginUser.setPassword(password);
 
-            if (loggedUser != null) {
-                if ("admin".equalsIgnoreCase(loggedUser.getRole())) {
-                    // Nếu là Admin, ẩn form đăng nhập và mở AdminHomeFrm
-                    this.dispose();
-                    AdminHomeFrm homeFrm = new AdminHomeFrm();
-                    homeFrm.setVisible(true);
-                } else {
-                    JOptionPane.showMessageDialog(this, "Your account does not have Admin access privileges!", "Access Denied", JOptionPane.ERROR_MESSAGE);
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Incorrect username or password!", "Login Error", JOptionPane.ERROR_MESSAGE);
-            }
+        UserDAO userDAO = new UserDAO();
+        User loggedUser = userDAO.checkLogin(loginUser);
+
+        if (loggedUser == null) {
+            JOptionPane.showMessageDialog(this, "Tên đăng nhập hoặc mật khẩu không đúng!", "Lỗi đăng nhập", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String role = loggedUser.getRole() == null ? "" : loggedUser.getRole().trim().toLowerCase();
+        if ("admin".equals(role)) {
+            new AdminHomeFrm().setVisible(true);
+            dispose();
+        } else if ("librarian".equals(role) || "manager".equals(role)) {
+            new ManagerHomeFrm(loggedUser).setVisible(true);
+            dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Tài khoản không có quyền truy cập phù hợp.", "Lỗi phân quyền", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     public static void main(String[] args) {
         try {
             com.formdev.flatlaf.FlatIntelliJLaf.setup();
-            System.out.println("DEBUG: Active LookAndFeel is -> " + UIManager.getLookAndFeel().getName());
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        SwingUtilities.invokeLater(() -> {
-            new LoginFrm().setVisible(true);
-        });
+        SwingUtilities.invokeLater(() -> new LoginFrm().setVisible(true));
     }
 }

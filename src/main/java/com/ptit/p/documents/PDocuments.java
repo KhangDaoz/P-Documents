@@ -16,10 +16,6 @@ public class PDocuments {
             System.err.println("FlatLaf Look and Feel setup failed: " + ex.getMessage());
         }
 
-        SwingUtilities.invokeLater(() -> {
-            new LoginFrm().setVisible(true);
-        });
+        SwingUtilities.invokeLater(() -> new LoginFrm().setVisible(true));
     }
 }
-
-

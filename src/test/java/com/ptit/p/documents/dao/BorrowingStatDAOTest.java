@@ -91,4 +91,39 @@ class BorrowingStatDAOTest {
         
         assertTrue(result.isEmpty(), "SQL sẽ không tìm thấy dữ liệu nếu khoảng thời gian ngược");
     }
+
+    @Test
+    void test_EP_N1_BVA_N3_TopNIs2() {
+        // EP-N1: Số nguyên dương nhỏ (N < tổng sách)
+        // BVA-N3: Trên biên dưới (N = 2)
+        LocalDate from = LocalDate.of(2026, 1, 1);
+        LocalDate to = LocalDate.of(2026, 5, 31);
+        
+        List<BorrowingStat> result = dao.getTopBorrowedBooks(from, to, 2);
+        
+        assertEquals(2, result.size(), "Chỉ trả về 2 đầu sách");
+        assertEquals("ISBN-CS-01", result.get(0).getIsbn(), "Top 1 phải là ISBN-CS-01");
+        assertEquals("ISBN-CS-02", result.get(1).getIsbn(), "Top 2 phải là ISBN-CS-02");
+    }
+
+    @Test
+    void test_BVA_N4_TopNIs4() {
+        // BVA-N4: Dưới tổng số sách có lượt mượn (N = 4, tổng = 5)
+        LocalDate from = LocalDate.of(2026, 1, 1);
+        LocalDate to = LocalDate.of(2026, 5, 31);
+        
+        List<BorrowingStat> result = dao.getTopBorrowedBooks(from, to, 4);
+        
+        assertEquals(4, result.size(), "Trả về đúng 4 đầu sách");
+    }
+
+    @Test
+    void test_BVA_D7_FromDateIsOneDayAfterToDate() {
+        LocalDate from = LocalDate.of(2026, 1, 11);
+        LocalDate to = LocalDate.of(2026, 1, 10);
+        
+        List<BorrowingStat> result = dao.getTopBorrowedBooks(from, to, 10);
+        
+        assertTrue(result.isEmpty(), "Thời gian ngược biên sát (từ = đến + 1) phải trả về rỗng");
+    }
 }

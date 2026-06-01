@@ -90,4 +90,24 @@ class StockStatDAOTest {
 
         assertEquals(2, result.size(), "Chứa 2 dòng: ID=10 (15/03) và ID=14 (08/04)");
     }
+
+    @Test
+    void test_EP_D4_InvalidDateOrder() {
+        LocalDate from = LocalDate.of(2026, 5, 31);
+        LocalDate to = LocalDate.of(2026, 1, 1);
+        
+        List<StockStat> result = dao.searchDamageLossRecords(from, to, "Tất cả");
+        
+        assertTrue(result.isEmpty(), "Khoảng thời gian ngược phải trả về danh sách rỗng");
+    }
+
+    @Test
+    void test_BVA_D7_FromDateIsOneDayAfterToDate() {
+        LocalDate from = LocalDate.of(2026, 2, 11);
+        LocalDate to = LocalDate.of(2026, 2, 10);
+        
+        List<StockStat> result = dao.searchDamageLossRecords(from, to, "Tất cả");
+        
+        assertTrue(result.isEmpty(), "Từ ngày = Đến ngày + 1 ngày phải trả về danh sách rỗng");
+    }
 }

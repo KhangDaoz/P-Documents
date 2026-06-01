@@ -91,6 +91,11 @@ public class BorrowingStatFrm extends JFrame {
         try {
             LocalDate from = LocalDate.parse(txtFrom.getText().trim(), DF);
             LocalDate to   = LocalDate.parse(txtTo.getText().trim(), DF);
+            if (from.isAfter(to)) {
+                JOptionPane.showMessageDialog(this,
+                    "Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             int topN = (Integer) spnTopN.getValue();
 
             currentRows = dao.getTopBorrowedBooks(from, to, topN);

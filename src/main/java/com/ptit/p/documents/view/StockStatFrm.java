@@ -74,6 +74,11 @@ public class StockStatFrm extends JFrame {
         try {
             LocalDate from = LocalDate.parse(txtFrom.getText().trim(), DF);
             LocalDate to   = LocalDate.parse(txtTo.getText().trim(), DF);
+            if (from.isAfter(to)) {
+                JOptionPane.showMessageDialog(this,
+                    "Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             String reason  = (String) cbReason.getSelectedItem();
 
             currentRows = dao.searchDamageLossRecords(from, to, reason);

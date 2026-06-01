@@ -12,8 +12,7 @@ public class DAO {
         try {
             if (con == null || con.isClosed()) {
                 Class.forName("com.mysql.cj.jdbc.Driver");
-                String url = "jdbc:mysql:
-                        + "?useSSL=false&serverTimezone=UTC&characterEncoding=utf8&allowPublicKeyRetrieval=true";
+                String url = "jdbc:mysql://localhost:3306/p_documents?useSSL=false&serverTimezone=UTC&characterEncoding=utf8&allowPublicKeyRetrieval=true";
                 String user = "root";
                 String[] passwords = { "08082005", "123456"};
                 SQLException last = null;

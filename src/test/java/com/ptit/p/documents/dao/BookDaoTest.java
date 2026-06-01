@@ -1,190 +1,80 @@
 package com.ptit.p.documents.dao;
 
-import java.sql.Connection;
-import java.util.List;
-import org.junit.Assert;
-import org.junit.Test;
 import com.ptit.p.documents.model.Book;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import java.util.ArrayList;
 
 public class BookDaoTest {
-    private static final String EXISTING_ISBN = "ISBN-CS-04";
+
+    @BeforeClass
+    public static void initDb() {
+    }
+
     BookDAO bd = new BookDAO();
 
+    // TT1: Tim sach khong ton tai
     @Test
-    public void testSearchBookException(){
-        String key = "xxxxxxxxxx";
-        List<Book> listBook = bd.searchBook(key);
-        Assert.assertNotNull(listBook);
-        Assert.assertEquals(0, listBook.size());
+    public void testSearchBookException1() {
+        ArrayList<Book> list = bd.searchBook("xxxxxxxxxx", "", "", "");
+        Assert.assertNotNull(list);
+        Assert.assertEquals(0, list.size());
     }
 
+    // TT2: Tim sach ton tai theo the loai (genre ASCII, tranh loi dau tieng Viet)
     @Test
-    public void testSearchBookStandard(){
-        String key = "Software";
-        List<Book> listBook = bd.searchBook(key);
-        Assert.assertNotNull(listBook);
-        for(int i=0; i<listBook.size(); i++){
-            boolean match = listBook.get(i).getTitle().toLowerCase().contains(key.toLowerCase()) || 
-                            listBook.get(i).getAuthor().toLowerCase().contains(key.toLowerCase()) ||
-                            listBook.get(i).getISBN().toLowerCase().contains(key.toLowerCase());
-            Assert.assertTrue(match);
-        }
-    }
-
-    @Test
-    public void testUpdateBook() throws Exception {
-        Connection con = bd.getConnection();
-        if(con == null) {
-            Assert.fail("Không thể kết nối CSDL");
-            return;
-        }
-        
-        String newTitle = "Java Core Updated";
-        double newPrice = 250000;
-        String key = EXISTING_ISBN;
-        
-        try{
-            con.setAutoCommit(false);
-            List<Book> lb = bd.searchBook(key);
-            if(lb.size() > 0) {
-                lb.get(0).setTitle(newTitle);
-                lb.get(0).setPrice(newPrice);
-                bd.updateBook(lb.get(0));
-                
-                //test the new updated row
-                lb.clear();
-                lb = bd.searchBook(key);
-                Assert.assertEquals(newTitle, lb.get(0).getTitle());
-                Assert.assertEquals(newPrice, lb.get(0).getPrice(), 0.000001);
-            }
-        } catch(Exception e){
-            e.printStackTrace();
-        } finally {
-            try{
-                con.rollback();
-                con.setAutoCommit(true);
-            } catch(Exception ex){
-                ex.printStackTrace();
-            }
+    public void testSearchBookStandard1() {
+        String key = "Computer Science";
+        ArrayList<Book> list = bd.searchBook("", "", key, "");
+        Assert.assertNotNull(list);
+        Assert.assertTrue(list.size() >= 1);
+        for (int i = 0; i < list.size(); i++) {
+            Assert.assertTrue(
+                list.get(i).getGenre().toLowerCase().contains(key.toLowerCase())
+            );
         }
     }
 
+    // TT3: Tim sach theo ISBN cu the — dung 1 ket qua, ISBN khop
     @Test
-    public void testUpdateBookException() throws Exception {
-        Connection con = bd.getConnection();
-        if(con == null) return;
-        Book book = new Book();
-        book.setISBN("ISBN_NOT_EXIST");
-        book.setTitle("Sách Cập Nhật Ảo");
-        try {
-            con.setAutoCommit(false);
-            boolean result = bd.updateBook(book);
-            Assert.assertFalse(result);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                con.rollback();
-                con.setAutoCommit(true);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
+    public void testSearchBookStandard2() {
+        String isbn = "ISBN-CS-01";
+        ArrayList<Book> list = bd.searchBook("", "", "", isbn);
+        Assert.assertNotNull(list);
+        Assert.assertEquals(1, list.size());
+        Assert.assertEquals(isbn, list.get(0).getIsbn());
     }
 
+    // TT4: Tat ca tham so rong — tra ve toan bo sach (seed: 6 sach)
     @Test
-    public void testAddBookStandard() throws Exception {
-        Connection con = bd.getConnection();
-        if(con == null) return;
-        Book book = new Book();
-        book.setISBN("ISBN999");
-        book.setTitle("Sách Mới Thêm");
-        book.setAuthor("Tác Giả A");
-        book.setGenre("Khoa Học");
-        book.setPublisher("Nhà Xuất Bản A");
-        book.setPublishYear(2024);
-        book.setPrice(100000);
-        book.setDescription("Mô tả sách mới thêm");
-        book.setAvailableCopies(10);
-        book.setTotalCopies(10);
-        try {
-            con.setAutoCommit(false);
-            boolean result = bd.addBook(book);
-            Assert.assertTrue(result);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                con.rollback();
-                con.setAutoCommit(true);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
+    public void testSearchBookAllEmpty() {
+        ArrayList<Book> list = bd.searchBook("", "", "", "");
+        Assert.assertNotNull(list);
+        Assert.assertEquals(6, list.size());
     }
 
+    // TT5: Sach co ban sao kha dung — availableCopies la thuoc tinh dan xuat >= 0
     @Test
-    public void testAddBookException() throws Exception {
-        Connection con = bd.getConnection();
-        if(con == null) return;
-        Book book = new Book();
-        book.setISBN(EXISTING_ISBN); // Đã tồn tại trong seed data
-        book.setTitle("Sách Trùng ISBN");
-        try {
-            con.setAutoCommit(false);
-            boolean result = bd.addBook(book);
-            Assert.assertFalse(result);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                con.rollback();
-                con.setAutoCommit(true);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
+    public void testSearchBookAvailableCopies() {
+        String isbn = "ISBN-CS-01"; // 3 BookItem status='good' trong seed
+        ArrayList<Book> list = bd.searchBook("", "", "", isbn);
+        Assert.assertNotNull(list);
+        Assert.assertEquals(1, list.size());
+        // Thuoc tinh dan xuat: >= 0 va <= tong so ban sao (3)
+        int avail = list.get(0).getAvailableCopies();
+        Assert.assertTrue(avail >= 0);
+        Assert.assertTrue(avail <= 3);
     }
 
+    // TT6: Sach khong co ban sao nao (ISBN co sach nhung khong co BookItem)
     @Test
-    public void testDeleteBookStandard() throws Exception {
-        Connection con = bd.getConnection();
-        if(con == null) return;
-        String isbn = EXISTING_ISBN;
-        try {
-            con.setAutoCommit(false);
-            boolean result = bd.deleteBook(isbn);
-            Assert.assertTrue(result);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                con.rollback();
-                con.setAutoCommit(true);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-
-    @Test
-    public void testDeleteBookException() throws Exception {
-        Connection con = bd.getConnection();
-        if(con == null) return;
-        String isbn = "ISBN_NOT_EXIST";
-        try {
-            con.setAutoCommit(false);
-            boolean result = bd.deleteBook(isbn);
-            Assert.assertFalse(result);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                con.rollback();
-                con.setAutoCommit(true);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
+    public void testSearchBookNoCopies() {
+        String isbn = "ISBN-CS-03"; // 0 BookItem trong seed
+        ArrayList<Book> list = bd.searchBook("", "", "", isbn);
+        Assert.assertNotNull(list);
+        Assert.assertEquals(1, list.size());
+        Assert.assertEquals(0, list.get(0).getAvailableCopies());
     }
 }

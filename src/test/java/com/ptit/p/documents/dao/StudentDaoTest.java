@@ -1,6 +1,5 @@
-package test.unit;
+package com.ptit.p.documents.dao;
 
-import com.ptit.p.documents.dao.StudentDAO;
 import com.ptit.p.documents.model.Student;
 
 import org.junit.Assert;

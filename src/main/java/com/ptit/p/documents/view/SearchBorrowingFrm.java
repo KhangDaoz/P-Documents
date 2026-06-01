@@ -2,109 +2,287 @@ package com.ptit.p.documents.view;
 
 import com.ptit.p.documents.dao.BorrowingDAO;
 import com.ptit.p.documents.model.Borrowing;
+import com.ptit.p.documents.model.BorrowedBook;
 import com.ptit.p.documents.model.User;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.*;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.time.LocalDate;
 
-/**
- * Giao dien tim kiem phieu muon — Buoc dau cua module Huy Dat Sach.
- */
-public class SearchBorrowingFrm extends JFrame implements ActionListener {
+public class SearchBorrowingFrm extends JFrame {
+    private User currentUser;
+    private SearchMode mode;
+    private BorrowingDAO borrowingDAO;
 
-    private User       u;
-    private JTextField txtSearch;
-    private JButton    btnSearch;
-    private JTable     tblListBorrow;
-    private JLabel     lblStatus;
+    private JTextField txtStudentId;
+    private JTextField txtStudentName;
+    private JButton btnSearch;
+    private JButton btnClear;
+    private JTable tblResult;
+    private DefaultTableModel tbmResult;
+    private JButton btnSelect;
+    private JButton btnBack;
 
-    private DefaultTableModel    tableModel;
-    private ArrayList<Borrowing> searchResults = new ArrayList<>();
+    private List<Borrowing> searchResults;
 
-    public SearchBorrowingFrm(User u) {
-        this.u = u;
+    // Inline Detail Panel components
+    private JSplitPane mainSplitPane;
+    private JPanel pnlBorrowingDetail;
+    private JLabel lblDetailName;
+    private JLabel lblDetailId;
+    private JTable tblBorrowedBooks;
+    private DefaultTableModel tbmBorrowedBooks;
+    private JButton btnAddFine;
+    private JButton btnContinue;
+    private JButton btnDetailBack;
+
+    private Borrowing selectedBorrowing;
+    private BorrowedBook selectedBorrowedBook;
+
+    public SearchBorrowingFrm(User user, SearchMode mode) {
+        this.currentUser = user;
+        this.mode = mode;
+        this.borrowingDAO = new BorrowingDAO();
         initComponents();
     }
 
     private void initComponents() {
-        setTitle("Huy dat sach — Tim kiem phieu muon");
+        String title = "Tìm kiếm phiếu mượn";
+        if (mode == SearchMode.CONFIRM_BORROW) title = "Xử lý nhận sách";
+        if (mode == SearchMode.RETURN_BOOK) title = "Xử lý trả sách";
+        if (mode == SearchMode.CANCEL_BORROW) title = "Hủy đặt sách";
+        setTitle(title);
+        setSize(850, 550);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(780, 440);
         setLocationRelativeTo(null);
-        setLayout(new BorderLayout(4, 4));
+        setLayout(new BorderLayout());
 
-        // ---- Panel tìm kiếm ----
-        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 6));
-        searchPanel.setBorder(BorderFactory.createTitledBorder("Tim kiem phieu muon (trang thai: pending)"));
+        // NORTH: pnlSearch
+        JPanel pnlSearch = new JPanel(new GridBagLayout());
+        pnlSearch.setBorder(BorderFactory.createTitledBorder("Tìm kiếm"));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
 
-        searchPanel.add(new JLabel("Ma SV / Ho ten:"));
-        txtSearch = new JTextField(22);
-        searchPanel.add(txtSearch);
+        pnlSearch.add(new JLabel("Mã sinh viên:"), gbc);
+        txtStudentId = new JTextField(12);
+        gbc.gridx = 1;
+        pnlSearch.add(txtStudentId, gbc);
 
-        btnSearch = new JButton("Tim kiem");
-        btnSearch.addActionListener(this);
-        searchPanel.add(btnSearch);
+        gbc.gridx = 2;
+        pnlSearch.add(new JLabel("Tên sinh viên:"), gbc);
+        txtStudentName = new JTextField(15);
+        gbc.gridx = 3;
+        pnlSearch.add(txtStudentName, gbc);
 
-        add(searchPanel, BorderLayout.NORTH);
+        btnSearch = new JButton("Tìm kiếm");
+        gbc.gridx = 4;
+        pnlSearch.add(btnSearch, gbc);
 
-        // ---- Bảng kết quả ----
-        String[] cols = {"ID Phieu", "Ma SV", "Ho ten SV", "Ten sach", "Ngay dat", "Trang thai"};
-        tableModel = new DefaultTableModel(cols, 0) {
-            @Override public boolean isCellEditable(int r, int c) { return false; }
+        btnClear = new JButton("Xóa");
+        gbc.gridx = 5;
+        pnlSearch.add(btnClear, gbc);
+
+        add(pnlSearch, BorderLayout.NORTH);
+
+        // CENTER: tblResult inside JSplitPane
+        String[] columns = {"#", "Mã PM", "Tên sinh viên", "Ngày tạo", "Ngày hẹn nhận", "Trạng thái"};
+        tbmResult = new DefaultTableModel(columns, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
         };
-        tblListBorrow = new JTable(tableModel);
-        tblListBorrow.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        tblListBorrow.addMouseListener(new MouseAdapter() {
-            @Override public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) onBorrowingSelected();
+        tblResult = new JTable(tbmResult);
+        tblResult.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane scrResult = new JScrollPane(tblResult);
+
+        // SOUTH: pnlActions
+        JPanel pnlActions = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        String btnSelectText = "Chọn phiếu";
+        if (mode == SearchMode.RETURN_BOOK) btnSelectText = "Chọn phiếu trả";
+        if (mode == SearchMode.CANCEL_BORROW) btnSelectText = "Chọn phiếu hủy";
+        btnSelect = new JButton(btnSelectText);
+        
+        btnBack = new JButton("Quay lại");
+        pnlActions.add(btnSelect);
+        pnlActions.add(btnBack);
+
+        // Wrapper for TOP part
+        JPanel pnlTopWrap = new JPanel(new BorderLayout());
+        pnlTopWrap.add(scrResult, BorderLayout.CENTER);
+        pnlTopWrap.add(pnlActions, BorderLayout.SOUTH);
+
+        // Details Panel (Bottom part for SplitPane)
+        pnlBorrowingDetail = new JPanel(new BorderLayout());
+        pnlBorrowingDetail.setBorder(BorderFactory.createTitledBorder("Chi tiết phiếu mượn"));
+        pnlBorrowingDetail.setVisible(false);
+
+        JPanel pnlDetailInfo = new JPanel(new GridLayout(2, 2, 10, 10));
+        lblDetailName = new JLabel("Họ tên: ");
+        lblDetailId = new JLabel("Mã SV: ");
+        pnlDetailInfo.add(lblDetailName);
+        pnlDetailInfo.add(lblDetailId);
+        pnlBorrowingDetail.add(pnlDetailInfo, BorderLayout.NORTH);
+
+        String[] bookCols = {"#", "Mã sách", "Tên sách", "Hạn trả", "Trạng thái", "Lỗi phạt"};
+        tbmBorrowedBooks = new DefaultTableModel(bookCols, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        tblBorrowedBooks = new JTable(tbmBorrowedBooks);
+        pnlBorrowingDetail.add(new JScrollPane(tblBorrowedBooks), BorderLayout.CENTER);
+
+        JPanel pnlDetailActions = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        btnAddFine = new JButton("Thêm lỗi phạt");
+        btnContinue = new JButton("Tiếp tục ->");
+        btnDetailBack = new JButton("Quay lại");
+        pnlDetailActions.add(btnAddFine);
+        pnlDetailActions.add(btnContinue);
+        pnlDetailActions.add(btnDetailBack);
+        pnlBorrowingDetail.add(pnlDetailActions, BorderLayout.SOUTH);
+
+        mainSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, pnlTopWrap, pnlBorrowingDetail);
+        mainSplitPane.setDividerLocation(300);
+        mainSplitPane.setResizeWeight(0.6);
+        add(mainSplitPane, BorderLayout.CENTER);
+
+        // Event Listeners
+        btnSearch.addActionListener(e -> searchAction());
+        btnClear.addActionListener(e -> clearAction());
+        btnBack.addActionListener(e -> dispose());
+        btnSelect.addActionListener(e -> selectAction());
+        tblResult.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent me) {
+                if (me.getClickCount() == 2) {
+                    selectAction();
+                }
             }
         });
 
-        add(new JScrollPane(tblListBorrow), BorderLayout.CENTER);
-
-        lblStatus = new JLabel("Nhap Ma SV hoac ho ten va nhan Tim kiem. Double-click de huy phieu.");
-        lblStatus.setBorder(BorderFactory.createEmptyBorder(4, 6, 4, 6));
-        add(lblStatus, BorderLayout.SOUTH);
+        btnAddFine.addActionListener(e -> addFineAction());
+        btnDetailBack.addActionListener(e -> {
+            pnlBorrowingDetail.setVisible(false);
+            mainSplitPane.setDividerLocation(1.0); // Hide bottom
+        });
+        btnContinue.addActionListener(e -> {
+            if (selectedBorrowing == null) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn một phiếu mượn", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            new ReturnConfirmFrm(currentUser, selectedBorrowing).setVisible(true);
+            this.dispose();
+        });
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == btnSearch) {
-            BorrowingDAO dao = new BorrowingDAO();
-            searchResults = dao.searchBorrowing(txtSearch.getText().trim());
+    private void searchAction() {
+        String studentId = txtStudentId.getText().trim();
+        String studentName = txtStudentName.getText().trim();
 
-            tableModel.setRowCount(0);
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-            for (Borrowing b : searchResults) {
-                String tenSach = "";
-                if (b.getBooks() != null && !b.getBooks().isEmpty()
-                        && b.getBooks().get(0).getBook() != null)
-                    tenSach = b.getBooks().get(0).getBook().getTitle();
+        if (mode == SearchMode.CONFIRM_BORROW || mode == SearchMode.CANCEL_BORROW) {
+            searchResults = borrowingDAO.searchBorrowing(studentId, studentName, "pending");
+        } else {
+            searchResults = borrowingDAO.searchBorrowing(studentId, studentName, "borrowed", "overdue");
+        }
 
-                tableModel.addRow(new Object[]{
-                        b.getId(),
-                        b.getStudent() != null ? b.getStudent().getStudentId() : "",
-                        b.getStudent() != null ? b.getStudent().getFullName()  : "",
-                        tenSach,
-                        b.getCreatedAt() != null ? sdf.format(b.getCreatedAt()) : "",
-                        b.getStatus()
-                });
-            }
-
-            lblStatus.setText(searchResults.isEmpty()
-                    ? "Khong tim thay phieu nao dang cho nhan sach."
-                    : "Tim thay " + searchResults.size() + " phieu. Double-click de chon phieu can huy.");
+        tbmResult.setRowCount(0);
+        DateTimeFormatter sdf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        int idx = 1;
+        for (Borrowing b : searchResults) {
+            String bDate = b.getCreatedAt() != null ? b.getCreatedAt().format(sdf) : "";
+            String eDate = b.getExpectedReceiveDate() != null ? b.getExpectedReceiveDate().format(sdf) : "";
+            tbmResult.addRow(new Object[]{
+                idx++,
+                b.getId(),
+                b.getStudent() != null ? b.getStudent().getFullName() : "",
+                bDate,
+                eDate,
+                b.getStatus()
+            });
         }
     }
 
-    private void onBorrowingSelected() {
-        int row = tblListBorrow.getSelectedRow();
-        if (row < 0 || row >= searchResults.size()) return;
-        new ConfirmCancelFrm(searchResults.get(row), u).setVisible(true);
-        this.dispose();
+    private void clearAction() {
+        txtStudentId.setText("");
+        txtStudentName.setText("");
+        tbmResult.setRowCount(0);
+    }
+
+    private void selectAction() {
+        int selectedRow = tblResult.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một phiếu mượn", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        selectedBorrowing = searchResults.get(selectedRow);
+
+        if (mode == SearchMode.CONFIRM_BORROW) {
+            new AcceptBorrowingFrm(currentUser, selectedBorrowing).setVisible(true);
+            // this.dispose();
+        } else if (mode == SearchMode.CANCEL_BORROW) {
+            new ConfirmCancelFrm(selectedBorrowing, currentUser).setVisible(true);
+            this.dispose();
+        } else {
+            // INLINE DETAIL for RETURN_BOOK
+            showInlineDetail();
+        }
+    }
+
+    private void showInlineDetail() {
+        lblDetailName.setText("Họ tên: " + selectedBorrowing.getStudent().getFullName());
+        lblDetailId.setText("Mã SV: " + selectedBorrowing.getStudent().getStudentId());
+        
+        ((TitledBorder)pnlBorrowingDetail.getBorder()).setTitle("Chi tiết phiếu mượn #" + selectedBorrowing.getId());
+
+        tbmBorrowedBooks.setRowCount(0);
+        DateTimeFormatter sdf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        int idx = 1;
+        for (BorrowedBook bb : selectedBorrowing.getBooks()) {
+            String expDate = bb.getExpectedReturnDate() != null ? bb.getExpectedReturnDate().format(sdf) : "";
+            String bookName = "Sách ID: " + (bb.getBookItem() != null ? bb.getBookItem().getId() : "N/A");
+            int bookItemId = bb.getBookItem() != null ? bb.getBookItem().getId() : -1;
+            
+            // Summarize fines
+            long fineCount = 0;
+            if (bb.getBorrowedBookFines() != null) {
+                fineCount = bb.getBorrowedBookFines().size();
+            }
+            String finesSum = fineCount > 0 ? fineCount + " lỗi" : "Không có"; 
+            tbmBorrowedBooks.addRow(new Object[]{
+                idx++,
+                bookItemId,
+                bookName,
+                expDate,
+                bb.getStatus(),
+                finesSum
+            });
+        }
+
+        pnlBorrowingDetail.setVisible(true);
+        mainSplitPane.setDividerLocation(300);
+    }
+
+    private void addFineAction() {
+        int selectedRow = tblBorrowedBooks.getSelectedRow();
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một quyển sách để thêm lỗi phạt", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        selectedBorrowedBook = selectedBorrowing.getBooks().get(selectedRow);
+
+        new AddFineDlg(this, selectedBorrowedBook).setVisible(true);
+        selectedBorrowing.updateBorrowedBook(selectedBorrowedBook);
+        // After dialog closes, refresh the inline panel to show updated fines
+        showInlineDetail(); 
     }
 }

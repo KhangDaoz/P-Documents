@@ -16,7 +16,7 @@ public class ConfirmDeleteUserFrm extends JFrame implements ActionListener {
     private final JButton btnCancel;
 
     public ConfirmDeleteUserFrm(User user) {
-        super("ConfirmDeleteUserFrm");
+        super("Xác nhận xóa tài khoản");
         this.user = user;
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -33,7 +33,7 @@ public class ConfirmDeleteUserFrm extends JFrame implements ActionListener {
         pnlMain.add(pnl);
 
         // Tiêu đề form (hiển thị phẳng đẹp, không giống nút bấm)
-        JLabel lblHeader = new JLabel("Confirm Delete User Account", JLabel.CENTER);
+        JLabel lblHeader = new JLabel("Xác nhận xóa tài khoản", JLabel.CENTER);
         lblHeader.setFont(new Font("Segoe UI", Font.BOLD, 16));
         lblHeader.setForeground(new Color(30, 41, 59));
         lblHeader.setBounds(100, 30, 400, 35);
@@ -80,7 +80,7 @@ public class ConfirmDeleteUserFrm extends JFrame implements ActionListener {
         pnl.add(pnlGrid);
 
         // Nút Huỷ và Xác nhận xoá
-        btnCancel = new JButton("Cancel");
+        btnCancel = new JButton("Hủy");
         btnCancel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         btnCancel.setBackground(Color.WHITE);
         btnCancel.setForeground(new Color(50, 60, 70));
@@ -101,27 +101,28 @@ public class ConfirmDeleteUserFrm extends JFrame implements ActionListener {
         btnCancel.addActionListener(this);
         pnl.add(btnCancel);
 
-        btnConfirm = new JButton("Confirm");
-        btnConfirm.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btnConfirm.setBackground(new Color(96, 165, 250));
-        btnConfirm.setForeground(Color.WHITE);
+        btnConfirm = new JButton("Xác nhận");
+        btnConfirm.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        btnConfirm.setBackground(Color.WHITE);
+        btnConfirm.setForeground(Color.BLACK);
         btnConfirm.setFocusPainted(false);
-        btnConfirm.setBorder(BorderFactory.createEmptyBorder());
+        btnConfirm.setBorder(BorderFactory.createLineBorder(new Color(160, 170, 185)));
         btnConfirm.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnConfirm.setBounds(330, 310, 140, 35);
         btnConfirm.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                btnConfirm.setBackground(new Color(59, 130, 246));
+                btnConfirm.setBackground(new Color(230, 235, 240));
             }
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
-                btnConfirm.setBackground(new Color(96, 165, 250));
+                btnConfirm.setBackground(Color.WHITE);
             }
         });
         btnConfirm.addActionListener(this);
         pnl.add(btnConfirm);
         tblDeleteUserConfirm = new JTable();
+
     }
 
     private JLabel createGridLabel(String text, Color background) {
@@ -148,7 +149,7 @@ public class ConfirmDeleteUserFrm extends JFrame implements ActionListener {
                 UserManageFrm manageFrm = new UserManageFrm();
                 manageFrm.setVisible(true);
             } else {
-                JOptionPane.showMessageDialog(this, "Failed to delete account or account not found!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Xóa tài khoản thất bại hoặc không tìm thấy tài khoản!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 this.dispose();
                 UserManageFrm manageFrm = new UserManageFrm();
                 manageFrm.setVisible(true);

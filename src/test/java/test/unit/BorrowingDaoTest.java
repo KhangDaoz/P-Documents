@@ -13,9 +13,8 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 public class BorrowingDaoTest {
 
@@ -40,21 +39,18 @@ public class BorrowingDaoTest {
 
     // Helper: tao phieu muon mau voi ISBN cho truoc
     private Borrowing buildSampleBorrowing(String isbn) {
-        User user  = new User(1, "admin", "Nguyen Van Admin", "admin");
-        Student sv = new Student("SV220001", "Le Van An", "le@ptit.edu.vn", "0923456789", "Ha Noi");
+        User user  = new User(3, "librarian1", "Trần Thị Thư", "librarian");
+        Student sv = new Student("SV001", "Do Huy Hoang", "hoang@ptit.edu.vn", "0911111111", "Hanoi");
 
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_MONTH, 2);
-        Date receive = cal.getTime();
-        cal.add(Calendar.DAY_OF_MONTH, 14);
-        Date returnDt = cal.getTime();
+        LocalDate receive = LocalDate.now().plusDays(2);
+        LocalDate returnDt = LocalDate.now().plusDays(16);
 
         Book book = new Book();
         book.setIsbn(isbn);
 
-        BorrowedBook bb = new BorrowedBook(book, returnDt, BigDecimal.valueOf(85000));
+        BorrowedBook bb = new BorrowedBook(book, returnDt, BigDecimal.valueOf(150000));
 
-        Borrowing b = new Borrowing(sv, user, new Date(), receive);
+        Borrowing b = new Borrowing(sv, user, LocalDate.now(), receive);
         b.getBooks().add(bb);
         return b;
     }
@@ -64,7 +60,7 @@ public class BorrowingDaoTest {
     // TT11: SV va sach ton tai, con ban sao — dat thanh cong
     @Test
     public void testAddBorrowingStandard() {
-        Borrowing b = buildSampleBorrowing("978-604-1-01234-5");
+        Borrowing b = buildSampleBorrowing("ISBN-CS-01");
         boolean ok = bd.addBorrowing(b);
         Assert.assertTrue(ok);
         Assert.assertTrue(b.getId() > 0);
@@ -74,7 +70,7 @@ public class BorrowingDaoTest {
     // TT12: Sach khong con ban sao kha dung — dat that bai
     @Test
     public void testAddBorrowingExceptionNoBookItem() {
-        Borrowing b = buildSampleBorrowing("978-604-1-09012-3"); // 0 BookItem trong seed
+        Borrowing b = buildSampleBorrowing("ISBN-CS-03"); // 0 BookItem trong seed
         boolean ok = bd.addBorrowing(b);
         Assert.assertFalse(ok);
     }
@@ -82,19 +78,17 @@ public class BorrowingDaoTest {
     // TT13: Sinh vien khong ton tai — dat that bai (FK violation)
     @Test
     public void testAddBorrowingExceptionInvalidStudent() {
-        User user    = new User(1, "admin", "Nguyen Van Admin", "admin");
+        User user    = new User(3, "librarian1", "Trần Thị Thư", "librarian");
         Student svKo = new Student("SV999999", "Khong Ton Tai", "", "", "");
 
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_MONTH, 2);
-        Date receive = cal.getTime();
-        cal.add(Calendar.DAY_OF_MONTH, 14);
+        LocalDate receive = LocalDate.now().plusDays(2);
+        LocalDate returnDt = LocalDate.now().plusDays(16);
 
         Book book = new Book();
-        book.setIsbn("978-604-1-01234-5");
-        BorrowedBook bb = new BorrowedBook(book, cal.getTime(), BigDecimal.valueOf(85000));
+        book.setIsbn("ISBN-CS-01");
+        BorrowedBook bb = new BorrowedBook(book, returnDt, BigDecimal.valueOf(150000));
 
-        Borrowing b = new Borrowing(svKo, user, new Date(), receive);
+        Borrowing b = new Borrowing(svKo, user, LocalDate.now(), receive);
         b.getBooks().add(bb);
 
         boolean ok = bd.addBorrowing(b);
@@ -114,11 +108,11 @@ public class BorrowingDaoTest {
     // TT15: Co phieu pending — setup trong test, xoa sau khi test
     @Test
     public void testSearchBorrowingStandard() {
-        Borrowing b = buildSampleBorrowing("978-604-1-01234-5");
+        Borrowing b = buildSampleBorrowing("ISBN-CS-01");
         boolean addOk = bd.addBorrowing(b);
         Assert.assertTrue(addOk);
         try {
-            ArrayList<Borrowing> list = bd.searchBorrowing("SV220001");
+            ArrayList<Borrowing> list = bd.searchBorrowing("SV001");
             Assert.assertNotNull(list);
             Assert.assertTrue(list.size() >= 1);
             Assert.assertEquals("pending", list.get(0).getStatus());
@@ -130,7 +124,7 @@ public class BorrowingDaoTest {
     // TT16: Huy phieu dang pending — thanh cong
     @Test
     public void testCancelBorrowingStandard() {
-        Borrowing b = buildSampleBorrowing("978-604-1-01234-5");
+        Borrowing b = buildSampleBorrowing("ISBN-CS-01");
         boolean addOk = bd.addBorrowing(b);
         Assert.assertTrue(addOk);
         try {
@@ -138,7 +132,7 @@ public class BorrowingDaoTest {
             Assert.assertTrue(cancelOk);
 
             // Sau huy: phieu nay khong con trong danh sach pending
-            ArrayList<Borrowing> list = bd.searchBorrowing("SV220001");
+            ArrayList<Borrowing> list = bd.searchBorrowing("SV001");
             for (Borrowing item : list) {
                 Assert.assertNotEquals(b.getId(), item.getId());
             }
@@ -157,7 +151,7 @@ public class BorrowingDaoTest {
     // TT18: Huy phieu khong o trang thai pending — that bai (huy lan 2)
     @Test
     public void testCancelBorrowingExceptionNotPending() {
-        Borrowing b = buildSampleBorrowing("978-604-1-01234-5");
+        Borrowing b = buildSampleBorrowing("ISBN-CS-01");
         boolean addOk = bd.addBorrowing(b);
         Assert.assertTrue(addOk);
         try {

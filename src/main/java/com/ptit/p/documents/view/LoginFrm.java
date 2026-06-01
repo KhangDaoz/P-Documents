@@ -9,15 +9,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class LoginFrm extends JFrame implements ActionListener {
+    public static final String ROLE_LIBRARIAN = "librarian";
+    public static final String ROLE_ADMIN = "admin";
+    public static final String ROLE_MANAGER = "manager";
+
     private final JTextField txtUsername;
     private final JPasswordField txtPassword;
     private final JButton btnLogin;
 
     public LoginFrm() {
-        super("LoginFrm");
+        super("Đăng nhập hệ thống");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(560, 450);
         setLocationRelativeTo(null);
+        setResizable(false);
 
         JPanel pnlMain = new JPanel(new GridBagLayout());
         setContentPane(pnlMain);
@@ -28,13 +33,13 @@ public class LoginFrm extends JFrame implements ActionListener {
         pnl.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240), 1));
         pnlMain.add(pnl);
 
-        JLabel lblLogin = new JLabel("Login", JLabel.CENTER);
+        JLabel lblLogin = new JLabel("Đăng nhập", JLabel.CENTER);
         lblLogin.setFont(new Font("Segoe UI", Font.BOLD, 22));
         lblLogin.setForeground(new Color(30, 41, 59));
         lblLogin.setBounds(150, 50, 200, 40);
         pnl.add(lblLogin);
 
-        JLabel lblUser = new JLabel("Username:", JLabel.RIGHT);
+        JLabel lblUser = new JLabel("Tên đăng nhập:", JLabel.RIGHT);
         lblUser.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         lblUser.setForeground(new Color(71, 85, 105));
         lblUser.setBounds(60, 130, 90, 30);
@@ -47,7 +52,7 @@ public class LoginFrm extends JFrame implements ActionListener {
         txtUsername.setBounds(160, 130, 280, 30);
         pnl.add(txtUsername);
 
-        JLabel lblPass = new JLabel("Password:", JLabel.RIGHT);
+        JLabel lblPass = new JLabel("Mật khẩu:", JLabel.RIGHT);
         lblPass.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         lblPass.setForeground(new Color(71, 85, 105));
         lblPass.setBounds(60, 200, 90, 30);
@@ -55,36 +60,34 @@ public class LoginFrm extends JFrame implements ActionListener {
 
         txtPassword = new JPasswordField(15);
         txtPassword.putClientProperty("JPasswordField.showRevealButton", true);
-        txtPassword.putClientProperty("PasswordField.showRevealButton", true);
-        txtPassword.putClientProperty("showRevealButton", true);
-        txtPassword.putClientProperty("FlatLaf.style", "showRevealButton: true");
         txtPassword.setBackground(Color.WHITE);
         txtPassword.setForeground(Color.BLACK);
         txtPassword.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         txtPassword.setBounds(160, 200, 280, 30);
         pnl.add(txtPassword);
 
-        btnLogin = new JButton("Login");
-        btnLogin.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btnLogin.setBackground(new Color(96, 165, 250));
-        btnLogin.setForeground(Color.WHITE);
+        btnLogin = new JButton("Đăng nhập");
+        btnLogin.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        btnLogin.setBackground(Color.WHITE);
+        btnLogin.setForeground(Color.BLACK);
         btnLogin.setFocusPainted(false);
-        btnLogin.setBorder(BorderFactory.createEmptyBorder());
+        btnLogin.setBorder(BorderFactory.createLineBorder(new Color(160, 170, 185)));
         btnLogin.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnLogin.setBounds(195, 290, 110, 35);
         btnLogin.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                btnLogin.setBackground(new Color(59, 130, 246));
+                btnLogin.setBackground(new Color(230, 235, 240));
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
-                btnLogin.setBackground(new Color(96, 165, 250));
+                btnLogin.setBackground(Color.WHITE);
             }
         });
         btnLogin.addActionListener(this);
         pnl.add(btnLogin);
+
     }
 
     @Override
@@ -101,12 +104,8 @@ public class LoginFrm extends JFrame implements ActionListener {
             return;
         }
 
-        User loginUser = new User();
-        loginUser.setUsername(username);
-        loginUser.setPassword(password);
-
         UserDAO userDAO = new UserDAO();
-        User loggedUser = userDAO.checkLogin(loginUser);
+        User loggedUser = userDAO.checkLogin(username, password);
 
         if (loggedUser == null) {
             JOptionPane.showMessageDialog(this, "Tên đăng nhập hoặc mật khẩu không đúng!", "Lỗi đăng nhập", JOptionPane.ERROR_MESSAGE);
@@ -114,13 +113,13 @@ public class LoginFrm extends JFrame implements ActionListener {
         }
 
         String role = loggedUser.getRole() == null ? "" : loggedUser.getRole().trim().toLowerCase();
-        if ("admin".equals(role)) {
-            new AdminHomeFrm().setVisible(true);
+        if (ROLE_ADMIN.equals(role)) {
+            new AdminHomeFrm(loggedUser).setVisible(true);
             dispose();
-        } else if ("manager".equals(role)) {
+        } else if (ROLE_MANAGER.equals(role)) {
             new ManagerHomeFrm(loggedUser).setVisible(true);
             dispose();
-        } else if ("librarian".equals(role)) {
+        } else if (ROLE_LIBRARIAN.equals(role)) {
             new LibrarianHomeFrm(loggedUser).setVisible(true);
             dispose();
         } else {

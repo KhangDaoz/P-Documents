@@ -18,7 +18,7 @@ public class UserDAOTest {
     @BeforeEach
     public void setUp() throws SQLException {
         userDAO = new UserDAO();
-        con = userDAO.con; 
+        con = userDAO.getCon(); 
         
         if (con != null) {
             con.setAutoCommit(false); 
@@ -30,7 +30,19 @@ public class UserDAOTest {
         if (con != null) {
             con.rollback(); 
             con.setAutoCommit(true);
-            con.close(); 
+        }
+    }
+
+    @Test
+    void testDatabaseConnection() {
+        // We will call the inherited getConnection() to verify the connection
+        try {
+            Connection conn = userDAO.getConnection();
+            assertNotNull(conn, "Connection should not be null");
+            assertFalse(conn.isClosed(), "Connection should be open");
+            System.out.println("Database connection established successfully!");
+        } catch (SQLException e) {
+            fail("Database connection failed: " + e.getMessage());
         }
     }
 

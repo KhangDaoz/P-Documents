@@ -1,4 +1,5 @@
 {
+    "java.configuration.updateBuildConfiguration": "interactive",
     "explorer.sortOrder": "filesFirst",
     "explorer.compactFolders": true
 }

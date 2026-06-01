@@ -19,7 +19,7 @@ public class EditUserFrm extends JFrame implements ActionListener {
     private final JButton btnCancel;
 
     public EditUserFrm(User user) {
-        super("EditUserFrm");
+        super("Sửa tài khoản");
         this.user = user;
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -36,7 +36,7 @@ public class EditUserFrm extends JFrame implements ActionListener {
         pnlMain.add(pnl);
 
         // Tiêu đề form (hiển thị phẳng đẹp, không giống nút bấm)
-        JLabel lblHeader = new JLabel("Update User Information", JLabel.CENTER);
+        JLabel lblHeader = new JLabel("Cập nhật thông tin tài khoản", JLabel.CENTER);
         lblHeader.setFont(new Font("Segoe UI", Font.BOLD, 16));
         lblHeader.setForeground(new Color(30, 41, 59));
         lblHeader.setBounds(100, 30, 400, 35);
@@ -48,22 +48,22 @@ public class EditUserFrm extends JFrame implements ActionListener {
         pnlGrid.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240), 1));
 
         // Dòng 1: MNV
-        pnlGrid.add(createGridLabel("Employee ID", Color.WHITE, false));
+        pnlGrid.add(createGridLabel("Mã nhân viên", Color.WHITE, false));
         String mnvStr = "NV" + String.format("%03d", user.getId());
         pnlGrid.add(createGridLabel(mnvStr, new Color(248, 250, 252), false));
 
         // Dòng 2: Họ tên
-        pnlGrid.add(createGridLabel("Full Name", Color.WHITE, false));
+        pnlGrid.add(createGridLabel("Họ và tên", Color.WHITE, false));
         txtFullName = createGridTextField(user.getFullName(), true);
         pnlGrid.add(txtFullName);
 
         // Dòng 3: Tên đăng nhập
-        pnlGrid.add(createGridLabel("Username", Color.WHITE, false));
+        pnlGrid.add(createGridLabel("Tên đăng nhập", Color.WHITE, false));
         txtUsername = createGridTextField(user.getUsername(), true);
         pnlGrid.add(txtUsername);
 
         // Dòng 4: Mật khẩu
-        pnlGrid.add(createGridLabel("Password", Color.WHITE, false));
+        pnlGrid.add(createGridLabel("Mật khẩu", Color.WHITE, false));
         txtPassword = new JPasswordField(user.getPassword());
         txtPassword.putClientProperty("JPasswordField.showRevealButton", true);
         txtPassword.putClientProperty("PasswordField.showRevealButton", true);
@@ -76,19 +76,19 @@ public class EditUserFrm extends JFrame implements ActionListener {
         pnlGrid.add(txtPassword);
 
         // Dòng 5: Số điện thoại
-        pnlGrid.add(createGridLabel("Phone", Color.WHITE, false));
+        pnlGrid.add(createGridLabel("Số điện thoại", Color.WHITE, false));
         txtPhone = createGridTextField(user.getPhone(), true);
         pnlGrid.add(txtPhone);
 
         // Dòng 6: Quyền hạn
-        pnlGrid.add(createGridLabel("Role", Color.WHITE, false));
+        pnlGrid.add(createGridLabel("Vai trò", Color.WHITE, false));
         txtRole = createGridTextField(user.getRole(), true);
         pnlGrid.add(txtRole);
 
         pnl.add(pnlGrid);
 
         // Nút Huỷ và Cập nhật
-        btnCancel = new JButton("Cancel");
+        btnCancel = new JButton("Hủy");
         btnCancel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         btnCancel.setBackground(Color.WHITE);
         btnCancel.setForeground(new Color(50, 60, 70));
@@ -109,26 +109,27 @@ public class EditUserFrm extends JFrame implements ActionListener {
         btnCancel.addActionListener(this);
         pnl.add(btnCancel);
 
-        btnUpdate = new JButton("Update");
-        btnUpdate.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btnUpdate.setBackground(new Color(96, 165, 250));
-        btnUpdate.setForeground(Color.WHITE);
+        btnUpdate = new JButton("Cập nhật");
+        btnUpdate.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        btnUpdate.setBackground(Color.WHITE);
+        btnUpdate.setForeground(Color.BLACK);
         btnUpdate.setFocusPainted(false);
-        btnUpdate.setBorder(BorderFactory.createEmptyBorder());
+        btnUpdate.setBorder(BorderFactory.createLineBorder(new Color(160, 170, 185)));
         btnUpdate.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnUpdate.setBounds(330, 310, 140, 35);
         btnUpdate.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                btnUpdate.setBackground(new Color(59, 130, 246));
+                btnUpdate.setBackground(new Color(230, 235, 240));
             }
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
-                btnUpdate.setBackground(new Color(96, 165, 250));
+                btnUpdate.setBackground(Color.WHITE);
             }
         });
         btnUpdate.addActionListener(this);
         pnl.add(btnUpdate);
+
     }
 
     private JLabel createGridLabel(String text, Color background, boolean bold) {

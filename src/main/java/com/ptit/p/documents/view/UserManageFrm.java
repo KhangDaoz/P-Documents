@@ -12,7 +12,7 @@ public class UserManageFrm extends JFrame implements ActionListener {
     private final JButton btnBack;
 
     public UserManageFrm() {
-        super("UserManageFrm");
+        super("Quản lý tài khoản");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(660, 470);
         setLocationRelativeTo(null);
@@ -26,72 +26,72 @@ public class UserManageFrm extends JFrame implements ActionListener {
         pnl.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240), 1));
         pnlMain.add(pnl);
 
-        JLabel lblHeader = new JLabel("Manage Accounts", JLabel.CENTER);
+        JLabel lblHeader = new JLabel("Quản lý tài khoản", JLabel.CENTER);
         lblHeader.setFont(new Font("Segoe UI", Font.BOLD, 18));
         lblHeader.setForeground(new Color(30, 41, 59));
         lblHeader.setBounds(100, 25, 400, 35);
         pnl.add(lblHeader);
-        btnEditUser = new JButton("Edit Account");
-        btnEditUser.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btnEditUser.setBackground(new Color(96, 165, 250));
-        btnEditUser.setForeground(Color.WHITE);
+        btnEditUser = new JButton("Sửa tài khoản");
+        btnEditUser.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        btnEditUser.setBackground(Color.WHITE);
+        btnEditUser.setForeground(Color.BLACK);
         btnEditUser.setFocusPainted(false);
-        btnEditUser.setBorder(BorderFactory.createEmptyBorder());
+        btnEditUser.setBorder(BorderFactory.createLineBorder(new Color(160, 170, 185)));
         btnEditUser.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnEditUser.setBounds(190, 80, 220, 45);
         btnEditUser.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                btnEditUser.setBackground(new Color(59, 130, 246));
+                btnEditUser.setBackground(new Color(230, 235, 240));
             }
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
-                btnEditUser.setBackground(new Color(96, 165, 250));
+                btnEditUser.setBackground(Color.WHITE);
             }
         });
         btnEditUser.addActionListener(this);
         pnl.add(btnEditUser);
-        btnAddUser = new JButton("Create Account");
-        btnAddUser.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btnAddUser.setBackground(new Color(96, 165, 250));
-        btnAddUser.setForeground(Color.WHITE);
+        btnAddUser = new JButton("Tạo tài khoản");
+        btnAddUser.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        btnAddUser.setBackground(Color.WHITE);
+        btnAddUser.setForeground(Color.BLACK);
         btnAddUser.setFocusPainted(false);
-        btnAddUser.setBorder(BorderFactory.createEmptyBorder());
+        btnAddUser.setBorder(BorderFactory.createLineBorder(new Color(160, 170, 185)));
         btnAddUser.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnAddUser.setBounds(190, 145, 220, 45);
         btnAddUser.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                btnAddUser.setBackground(new Color(59, 130, 246));
+                btnAddUser.setBackground(new Color(230, 235, 240));
             }
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
-                btnAddUser.setBackground(new Color(96, 165, 250));
+                btnAddUser.setBackground(Color.WHITE);
             }
         });
         btnAddUser.addActionListener(this);
         pnl.add(btnAddUser);
-        btnDeleteUser = new JButton("Delete Account");
-        btnDeleteUser.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btnDeleteUser.setBackground(new Color(96, 165, 250));
-        btnDeleteUser.setForeground(Color.WHITE);
+        btnDeleteUser = new JButton("Xóa tài khoản");
+        btnDeleteUser.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        btnDeleteUser.setBackground(Color.WHITE);
+        btnDeleteUser.setForeground(Color.BLACK);
         btnDeleteUser.setFocusPainted(false);
-        btnDeleteUser.setBorder(BorderFactory.createEmptyBorder());
+        btnDeleteUser.setBorder(BorderFactory.createLineBorder(new Color(160, 170, 185)));
         btnDeleteUser.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnDeleteUser.setBounds(190, 210, 220, 45);
         btnDeleteUser.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                btnDeleteUser.setBackground(new Color(59, 130, 246));
+                btnDeleteUser.setBackground(new Color(230, 235, 240));
             }
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
-                btnDeleteUser.setBackground(new Color(96, 165, 250));
+                btnDeleteUser.setBackground(Color.WHITE);
             }
         });
         btnDeleteUser.addActionListener(this);
         pnl.add(btnDeleteUser);
-        btnBack = new JButton("Back");
+        btnBack = new JButton("Trở về");
         btnBack.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         btnBack.setBackground(Color.WHITE);
         btnBack.setForeground(new Color(50, 60, 70));
@@ -111,6 +111,7 @@ public class UserManageFrm extends JFrame implements ActionListener {
         });
         btnBack.addActionListener(this);
         pnl.add(btnBack);
+
     }
 
     @Override

@@ -7,7 +7,7 @@ import org.junit.Test;
 import com.ptit.p.documents.model.Book;
 
 public class BookDaoTest {
-    private static final String EXISTING_ISBN = "978-604-1-01234-5";
+    private static final String EXISTING_ISBN = "ISBN-CS-04";
     BookDAO bd = new BookDAO();
 
     @Test
@@ -20,7 +20,7 @@ public class BookDaoTest {
 
     @Test
     public void testSearchBookStandard(){
-        String key = "Java";
+        String key = "Software";
         List<Book> listBook = bd.searchBook(key);
         Assert.assertNotNull(listBook);
         for(int i=0; i<listBook.size(); i++){
@@ -32,7 +32,7 @@ public class BookDaoTest {
     }
 
     @Test
-    public void testUpdateBook(){
+    public void testUpdateBook() throws Exception {
         Connection con = bd.getConnection();
         if(con == null) {
             Assert.fail("Không thể kết nối CSDL");
@@ -70,7 +70,7 @@ public class BookDaoTest {
     }
 
     @Test
-    public void testUpdateBookException() {
+    public void testUpdateBookException() throws Exception {
         Connection con = bd.getConnection();
         if(con == null) return;
         Book book = new Book();
@@ -93,7 +93,7 @@ public class BookDaoTest {
     }
 
     @Test
-    public void testAddBookStandard() {
+    public void testAddBookStandard() throws Exception {
         Connection con = bd.getConnection();
         if(con == null) return;
         Book book = new Book();
@@ -124,7 +124,7 @@ public class BookDaoTest {
     }
 
     @Test
-    public void testAddBookException() {
+    public void testAddBookException() throws Exception {
         Connection con = bd.getConnection();
         if(con == null) return;
         Book book = new Book();
@@ -147,7 +147,7 @@ public class BookDaoTest {
     }
 
     @Test
-    public void testDeleteBookStandard() {
+    public void testDeleteBookStandard() throws Exception {
         Connection con = bd.getConnection();
         if(con == null) return;
         String isbn = EXISTING_ISBN;
@@ -168,7 +168,7 @@ public class BookDaoTest {
     }
 
     @Test
-    public void testDeleteBookException() {
+    public void testDeleteBookException() throws Exception {
         Connection con = bd.getConnection();
         if(con == null) return;
         String isbn = "ISBN_NOT_EXIST";

@@ -38,6 +38,7 @@ public class SearchBookFrm extends JFrame implements ActionListener {
 
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        mainPanel.setBackground(Color.WHITE);
 
         // Title
         JLabel lblTitle = new JLabel(titleText.toUpperCase(), SwingConstants.CENTER);
@@ -47,25 +48,32 @@ public class SearchBookFrm extends JFrame implements ActionListener {
 
         // Search panel
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        searchPanel.setBackground(Color.WHITE);
         searchPanel.add(new JLabel("Từ khóa (tên sách/tác giả/ISBN):"));
         txtKeyword = new JTextField(25);
         searchPanel.add(txtKeyword);
         btnSearch = new JButton("Tìm");
-        btnSearch.setBackground(UIManager.getColor("Button.background"));
+        btnSearch.setBackground(Color.WHITE);
         btnSearch.setForeground(Color.BLACK);
         btnSearch.setPreferredSize(new Dimension(80, 30));
+        btnSearch.setBorder(BorderFactory.createLineBorder(new Color(160, 170, 185)));
         searchPanel.add(btnSearch);
         btnBack = new JButton("Quay lại");
+        btnBack.setBackground(Color.WHITE);
+        btnBack.setForeground(Color.BLACK);
         btnBack.setPreferredSize(new Dimension(100, 30));
+        btnBack.setBorder(BorderFactory.createLineBorder(new Color(160, 170, 185)));
         searchPanel.add(btnBack);
 
         // Đặt search panel ở trên bảng
         JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.setBackground(Color.WHITE);
         topPanel.add(searchPanel, BorderLayout.SOUTH);
         mainPanel.add(topPanel, BorderLayout.NORTH);
 
         // Thay đổi: đặt title và search vào topPanel
         JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setBackground(Color.WHITE);
         headerPanel.add(lblTitle, BorderLayout.NORTH);
         headerPanel.add(searchPanel, BorderLayout.SOUTH);
         mainPanel.add(headerPanel, BorderLayout.NORTH);
@@ -112,6 +120,7 @@ public class SearchBookFrm extends JFrame implements ActionListener {
         });
 
         add(mainPanel);
+
     }
 
     @Override

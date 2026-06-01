@@ -16,7 +16,7 @@ public class ConfirmAddUserFrm extends JFrame implements ActionListener {
     private final JButton btnCancel;
 
     public ConfirmAddUserFrm(User user) {
-        super("ConfirmAddUserFrm");
+        super("Xác nhận tài khoản mới");
         this.user = user;
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -33,7 +33,7 @@ public class ConfirmAddUserFrm extends JFrame implements ActionListener {
         pnlMain.add(pnl);
 
        
-        JLabel lblHeader = new JLabel("Confirm New Account Details", JLabel.CENTER);
+        JLabel lblHeader = new JLabel("Xác nhận thông tin tài khoản mới", JLabel.CENTER);
         lblHeader.setFont(new Font("Segoe UI", Font.BOLD, 16));
         lblHeader.setForeground(new Color(50, 60, 70));
         lblHeader.setBounds(100, 30, 400, 35);
@@ -45,23 +45,23 @@ public class ConfirmAddUserFrm extends JFrame implements ActionListener {
         pnlGrid.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
 
         // Dòng 1: Họ tên
-        pnlGrid.add(createGridLabel("Full Name", Color.WHITE));
+        pnlGrid.add(createGridLabel("Họ và tên", Color.WHITE));
         pnlGrid.add(createGridLabel(user.getFullName(), Color.WHITE));
 
         // Dòng 2: Tên đăng nhập
-        pnlGrid.add(createGridLabel("Username", Color.WHITE));
+        pnlGrid.add(createGridLabel("Tên đăng nhập", Color.WHITE));
         pnlGrid.add(createGridLabel(user.getUsername(), Color.WHITE));
 
         // Dòng 3: Mật khẩu
-        pnlGrid.add(createGridLabel("Password", Color.WHITE));
+        pnlGrid.add(createGridLabel("Mật khẩu", Color.WHITE));
         pnlGrid.add(createGridLabel(user.getPassword(), Color.WHITE));
 
         // Dòng 4: Số điện thoại
-        pnlGrid.add(createGridLabel("Phone", Color.WHITE));
+        pnlGrid.add(createGridLabel("Số điện thoại", Color.WHITE));
         pnlGrid.add(createGridLabel(user.getPhone(), Color.WHITE));
 
         // Dòng 5: Quyền hạn
-        pnlGrid.add(createGridLabel("Role", Color.WHITE));
+        pnlGrid.add(createGridLabel("Vai trò", Color.WHITE));
         String roleText = user.getRole();
         if ("admin".equalsIgnoreCase(roleText)) {
             roleText = "Admin";
@@ -75,7 +75,7 @@ public class ConfirmAddUserFrm extends JFrame implements ActionListener {
         pnl.add(pnlGrid);
 
         // Nút Xác nhận & Quay lại
-        btnCancel = new JButton("Back");
+        btnCancel = new JButton("Quay lại");
         btnCancel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         btnCancel.setBackground(Color.WHITE);
         btnCancel.setForeground(new Color(50, 60, 70));
@@ -96,22 +96,22 @@ public class ConfirmAddUserFrm extends JFrame implements ActionListener {
         btnCancel.addActionListener(this);
         pnl.add(btnCancel);
 
-        btnConfirm = new JButton("Confirm & Save");
-        btnConfirm.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btnConfirm.setBackground(new Color(96, 165, 250));
-        btnConfirm.setForeground(Color.WHITE);
+        btnConfirm = new JButton("Xác nhận và lưu");
+        btnConfirm.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        btnConfirm.setBackground(Color.WHITE);
+        btnConfirm.setForeground(Color.BLACK);
         btnConfirm.setFocusPainted(false);
-        btnConfirm.setBorder(BorderFactory.createEmptyBorder());
+        btnConfirm.setBorder(BorderFactory.createLineBorder(new Color(160, 170, 185)));
         btnConfirm.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnConfirm.setBounds(330, 280, 140, 35);
         btnConfirm.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                btnConfirm.setBackground(new Color(59, 130, 246));
+                btnConfirm.setBackground(new Color(230, 235, 240));
             }
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
-                btnConfirm.setBackground(new Color(96, 165, 250));
+                btnConfirm.setBackground(Color.WHITE);
             }
         });
         btnConfirm.addActionListener(this);
@@ -119,6 +119,7 @@ public class ConfirmAddUserFrm extends JFrame implements ActionListener {
 
         
         tblAddUserConfirm = new JTable();
+
     }
 
     private JLabel createGridLabel(String text, Color background) {
@@ -146,7 +147,7 @@ public class ConfirmAddUserFrm extends JFrame implements ActionListener {
                 UserManageFrm manageFrm = new UserManageFrm();
                 manageFrm.setVisible(true);
             } else {
-                JOptionPane.showMessageDialog(this, "Failed to create account! Username might already exist.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Tạo tài khoản thất bại! Tên đăng nhập có thể đã tồn tại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 // Quay lại màn hình nhập liệu để Admin sửa
                 this.dispose();
                 AddUserFrm addFrm = new AddUserFrm();

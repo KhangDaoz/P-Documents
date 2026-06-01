@@ -1,47 +1,62 @@
 package com.ptit.p.documents.model;
 
-import java.math.BigDecimal;
-import java.util.Date;
+import java.util.ArrayList;
+import java.time.LocalDate;
 
 /**
  * Đại diện cho một cuốn sách cụ thể trong một phiếu mượn.
  * Tương ứng với bảng tblBorrowedBook trong CSDL.
- *
- * Các giá trị status (ENUM trong DB):
- *   "good"    — sách được trả trong trạng thái tốt
- *   "damaged" — sách bị hư hỏng khi trả
- *   "lost"    — sách bị mất
- *
- * Lưu ý:
- *   - bookItem : bản sao vật lý được gán (auto-tìm bởi BorrowingDAO khi thêm mới).
- *   - book     : tham chiếu tiện ích đến đầu sách — không lưu trực tiếp vào DB,
- *                dùng để truyền thông tin ISBN khi tạo phiếu mượn mới.
  */
 public class BorrowedBook {
-    private int        id;
-    private Date       expectedReturnDate;  // Ngày dự kiến trả
-    private Date       actualReturnDate;    // Ngày trả thực tế
-    private String     status;             // 'good' | 'damaged' | 'lost'
-    private String     note;
-    private BigDecimal price;
-    private BookItem   bookItem;           // Bản sao vật lý được mượn (PK từ tblBookItem)
-    private Book       book;              // Đầu sách — tham chiếu tiện ích, không phải cột DB
+    private int id;
+    private LocalDate expectedReturnDate;
+    private LocalDate actualReturnDate;
+    private String status;
+    private String note;
+    private double price;
+    private BookItem bookItem;
+    private Book book;
+    private ArrayList<BorrowedBookFine> borrowedBookFine;
+    private Borrowing borrowing;
 
-    public BorrowedBook() {}
+    public BorrowedBook() {
+        this.borrowedBookFine = new ArrayList<>();
+    }
 
-    /**
-     * Constructor dùng khi thủ thư vừa chọn sách từ kết quả tìm kiếm.
-     * bookItem sẽ được auto-gán bởi BorrowingDAO.addBorrowing().
-     *
-     * @param book               Đầu sách sinh viên muốn mượn
-     * @param expectedReturnDate Ngày dự kiến trả sách
-     * @param price              Giá tiền mượn sách (lấy từ tblBook)
-     */
-    public BorrowedBook(Book book, Date expectedReturnDate, BigDecimal price) {
-        this.book               = book;
+    public BorrowedBook(int id, LocalDate expectedReturnDate, LocalDate actualReturnDate, String status) {
+        this.id = id;
         this.expectedReturnDate = expectedReturnDate;
-        this.price              = price;
-        this.status             = "good";
+        this.actualReturnDate = actualReturnDate;
+        this.status = status;
+        this.borrowedBookFine = new ArrayList<>();
+    }
+
+    public BorrowedBook(Book book, LocalDate expectedReturnDate, double price) {
+        this.book = book;
+        this.expectedReturnDate = expectedReturnDate;
+        this.price = price;
+        this.status = "good";
+        this.borrowedBookFine = new ArrayList<>();
+    }
+
+    public BorrowedBook(Book book, LocalDate expectedReturnDate, java.math.BigDecimal price) {
+        this.book = book;
+        this.expectedReturnDate = expectedReturnDate;
+        this.price = price.doubleValue();
+        this.status = "good";
+        this.borrowedBookFine = new ArrayList<>();
+    }
+
+    public BorrowedBook(int id, LocalDate expectedReturnDate, LocalDate actualReturnDate, String status,
+                        String note, double price, BookItem bookItem, ArrayList<BorrowedBookFine> borrowedBookFine) {
+        this.id = id;
+        this.expectedReturnDate = expectedReturnDate;
+        this.actualReturnDate = actualReturnDate;
+        this.status = status;
+        this.note = note;
+        this.price = price;
+        this.bookItem = bookItem;
+        this.borrowedBookFine = borrowedBookFine != null ? borrowedBookFine : new ArrayList<>();
     }
 
     // -------- Getters & Setters --------
@@ -54,19 +69,19 @@ public class BorrowedBook {
         this.id = id;
     }
 
-    public Date getExpectedReturnDate() {
+    public LocalDate getExpectedReturnDate() {
         return expectedReturnDate;
     }
 
-    public void setExpectedReturnDate(Date expectedReturnDate) {
+    public void setExpectedReturnDate(LocalDate expectedReturnDate) {
         this.expectedReturnDate = expectedReturnDate;
     }
 
-    public Date getActualReturnDate() {
+    public LocalDate getActualReturnDate() {
         return actualReturnDate;
     }
 
-    public void setActualReturnDate(Date actualReturnDate) {
+    public void setActualReturnDate(LocalDate actualReturnDate) {
         this.actualReturnDate = actualReturnDate;
     }
 
@@ -86,11 +101,11 @@ public class BorrowedBook {
         this.note = note;
     }
 
-    public BigDecimal getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -108,5 +123,33 @@ public class BorrowedBook {
 
     public void setBook(Book book) {
         this.book = book;
+    }
+
+    public Borrowing getBorrowing() {
+        return borrowing;
+    }
+
+    public void setBorrowing(Borrowing borrowing) {
+        this.borrowing = borrowing;
+    }
+
+    public ArrayList<BorrowedBookFine> getBorrowedBookFines() {
+        return borrowedBookFine;
+    }
+
+    public void addBorrowedBookFine(BorrowedBookFine fine) {
+        if(this.borrowedBookFine == null) {
+            this.borrowedBookFine = new ArrayList<>();
+        }
+        this.borrowedBookFine.add(fine);
+    }
+
+    public void setBorrowedBookFines(ArrayList<BorrowedBookFine> borrowedBookFines) {
+        if (borrowedBookFines == null) {
+            this.borrowedBookFine = new ArrayList<>();
+        } else {
+            this.borrowedBookFine.clear();
+            this.borrowedBookFine.addAll(borrowedBookFines);
+        }
     }
 }

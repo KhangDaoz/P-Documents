@@ -30,7 +30,7 @@ public class SearchUserFrm extends JFrame implements ActionListener {
     private static final Icon DELETE_ICON = new DeleteIcon();
 
     public SearchUserFrm(Mode mode) {
-        super("SearchUserFrm");
+        super("Tìm kiếm tài khoản");
         this.mode = mode;
         this.userDAO = new UserDAO();
         this.searchResults = new ArrayList<>();
@@ -48,7 +48,7 @@ public class SearchUserFrm extends JFrame implements ActionListener {
         JPanel pnlTop = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
         pnlTop.setOpaque(false);
 
-        txtKey = new JTextField("Enter keyword to search...");
+        txtKey = new JTextField("Nhập từ khóa tìm kiếm...");
         txtKey.setPreferredSize(new Dimension(350, 35));
         txtKey.setBackground(Color.WHITE);
         txtKey.setForeground(Color.GRAY);
@@ -60,7 +60,7 @@ public class SearchUserFrm extends JFrame implements ActionListener {
         txtKey.addFocusListener(new java.awt.event.FocusAdapter() {
             @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
-                if (txtKey.getText().equals("Enter keyword to search...")) {
+                if (txtKey.getText().equals("Nhập từ khóa tìm kiếm...")) {
                     txtKey.setText("");
                     txtKey.setForeground(Color.BLACK);
                 }
@@ -68,7 +68,7 @@ public class SearchUserFrm extends JFrame implements ActionListener {
             @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 if (txtKey.getText().isEmpty()) {
-                    txtKey.setText("Enter keyword to search...");
+                    txtKey.setText("Nhập từ khóa tìm kiếm...");
                     txtKey.setForeground(Color.GRAY);
                 }
             }
@@ -80,7 +80,7 @@ public class SearchUserFrm extends JFrame implements ActionListener {
             private void checkEmpty() {
                 String text = txtKey.getText();
                 // Chỉ nạp lại bảng nếu thanh tìm kiếm thực sự bị xóa trắng 
-                if (text.trim().isEmpty() && !text.equals("Enter keyword to search...")) {
+                if (text.trim().isEmpty() && !text.equals("Nhập từ khóa tìm kiếm...")) {
                     performSearch();
                 }
             }
@@ -88,22 +88,22 @@ public class SearchUserFrm extends JFrame implements ActionListener {
         txtKey.addActionListener(this);
         pnlTop.add(txtKey);
 
-        btnSearch = new JButton("Search");
+        btnSearch = new JButton("Tìm kiếm");
         btnSearch.setPreferredSize(new Dimension(100, 35));
-        btnSearch.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btnSearch.setBackground(new Color(96, 165, 250));
-        btnSearch.setForeground(Color.WHITE);
+        btnSearch.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        btnSearch.setBackground(Color.WHITE);
+        btnSearch.setForeground(Color.BLACK);
         btnSearch.setFocusPainted(false);
-        btnSearch.setBorder(BorderFactory.createEmptyBorder());
+        btnSearch.setBorder(BorderFactory.createLineBorder(new Color(160, 170, 185)));
         btnSearch.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnSearch.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                btnSearch.setBackground(new Color(59, 130, 246));
+                btnSearch.setBackground(new Color(230, 235, 240));
             }
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
-                btnSearch.setBackground(new Color(96, 165, 250));
+                btnSearch.setBackground(Color.WHITE);
             }
         });
         btnSearch.addActionListener(this);
@@ -115,7 +115,7 @@ public class SearchUserFrm extends JFrame implements ActionListener {
         JPanel pnlCenter = new JPanel(new BorderLayout(0, 10));
         pnlCenter.setOpaque(false);
 
-        JLabel lblList = new JLabel("User List", JLabel.LEFT);
+        JLabel lblList = new JLabel("Danh sách tài khoản", JLabel.LEFT);
         lblList.setFont(new Font("Segoe UI", Font.BOLD, 15));
         lblList.setForeground(new Color(30, 41, 59));
         pnlCenter.add(lblList, BorderLayout.NORTH);
@@ -197,11 +197,11 @@ public class SearchUserFrm extends JFrame implements ActionListener {
         JPanel pnlBottom = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         pnlBottom.setOpaque(false);
 
-        btnBack = new JButton("Back");
+        btnBack = new JButton("Trở về");
         btnBack.setPreferredSize(new Dimension(100, 35));
         btnBack.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         btnBack.setBackground(Color.WHITE);
-        btnBack.setForeground(new Color(50, 60, 70));
+        btnBack.setForeground(Color.BLACK);
         btnBack.setFocusPainted(false);
         btnBack.setBorder(BorderFactory.createLineBorder(new Color(160, 170, 185)));
         btnBack.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -224,11 +224,12 @@ public class SearchUserFrm extends JFrame implements ActionListener {
 
         // Load danh sách người dùng ban đầu
         performSearch();
+
     }
 
     private void performSearch() {
         String keyword = txtKey.getText().trim();
-        if (keyword.equals("Enter keyword to search...")) {
+        if (keyword.equals("Nhập từ khóa tìm kiếm...")) {
             keyword = "";
         }
         // Gọi phương thức searchUser() của lớp UserDAO

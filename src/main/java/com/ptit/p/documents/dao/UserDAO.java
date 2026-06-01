@@ -26,7 +26,7 @@ public class UserDAO extends DAO {
         }
 
         String sql = "SELECT * FROM tblUser WHERE username = ? AND password = ?";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             ps.setString(1, u.getUsername());
             ps.setString(2, u.getPassword());
             try (ResultSet rs = ps.executeQuery()) {
@@ -50,7 +50,7 @@ public class UserDAO extends DAO {
         List<User> result = new ArrayList<>();
         String key = (keyword == null) ? "" : keyword.trim();
         String sql = "SELECT * FROM tblUser WHERE username LIKE ? OR fullName LIKE ? OR phone LIKE ?";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             String searchPattern = "%" + key + "%";
             ps.setString(1, searchPattern);
             ps.setString(2, searchPattern);
@@ -78,7 +78,7 @@ public class UserDAO extends DAO {
         }
 
         String checkSql = "SELECT ID FROM tblUser WHERE username = ?";
-        try (PreparedStatement checkPs = con.prepareStatement(checkSql)) {
+        try (PreparedStatement checkPs = getConnection().prepareStatement(checkSql)) {
             checkPs.setString(1, u.getUsername());
             try (ResultSet rs = checkPs.executeQuery()) {
                 if (rs.next()) {
@@ -91,7 +91,7 @@ public class UserDAO extends DAO {
         }
 
         String sql = "INSERT INTO tblUser(username, password, fullName, phone, role) VALUES(?, ?, ?, ?, ?)";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             ps.setString(1, u.getUsername());
             ps.setString(2, u.getPassword());
             ps.setString(3, u.getFullName());
@@ -110,7 +110,7 @@ public class UserDAO extends DAO {
         }
 
         String checkSql = "SELECT ID FROM tblUser WHERE username = ? AND ID != ?";
-        try (PreparedStatement checkPs = con.prepareStatement(checkSql)) {
+        try (PreparedStatement checkPs = getConnection().prepareStatement(checkSql)) {
             checkPs.setString(1, u.getUsername());
             checkPs.setInt(2, u.getId());
             try (ResultSet rs = checkPs.executeQuery()) {
@@ -124,7 +124,7 @@ public class UserDAO extends DAO {
         }
 
         String sql = "UPDATE tblUser SET username=?, password=?, fullName=?, phone=?, role=? WHERE ID=?";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             ps.setString(1, u.getUsername());
             ps.setString(2, u.getPassword());
             ps.setString(3, u.getFullName());
@@ -144,7 +144,7 @@ public class UserDAO extends DAO {
         }
 
         String sql = "DELETE FROM tblUser WHERE ID=?";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             ps.setInt(1, u.getId());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {

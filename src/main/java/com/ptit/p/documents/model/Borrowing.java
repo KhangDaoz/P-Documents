@@ -1,68 +1,65 @@
 package com.ptit.p.documents.model;
 
+import com.ptit.p.documents.dao.BookItemDAO;
 import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Đại diện cho một phiếu mượn (borrowing slip) trong hệ thống thư viện.
  * Tương ứng với bảng tblBorrowing trong CSDL.
- *
- * Vòng đời trạng thái (status) — theo ENUM trong DB:
- *   "pending"   → Chờ nhận sách (trạng thái khởi tạo)
- *   "borrowed"  → Đang mượn (đã nhận sách)
- *   "returned"  → Đã trả
- *   "overdue"   → Quá hạn
- *   "cancelled" → Đã hủy
- *
- * Lưu ý: borrowDate không có trong DB mới — thay bằng createdAt (tự động).
- * Sử dụng getCreatedAt() nếu cần hiển thị ngày tạo phiếu.
  */
 public class Borrowing {
-    private int                    id;
-    private Date                   expectedReceiveDate;  // Ngày dự kiến đến nhận sách
-    private Date                   actualReceiveDate;    // Ngày thực tế nhận sách
-    private String                 note;                // Ghi chú (nullable)
-    private String                 status;             // Trạng thái phiếu mượn
-    private Date                   createdAt;          // Ngày tạo phiếu (ánh xạ từ DB)
-    private ArrayList<BorrowedBook> books;              // Danh sách sách trong phiếu
-    private Student                student;             // Sinh viên mượn sách
-    private User                   user;               // Thủ thư tạo phiếu
+    private int id;
+    private LocalDate expectedReceiveDate;
+    private LocalDate actualReceiveDate;
+    private String note;
+    private String status;
+    private LocalDate createdAt;
+    private List<BorrowedBook> books = new ArrayList<>();
+    private Student student;
+    private User user;
 
     public Borrowing() {
         this.books = new ArrayList<>();
     }
 
-    /**
-     * Constructor dùng khi thủ thư vừa xác nhận thông tin để tạo phiếu mới.
-     *
-     * @param student             Sinh viên đã xác nhận
-     * @param user                Thủ thư đang thao tác
-     * @param expectedReceiveDate Ngày sinh viên dự kiến đến nhận sách
-     * @param note                Ghi chú thêm (có thể null)
-     */
-    public Borrowing(Student student, User user, Date expectedReceiveDate, String note) {
-        this.student             = student;
-        this.user               = user;
-        this.expectedReceiveDate = expectedReceiveDate;
-        this.note               = note;
-        this.status             = "pending";
-        this.books              = new ArrayList<>();
+    /** Constructor rút gọn từ sang branch */
+    public Borrowing(int id, Student student, LocalDate createdAt) {
+        this.id = id;
+        this.student = student;
+        this.createdAt = createdAt;
+        this.books = new ArrayList<>();
     }
 
-    /**
-     * Constructor tương thích với code cũ (không có note).
-     *
-     * @param student             Sinh viên đã xác nhận
-     * @param user                Thủ thư đang thao tác
-     * @param borrowDate          Bỏ qua — DB mới dùng createdAt tự động (truyền null cũng được)
-     * @param expectedReceiveDate Ngày sinh viên dự kiến đến nhận sách
-     */
-    public Borrowing(Student student, User user, Date borrowDate, Date expectedReceiveDate) {
-        this.student             = student;
-        this.user               = user;
+    /** Constructors từ huy branch */
+    public Borrowing(int id, LocalDate expectedReceiveDate, LocalDate actualReceiveDate, 
+                     String status, List<BorrowedBook> books, Student student, User user) {
+        this.id = id;
         this.expectedReceiveDate = expectedReceiveDate;
-        this.status             = "pending";
-        this.books              = new ArrayList<>();
+        this.actualReceiveDate = actualReceiveDate;
+        this.status = status;
+        this.books = books != null ? books : new ArrayList<>();
+        this.student = student;
+        this.user = user;
+    }
+
+    public Borrowing(Student student, User user, LocalDate expectedReceiveDate, String note) {
+        this.student = student;
+        this.user = user;
+        this.expectedReceiveDate = expectedReceiveDate;
+        this.note = note;
+        this.status = "pending";
+        this.books = new ArrayList<>();
+    }
+
+    public Borrowing(Student student, User user, LocalDate borrowDate, LocalDate expectedReceiveDate) {
+        this.student = student;
+        this.user = user;
+        this.createdAt = borrowDate;
+        this.expectedReceiveDate = expectedReceiveDate;
+        this.status = "pending";
+        this.books = new ArrayList<>();
     }
 
     // -------- Getters & Setters --------
@@ -75,44 +72,19 @@ public class Borrowing {
         this.id = id;
     }
 
-    /**
-     * @deprecated Không còn cột borrowDate trong DB mới. Dùng getCreatedAt() thay thế.
-     * Giữ lại để tương thích với code View cũ.
-     */
-    @Deprecated
-    public Date getBorrowDate() {
-        return createdAt;
-    }
-
-    /**
-     * @deprecated Không còn cột borrowDate trong DB mới. Dùng setCreatedAt() thay thế.
-     */
-    @Deprecated
-    public void setBorrowDate(Date borrowDate) {
-        this.createdAt = borrowDate;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getExpectedReceiveDate() {
+    public LocalDate getExpectedReceiveDate() {
         return expectedReceiveDate;
     }
 
-    public void setExpectedReceiveDate(Date expectedReceiveDate) {
+    public void setExpectedReceiveDate(LocalDate expectedReceiveDate) {
         this.expectedReceiveDate = expectedReceiveDate;
     }
 
-    public Date getActualReceiveDate() {
+    public LocalDate getActualReceiveDate() {
         return actualReceiveDate;
     }
 
-    public void setActualReceiveDate(Date actualReceiveDate) {
+    public void setActualReceiveDate(LocalDate actualReceiveDate) {
         this.actualReceiveDate = actualReceiveDate;
     }
 
@@ -132,12 +104,33 @@ public class Borrowing {
         this.status = status;
     }
 
-    public ArrayList<BorrowedBook> getBooks() {
+    public LocalDate getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    /** Ngày đặt mượn (borrowDate trong CNPM.md) — ánh xạ tới cột createdAt. */
+    public LocalDate getBorrowDate() {
+        return createdAt;
+    }
+
+    public void setBorrowDate(LocalDate borrowDate) {
+        this.createdAt = borrowDate;
+    }
+
+    public List<BorrowedBook> getBooks() {
         return books;
     }
 
-    public void setBooks(ArrayList<BorrowedBook> books) {
-        this.books = books;
+    public void setBooks(List<BorrowedBook> books) {
+        this.books = books != null ? books : new ArrayList<>();
+    }
+
+    public int getNumberOfBooks() {
+        return books != null ? books.size() : 0;
     }
 
     public Student getStudent() {
@@ -154,5 +147,31 @@ public class Borrowing {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public void updateBorrowedBook(BorrowedBook borrowedBook) {
+        if (books == null) return;
+        for (int i = 0; i < books.size(); i++) {
+            if (books.get(i).getId() == borrowedBook.getId()) {
+                books.set(i, borrowedBook);
+                break;
+            }
+        }
+    }
+
+    @Override
+    public String toString() {
+        if (books == null || books.isEmpty()) return "";
+        StringBuilder sb = new StringBuilder();
+        BookItemDAO dao = new BookItemDAO();
+        for (int i = 0; i < books.size(); i++) {
+            if (books.get(i).getBookItem() != null) {
+                sb.append(dao.getBookISBN(books.get(i).getBookItem().getId()));
+            }
+            if (i < books.size() - 1) {
+                sb.append(", ");
+            }
+        }
+        return sb.toString();
     }
 }

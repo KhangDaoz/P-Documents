@@ -16,7 +16,7 @@ public class StudentDAO extends DAO {
         ArrayList<Student> result = new ArrayList<>();
         String sql = "SELECT * FROM tblStudent WHERE ID LIKE ? OR fullName LIKE ?";
         try {
-            PreparedStatement ps = con.prepareStatement(sql);
+            PreparedStatement ps = getConnection().prepareStatement(sql);
             String pattern = "%" + key + "%";
             ps.setString(1, pattern);
             ps.setString(2, pattern);
@@ -40,7 +40,7 @@ public class StudentDAO extends DAO {
     public boolean addStudent(Student s) {
         String sql = "INSERT INTO tblStudent(ID, fullName, email, phone, address) VALUES(?,?,?,?,?)";
         try {
-            PreparedStatement ps = con.prepareStatement(sql);
+            PreparedStatement ps = getConnection().prepareStatement(sql);
             ps.setString(1, s.getStudentId());
             ps.setString(2, s.getFullName());
             ps.setString(3, s.getEmail());

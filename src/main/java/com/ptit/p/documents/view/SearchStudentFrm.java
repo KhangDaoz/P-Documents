@@ -15,14 +15,14 @@ import java.util.ArrayList;
  */
 public class SearchStudentFrm extends JFrame implements ActionListener {
 
-    private Borrowing  b;
+    private Borrowing b;
     private JTextField txtSearch;
-    private JButton    btnSearch;
-    private JButton    btnAddStudent;
-    private JTable     tblListStudent;
-    private JLabel     lblStatus;
+    private JButton btnSearch;
+    private JButton btnAddStudent;
+    private JTable tblListStudent;
+    private JLabel lblStatus;
 
-    private DefaultTableModel  tableModel;
+    private DefaultTableModel tableModel;
     private ArrayList<Student> searchResults = new ArrayList<>();
 
     public SearchStudentFrm(Borrowing b) {
@@ -31,7 +31,7 @@ public class SearchStudentFrm extends JFrame implements ActionListener {
     }
 
     private void initComponents() {
-        setTitle("Dat sach — Buoc 2: Tim kiem sinh vien");
+        setTitle("Đặt sách - Bước 2: Tìm kiếm sinh viên");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(680, 440);
         setLocationRelativeTo(null);
@@ -41,39 +41,45 @@ public class SearchStudentFrm extends JFrame implements ActionListener {
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 6));
         searchPanel.setBorder(BorderFactory.createTitledBorder("Tim kiem sinh vien"));
 
-        searchPanel.add(new JLabel("Ma SV / Ho ten:"));
+        searchPanel.add(new JLabel("Mã SV / Họ tên:"));
         txtSearch = new JTextField(20);
         searchPanel.add(txtSearch);
 
-        btnSearch = new JButton("Tim kiem");
+        btnSearch = new JButton("Tìm kiếm");
         btnSearch.addActionListener(this);
         searchPanel.add(btnSearch);
 
-        btnAddStudent = new JButton("Them sinh vien moi");
+        btnAddStudent = new JButton("Thêm sinh viên mới");
         btnAddStudent.addActionListener(this);
         searchPanel.add(btnAddStudent);
 
         add(searchPanel, BorderLayout.NORTH);
 
         // ---- Bảng kết quả ----
-        String[] cols = {"Ma sinh vien", "Ho ten", "Email", "So dien thoai", "Dia chi"};
+        String[] cols = { "Ma sinh vien", "Ho ten", "Email", "So dien thoai", "Dia chi" };
         tableModel = new DefaultTableModel(cols, 0) {
-            @Override public boolean isCellEditable(int r, int c) { return false; }
+            @Override
+            public boolean isCellEditable(int r, int c) {
+                return false;
+            }
         };
         tblListStudent = new JTable(tableModel);
         tblListStudent.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tblListStudent.addMouseListener(new MouseAdapter() {
-            @Override public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) onStudentSelected();
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2)
+                    onStudentSelected();
             }
         });
 
         add(new JScrollPane(tblListStudent), BorderLayout.CENTER);
 
         // ---- Status ----
-        lblStatus = new JLabel("Nhap tu khoa va nhan Tim kiem. Double-click de chon sinh vien.");
+        lblStatus = new JLabel("Nhập từ khóa và nhấn Tìm kiếm. Nhấp đúp để chọn sinh viên.");
         lblStatus.setBorder(BorderFactory.createEmptyBorder(4, 6, 4, 6));
         add(lblStatus, BorderLayout.SOUTH);
+
     }
 
     @Override
@@ -83,7 +89,7 @@ public class SearchStudentFrm extends JFrame implements ActionListener {
             searchResults = dao.searchStudent(txtSearch.getText().trim());
             tableModel.setRowCount(0);
             for (Student st : searchResults) {
-                tableModel.addRow(new Object[]{
+                tableModel.addRow(new Object[] {
                         st.getStudentId(), st.getFullName(),
                         st.getEmail(), st.getPhone(), st.getAddress()
                 });
@@ -98,7 +104,8 @@ public class SearchStudentFrm extends JFrame implements ActionListener {
 
     private void onStudentSelected() {
         int row = tblListStudent.getSelectedRow();
-        if (row < 0 || row >= searchResults.size()) return;
+        if (row < 0 || row >= searchResults.size())
+            return;
         b.setStudent(searchResults.get(row));
         new ConfirmBorrowingFrm(b).setVisible(true);
         this.dispose();

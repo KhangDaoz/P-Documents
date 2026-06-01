@@ -3,7 +3,7 @@ package com.ptit.p.documents.model;
 import java.io.Serializable;
 
 public class User implements Serializable {
-    private int    id;
+    private int id;
     private String username;
     private String password;
     private String fullName;
@@ -13,10 +13,10 @@ public class User implements Serializable {
     public User() {}
 
     public User(int id, String username, String fullName, String role) {
-        this.id       = id;
+        this.id = id;
         this.username = username;
         this.fullName = fullName;
-        this.role     = role;
+        this.role = role;
     }
 
     public User(int id, String username, String password, String fullName, String phone, String role) {

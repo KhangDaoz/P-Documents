@@ -1,59 +1,67 @@
 package com.ptit.p.documents.model;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Đại diện cho một đầu sách (book title) trong danh mục thư viện.
  * Tương ứng với bảng tblBook trong CSDL.
- * Một đầu sách (Book) có thể có nhiều bản sao vật lý (BookItem).
- *
- * Trường isbn là khóa chính, ví dụ: "978-604-1-01234-5".
- *
- * Lưu ý: availableCopies là thuộc tính DẪN XUẤT — không có trong CSDL,
- * được tính động bởi BookDAO bằng cách đếm số BookItem có status='good'
- * và không đang nằm trong phiếu mượn active (pending/borrowed).
  */
 public class Book {
-    private String     isbn;           // Khóa chính
-    private String     title;
-    private String     author;
-    private String     genre;
-    private String     publisher;
-    private int        publishYear;
-    private double     price;
-    private String     description;
-    private int        availableCopies; // Thuộc tính dẫn xuất — tính động, không lưu trong DB
-    private int        totalCopies;
-    private BookItem[] bookItems;       // Các bản sao vật lý (nạp theo nhu cầu)
-    private List<BookItem> items = new ArrayList<>(); // from master branch
+    private String isbn;
+    private String title;
+    private String author;
+    private String genre;
+    private String publisher;
+    private int publishYear;
+    private double price;
+    private String description;
+    private int availableCopies; // Thuộc tính dẫn xuất — tính động, không lưu trong DB
+    private int totalCopies;
+    private List<BookItem> items = new ArrayList<>(); // Các bản sao vật lý mà đầu sách sở hữu (Book OWNS a List<BookItem>)
 
     public Book() {}
 
-    /**
-     * Constructor rút gọn — giữ tương thích với code cũ (BookFrm).
-     */
+    /** Constructor rút gọn 2 tham số (từ sang branch) */
+    public Book(String isbn, String title, String author, String genre) {
+        this.isbn = isbn;
+        this.title = title;
+        this.author = author;
+        this.genre = genre;
+    }
+
+    /** Constructor rút gọn 3 tham số (từ huy branch) */
     public Book(String isbn, String title, String author) {
-        this.isbn   = isbn;
-        this.title  = title;
+        this.isbn = isbn;
+        this.title = title;
         this.author = author;
     }
 
-    /**
-     * Constructor đầy đủ tất cả các trường chính.
-     */
+    /** Constructor đầy đủ các trường chính (không có totalCopies) */
+    public Book(String isbn, String title, String author, String genre,
+                String publisher, int publishYear, double price, String description) {
+        this.isbn = isbn;
+        this.title = title;
+        this.author = author;
+        this.genre = genre;
+        this.publisher = publisher;
+        this.publishYear = publishYear;
+        this.price = price;
+        this.description = description;
+    }
+
+    /** Constructor đầy đủ từ huy branch */
     public Book(String isbn, String title, String author, String genre,
                 String publisher, int publishYear, double price,
                 String description, int availableCopies) {
-        this.isbn            = isbn;
-        this.title           = title;
-        this.author          = author;
-        this.genre           = genre;
-        this.publisher       = publisher;
-        this.publishYear     = publishYear;
-        this.price           = price;
-        this.description     = description;
+        this.isbn = isbn;
+        this.title = title;
+        this.author = author;
+        this.genre = genre;
+        this.publisher = publisher;
+        this.publishYear = publishYear;
+        this.price = price;
+        this.description = description;
         this.availableCopies = availableCopies;
     }
 
@@ -63,7 +71,7 @@ public class Book {
         this(isbn, title, author, genre, publisher, publishYear, price, description, availableCopies);
         this.totalCopies = totalCopies;
     }
-    
+
     public Book(String isbn, String title, String author, String genre,
                 String publisher, int publishYear, double price,
                 String description, int availableCopies, int totalCopies, List<BookItem> items) {
@@ -72,11 +80,6 @@ public class Book {
     }
 
     // -------- Getters & Setters --------
-
-    /** Alias của getIsbn() — giữ tương thích với code cũ sử dụng getId(). */
-    public String getId() {
-        return isbn;
-    }
 
     public String getISBN() {
         return isbn;
@@ -158,14 +161,6 @@ public class Book {
         this.availableCopies = availableCopies;
     }
 
-    public BookItem[] getBookItems() {
-        return bookItems;
-    }
-
-    public void setBookItems(BookItem[] bookItems) {
-        this.bookItems = bookItems;
-    }
-
     public int getTotalCopies() {
         return totalCopies;
     }
@@ -182,9 +177,16 @@ public class Book {
         this.items = items != null ? items : new ArrayList<>();
     }
 
+    public void addItem(BookItem item) {
+        if (this.items == null) {
+            this.items = new ArrayList<>();
+        }
+        this.items.add(item);
+    }
+
     @Override
     public String toString() {
-        return isbn + " - " + title + " (" + author + ")" + 
+        return isbn + " - " + title + " (" + author + ")" +
                " [total=" + totalCopies + ", available=" + availableCopies + "]";
     }
 }

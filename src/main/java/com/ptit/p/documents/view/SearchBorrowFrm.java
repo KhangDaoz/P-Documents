@@ -251,6 +251,6 @@ public class SearchBorrowFrm extends JFrame implements ActionListener {
             return;
         }
         new SearchStudentFrm(currentBorrowing).setVisible(true);
-        this.dispose();
+        // this.dispose();
     }
 }

@@ -22,10 +22,6 @@ class StockStatDAOTest {
 
     private StockStatDAO dao;
 
-    @BeforeAll
-    static void initDb() {
-        DatabaseInitializer.init(true);
-    }
 
     @BeforeEach
     void setUp() {

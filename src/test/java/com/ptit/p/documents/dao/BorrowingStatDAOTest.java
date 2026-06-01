@@ -19,10 +19,6 @@ class BorrowingStatDAOTest {
 
     private BorrowingStatDAO dao;
 
-    @BeforeAll
-    static void initDb() {
-        DatabaseInitializer.init(true);
-    }
 
     @BeforeEach
     void setUp() {

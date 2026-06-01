@@ -304,11 +304,10 @@ public class ReturnConfirmFrm extends JFrame {
                     overdueDays = 0;
                 }
             }
-
             totalOverdueDays += (int) overdueDays;
             totalOverdueFine += overdueFine;
             totalDamageFine += damageFine;
-
+            
             double totalBookFine = overdueFine + damageFine;
             borrowedBookFineTotals.put(bb.getId(), totalBookFine);
 
@@ -430,10 +429,29 @@ public class ReturnConfirmFrm extends JFrame {
     }
 
     private String buildFineSummary(BorrowedBook bb) {
+        // Add overdue fine
+        FineDAO fineDAO = new FineDAO();
+        List<Fine> fines = fineDAO.findAll();
+        Fine overdueFine = null;
+        for (Fine f : fines){
+            if (f.getName().equals("Overdue") || f.getName().equals("Trả trễ")){
+                overdueFine = f;
+                break;
+            }
+        }
+        BorrowedBookFine overdueFineBBF = new BorrowedBookFine();
+        overdueFineBBF.setFine(overdueFine);
+        overdueFineBBF.setFineRate(overdueFine.getFineRate());
+        overdueFineBBF.setTotalFine(overdueFine.getFineRate() * totalOverdueDays);
+        bb.addBorrowedBookFine(overdueFineBBF);
+
+
         // Build a comma-separated summary of fine names for a borrowed book.
         if (bb.getBorrowedBookFines() == null || bb.getBorrowedBookFines().isEmpty()) {
             return "Không có";
         }
+
+
         StringBuilder summary = new StringBuilder();
         for (BorrowedBookFine fine : bb.getBorrowedBookFines()) {
             if (fine.getFine() != null) {

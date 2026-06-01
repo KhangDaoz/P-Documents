@@ -32,7 +32,7 @@ public class BookDaoTest {
     }
 
     @Test
-    public void testUpdateBook(){
+    public void testUpdateBook() throws Exception {
         Connection con = bd.getConnection();
         if(con == null) {
             Assert.fail("Không thể kết nối CSDL");
@@ -70,7 +70,7 @@ public class BookDaoTest {
     }
 
     @Test
-    public void testUpdateBookException() {
+    public void testUpdateBookException() throws Exception {
         Connection con = bd.getConnection();
         if(con == null) return;
         Book book = new Book();
@@ -93,7 +93,7 @@ public class BookDaoTest {
     }
 
     @Test
-    public void testAddBookStandard() {
+    public void testAddBookStandard() throws Exception {
         Connection con = bd.getConnection();
         if(con == null) return;
         Book book = new Book();
@@ -124,7 +124,7 @@ public class BookDaoTest {
     }
 
     @Test
-    public void testAddBookException() {
+    public void testAddBookException() throws Exception {
         Connection con = bd.getConnection();
         if(con == null) return;
         Book book = new Book();
@@ -147,7 +147,7 @@ public class BookDaoTest {
     }
 
     @Test
-    public void testDeleteBookStandard() {
+    public void testDeleteBookStandard() throws Exception {
         Connection con = bd.getConnection();
         if(con == null) return;
         String isbn = EXISTING_ISBN;
@@ -168,7 +168,7 @@ public class BookDaoTest {
     }
 
     @Test
-    public void testDeleteBookException() {
+    public void testDeleteBookException() throws Exception {
         Connection con = bd.getConnection();
         if(con == null) return;
         String isbn = "ISBN_NOT_EXIST";

@@ -42,9 +42,9 @@ public class BorrowingDAO extends DAO {
 
         boolean result = true;
         try {
-            con.setAutoCommit(false);
+            getConnection().setAutoCommit(false);
 
-            PreparedStatement ps = con.prepareStatement(sqlAddBorrowing, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = getConnection().prepareStatement(sqlAddBorrowing, Statement.RETURN_GENERATED_KEYS);
             ps.setDate(1,
                     b.getExpectedReceiveDate() != null ? java.sql.Date.valueOf(b.getExpectedReceiveDate()) : null);
             ps.setString(2, b.getNote());
@@ -57,8 +57,8 @@ public class BorrowingDAO extends DAO {
             if (generatedKeys.next()) {
                 b.setId(generatedKeys.getInt(1));
             } else {
-                con.rollback();
-                con.setAutoCommit(true);
+                getConnection().rollback();
+                getConnection().setAutoCommit(true);
                 return false;
             }
 
@@ -69,23 +69,23 @@ public class BorrowingDAO extends DAO {
                 if (bb.getBookItem() != null && bb.getBookItem().getId() > 0) {
                     bookItemId = bb.getBookItem().getId();
                 } else if (isbn != null) {
-                    ps = con.prepareStatement(SQL_FIND_BOOK_ITEM);
+                    ps = getConnection().prepareStatement(SQL_FIND_BOOK_ITEM);
                     ps.setString(1, isbn);
                     ResultSet rs = ps.executeQuery();
                     if (rs.next()) {
                         bookItemId = rs.getInt("ID");
                     } else {
-                        con.rollback();
-                        con.setAutoCommit(true);
+                        getConnection().rollback();
+                        getConnection().setAutoCommit(true);
                         return false;
                     }
                 } else {
-                    con.rollback();
-                    con.setAutoCommit(true);
+                    getConnection().rollback();
+                    getConnection().setAutoCommit(true);
                     return false;
                 }
 
-                ps = con.prepareStatement(sqlAddBorrowedBook, Statement.RETURN_GENERATED_KEYS);
+                ps = getConnection().prepareStatement(sqlAddBorrowedBook, Statement.RETURN_GENERATED_KEYS);
                 ps.setDate(1,
                         bb.getExpectedReturnDate() != null ? java.sql.Date.valueOf(bb.getExpectedReturnDate()) : null);
                 ps.setString(2, bb.getStatus() != null ? bb.getStatus() : "good");
@@ -106,14 +106,14 @@ public class BorrowingDAO extends DAO {
                 }
             }
 
-            con.commit();
-            con.setAutoCommit(true);
+            getConnection().commit();
+            getConnection().setAutoCommit(true);
 
         } catch (Exception e) {
             result = false;
             try {
-                con.rollback();
-                con.setAutoCommit(true);
+                getConnection().rollback();
+                getConnection().setAutoCommit(true);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -145,7 +145,7 @@ public class BorrowingDAO extends DAO {
             params.add("%" + studentName + "%");
         }
 
-        try (PreparedStatement statement = con.prepareStatement(sql.toString())) {
+        try (PreparedStatement statement = getConnection().prepareStatement(sql.toString())) {
             for (int i = 0; i < params.size(); i++) {
                 statement.setObject(i + 1, params.get(i));
             }
@@ -208,7 +208,7 @@ public class BorrowingDAO extends DAO {
                 + " WHERE br.status = 'pending'"
                 + " AND (st.ID LIKE ? OR st.fullName LIKE ?)"
                 + " ORDER BY br.createdAt DESC";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             String pattern = "%" + key + "%";
             ps.setString(1, pattern);
             ps.setString(2, pattern);
@@ -254,7 +254,7 @@ public class BorrowingDAO extends DAO {
                 + " JOIN tblBookItem bi ON bb.tblBookItemID = bi.ID"
                 + " JOIN tblBook bk ON bi.tblBookISBN = bk.ISBN"
                 + " WHERE bb.tblBorrowingID = ?";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             ps.setInt(1, borrowingId);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -298,36 +298,36 @@ public class BorrowingDAO extends DAO {
 
         boolean result = true;
         try {
-            con.setAutoCommit(false);
+            getConnection().setAutoCommit(false);
 
-            PreparedStatement ps = con.prepareStatement(sqlCheck);
+            PreparedStatement ps = getConnection().prepareStatement(sqlCheck);
             ps.setInt(1, borrowingId);
             ResultSet rs = ps.executeQuery();
             if (!rs.next() || !"pending".equals(rs.getString("status"))) {
-                con.setAutoCommit(true);
+                getConnection().setAutoCommit(true);
                 return false;
             }
 
-            ps = con.prepareStatement(sqlCancel);
+            ps = getConnection().prepareStatement(sqlCancel);
             ps.setInt(1, borrowingId);
             if (ps.executeUpdate() == 0) {
-                con.rollback();
-                con.setAutoCommit(true);
+                getConnection().rollback();
+                getConnection().setAutoCommit(true);
                 return false;
             }
 
-            ps = con.prepareStatement(sqlCancelBooks);
+            ps = getConnection().prepareStatement(sqlCancelBooks);
             ps.setInt(1, borrowingId);
             ps.executeUpdate();
 
-            con.commit();
-            con.setAutoCommit(true);
+            getConnection().commit();
+            getConnection().setAutoCommit(true);
 
         } catch (Exception e) {
             result = false;
             try {
-                con.rollback();
-                con.setAutoCommit(true);
+                getConnection().rollback();
+                getConnection().setAutoCommit(true);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

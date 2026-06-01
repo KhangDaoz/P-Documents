@@ -30,7 +30,7 @@ public class BookDAO extends DAO {
                 + " bk.publisher, bk.publishYear, bk.price, bk.description, "
                 + AVAILABLE_COPIES_SUBQUERY
                 + " FROM tblBook bk WHERE bk.ISBN = ?";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             ps.setString(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -51,7 +51,7 @@ public class BookDAO extends DAO {
                 + " FROM tblBook bk"
                 + " WHERE bk.title LIKE ? AND bk.author LIKE ?"
                 + " AND bk.genre LIKE ? AND bk.ISBN LIKE ?";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             ps.setString(1, "%" + (name != null ? name : "") + "%");
             ps.setString(2, "%" + (author != null ? author : "") + "%");
             ps.setString(3, "%" + (genre != null ? genre : "") + "%");
@@ -73,7 +73,7 @@ public class BookDAO extends DAO {
                 + " bk.publisher, bk.publishYear, bk.price, bk.description, "
                 + AVAILABLE_COPIES_SUBQUERY
                 + " FROM tblBook bk";
-        try (PreparedStatement ps = con.prepareStatement(sql);
+        try (PreparedStatement ps = getConnection().prepareStatement(sql);
                 ResultSet rs = ps.executeQuery()) {
             while (rs.next())
                 result.add(mapRow(rs));
@@ -112,7 +112,7 @@ public class BookDAO extends DAO {
     public boolean addBook(Book book) {
         // Kiểm tra ISBN đã tồn tại
         String checkSql = "SELECT 1 FROM tblBook WHERE ISBN = ?";
-        try (PreparedStatement checkPs = con.prepareStatement(checkSql)) {
+        try (PreparedStatement checkPs = getConnection().prepareStatement(checkSql)) {
             checkPs.setString(1, book.getISBN());
             try (ResultSet crs = checkPs.executeQuery()) {
                 if (crs.next()) {
@@ -126,7 +126,7 @@ public class BookDAO extends DAO {
 
         String sql = "INSERT INTO tblBook (ISBN, title, author, genre, publisher, publishYear, price, description) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             ps.setString(1, book.getISBN());
             ps.setString(2, book.getTitle());
             ps.setString(3, book.getAuthor());
@@ -159,7 +159,7 @@ public class BookDAO extends DAO {
                 + "    GROUP BY tblBookISBN "
                 + ") bi ON b.ISBN = bi.tblBookISBN "
                 + "WHERE b.title LIKE ? OR b.author LIKE ? OR b.ISBN LIKE ?";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             String searchPattern = "%" + keyword + "%";
             ps.setString(1, searchPattern);
             ps.setString(2, searchPattern);
@@ -193,7 +193,7 @@ public class BookDAO extends DAO {
     public boolean updateBook(Book book) {
         String sql = "UPDATE tblBook SET title = ?, author = ?, genre = ?, publisher = ?, "
                 + "publishYear = ?, price = ?, description = ? WHERE ISBN = ?";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             ps.setString(1, book.getTitle());
             ps.setString(2, book.getAuthor());
             ps.setString(3, book.getGenre());
@@ -216,8 +216,8 @@ public class BookDAO extends DAO {
     public boolean deleteBook(String isbn) {
         String deleteItemsSql = "DELETE FROM tblBookItem WHERE tblBookISBN = ?";
         String deleteBookSql = "DELETE FROM tblBook WHERE ISBN = ?";
-        try (PreparedStatement itemPs = con.prepareStatement(deleteItemsSql);
-                PreparedStatement bookPs = con.prepareStatement(deleteBookSql)) {
+        try (PreparedStatement itemPs = getConnection().prepareStatement(deleteItemsSql);
+                PreparedStatement bookPs = getConnection().prepareStatement(deleteBookSql)) {
             itemPs.setString(1, isbn);
             itemPs.executeUpdate();
 
@@ -242,7 +242,7 @@ public class BookDAO extends DAO {
                         + "JOIN tblBorrowedBook bb ON br.ID = bb.tblBorrowingID "
                         + "JOIN tblBookItem bi ON bb.tblBookItemID = bi.ID "
                         + "WHERE bi.tblBookISBN = ? AND br.status IN ('pending', 'borrowed', 'overdue')";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             ps.setString(1, isbn);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {

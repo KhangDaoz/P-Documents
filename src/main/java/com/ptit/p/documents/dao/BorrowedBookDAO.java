@@ -30,7 +30,7 @@ public class BorrowedBookDAO extends DAO {
                 + "JOIN tblBookItem bi ON bb.tblBookItemID = bi.ID "
                 + "WHERE bb.tblBorrowingID = ?";
 
-        try (PreparedStatement statement = getConnection().prepareStatement(sql)) {
+        try (PreparedStatement statement = con.prepareStatement(sql)) {
             statement.setInt(1, borrowingId);
 
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -66,7 +66,7 @@ public class BorrowedBookDAO extends DAO {
     /** Cập nhật trạng thái trả của từng cuốn sách */
     public boolean updateReturnStatus(BorrowedBook bb) {
         String sql = "UPDATE tblBorrowedBook SET actualReturnDate = ?, status = ?, note = ?, price = ? WHERE ID = ?";
-        try (PreparedStatement statement = getConnection().prepareStatement(sql)) {
+        try (PreparedStatement statement = con.prepareStatement(sql)) {
             statement.setDate(1,
                     bb.getActualReturnDate() != null ? java.sql.Date.valueOf(bb.getActualReturnDate()) : null);
             statement.setString(2, bb.getStatus() != null ? bb.getStatus() : "good");
@@ -84,7 +84,7 @@ public class BorrowedBookDAO extends DAO {
     /** Thiết lập phạt áp dụng cho lượt mượn sách hỏng/mất */
     public boolean setBorrowedBookFine(BorrowedBookFine fine, BorrowedBook bb) {
         String sql = "INSERT INTO tblBorrowedBookFine (fineRate, tblBorrowedBookID, tblFineID) VALUES (?, ?, ?)";
-        try (PreparedStatement statement = getConnection().prepareStatement(sql)) {
+        try (PreparedStatement statement = con.prepareStatement(sql)) {
             statement.setDouble(1, fine.getFineRate());
             statement.setInt(2, bb.getId());
             statement.setInt(3, fine.getFine().getId());
@@ -114,7 +114,7 @@ public class BorrowedBookDAO extends DAO {
                 "WHERE bi.tblBookISBN = ? " +
                 "ORDER BY br.createdAt DESC";
 
-        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, isbn);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {

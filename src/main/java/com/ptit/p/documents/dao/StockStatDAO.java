@@ -70,7 +70,7 @@ public class StockStatDAO extends DAO {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            ps = getConnection().prepareStatement(sql.toString());
+            ps = con.prepareStatement(sql.toString());
             ps.setTimestamp(1, Timestamp.valueOf(from.atStartOfDay()));
             ps.setTimestamp(2, Timestamp.valueOf(to.atTime(23, 59, 59)));
             if (!filterAll && statusFilter != null) {
@@ -112,7 +112,8 @@ public class StockStatDAO extends DAO {
             System.err.println("[StockStatDAO] searchDamageLossRecords lỗi: " + e.getMessage());
             e.printStackTrace();
         } finally {
-            close(ps, rs);
+            if (rs != null) try { rs.close(); } catch (Exception ignored) {}
+            if (ps != null) try { ps.close(); } catch (Exception ignored) {}
         }
         return result;
     }

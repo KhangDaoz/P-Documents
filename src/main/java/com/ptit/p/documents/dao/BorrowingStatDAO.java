@@ -44,7 +44,7 @@ public class BorrowingStatDAO extends DAO {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            ps = getConnection().prepareStatement(sql);
+            ps = con.prepareStatement(sql);
             // createdAt là TIMESTAMP, nên dùng Timestamp cho phạm vi ngày đầy đủ
             ps.setTimestamp(1, Timestamp.valueOf(from.atStartOfDay()));
             ps.setTimestamp(2, Timestamp.valueOf(to.atTime(23, 59, 59)));
@@ -63,7 +63,8 @@ public class BorrowingStatDAO extends DAO {
             System.err.println("[BorrowingStatDAO] getTopBorrowedBooks lỗi: " + e.getMessage());
             e.printStackTrace();
         } finally {
-            close(ps, rs);
+            if (rs != null) try { rs.close(); } catch (Exception ignored) {}
+            if (ps != null) try { ps.close(); } catch (Exception ignored) {}
         }
         return result;
     }

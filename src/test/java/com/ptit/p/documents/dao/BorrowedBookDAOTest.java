@@ -37,7 +37,7 @@ public class BorrowedBookDAOTest {
 
     @BeforeEach
     void setUp() throws SQLException {
-        doReturn(mockConnection).when(borrowedBookDAO).getConnection();
+        doReturn(mockConnection).when(borrowedBookDAO).getCon();
     }
 
     @Test

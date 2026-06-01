@@ -245,6 +245,18 @@ public class UserDAOTest {
         List<User> searchAfter = userDAO.searchUser("khoihd");
         assertTrue(searchAfter.isEmpty());
     }
+
+    @Test
+    public void testDeleteUserException() {
+        // Cố tình tạo một User ảo với ID không tồn tại trong CSDL
+        User fakeUser = new User();
+        fakeUser.setId(-999); 
+        
+        // Hành động xóa phải trả về false vì không tìm thấy bản ghi nào để xóa
+        boolean deleteSuccess = userDAO.deleteUser(fakeUser);
+        assertFalse(deleteSuccess, "Xóa một tài khoản không tồn tại phải trả về false");
+    }
+
     // --- KIỂM THỬ GIÁ TRỊ BIÊN 
 
     @Test

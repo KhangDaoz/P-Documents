@@ -33,7 +33,7 @@ public class FineDAOTest {
 
     @BeforeEach
     void setUp() throws SQLException {
-        doReturn(mockConnection).when(fineDAO).getConnection();
+        doReturn(mockConnection).when(fineDAO).getCon();
     }
 
     @Test

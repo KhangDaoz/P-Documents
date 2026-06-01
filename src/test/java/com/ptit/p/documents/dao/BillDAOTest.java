@@ -35,7 +35,7 @@ public class BillDAOTest {
 
     @BeforeEach
     void setUp() throws SQLException {
-        doReturn(mockConnection).when(billDAO).getConnection();
+        doReturn(mockConnection).when(billDAO).getCon();
     }
 
     @Test

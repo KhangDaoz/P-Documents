@@ -21,7 +21,7 @@ public class DAO {
                 String url = "jdbc:mysql://localhost:3306/p_documents"
                         + "?useSSL=false&serverTimezone=UTC&characterEncoding=utf8&allowPublicKeyRetrieval=true";
                 String user = "root";
-                String[] passwords = { "08082005" };
+                String[] passwords = { "08082005", "123456"};
                 SQLException last = null;
                 for (String pwd : passwords) {
                     try {

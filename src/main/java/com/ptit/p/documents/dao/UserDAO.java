@@ -13,6 +13,22 @@ public class UserDAO extends DAO {
         super();
     }
 
+    private boolean validateUser(User u) {
+        if (u == null || u.getUsername() == null || u.getPassword() == null || u.getPhone() == null) {
+            return false;
+        }
+        // Validate Username: 5 - 20 chars
+        if (u.getUsername().length() < 5 || u.getUsername().length() > 20) return false;
+        
+        // Validate Password: 6 - 32 chars
+        if (u.getPassword().length() < 6 || u.getPassword().length() > 32) return false;
+        
+        // Validate Phone: exactly 10 digits
+        if (!u.getPhone().matches("\\d{10}")) return false;
+        
+        return true;
+    }
+
     public User checkLogin(String username, String password) {
         User loginUser = new User();
         loginUser.setUsername(username);
@@ -73,7 +89,7 @@ public class UserDAO extends DAO {
     }
 
     public boolean addUser(User u) {
-        if (u == null || u.getUsername() == null) {
+        if (!validateUser(u)) {
             return false;
         }
 
@@ -105,7 +121,7 @@ public class UserDAO extends DAO {
     }
 
     public boolean updateUser(User u) {
-        if (u == null) {
+        if (!validateUser(u)) {
             return false;
         }
 

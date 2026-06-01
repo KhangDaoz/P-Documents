@@ -45,28 +45,28 @@ public class ConfirmDeleteUserFrm extends JFrame implements ActionListener {
         pnlGrid.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240), 1));
 
         // Dòng 1: MNV
-        pnlGrid.add(createGridLabel("Employee ID", Color.WHITE));
+        pnlGrid.add(createGridLabel("Mã nhân viên", Color.WHITE));
         String mnvStr = "NV" + String.format("%03d", user.getId());
         pnlGrid.add(createGridLabel(mnvStr, new Color(248, 250, 252)));
 
         // Dòng 2: Họ tên
-        pnlGrid.add(createGridLabel("Full Name", Color.WHITE));
+        pnlGrid.add(createGridLabel("Họ và tên", Color.WHITE));
         pnlGrid.add(createGridLabel(user.getFullName(), Color.WHITE));
 
         // Dòng 3: Tên đăng nhập
-        pnlGrid.add(createGridLabel("Username", Color.WHITE));
+        pnlGrid.add(createGridLabel("Tên đăng nhập", Color.WHITE));
         pnlGrid.add(createGridLabel(user.getUsername(), Color.WHITE));
 
         // Dòng 4: Mật khẩu
-        pnlGrid.add(createGridLabel("Password", Color.WHITE));
+        pnlGrid.add(createGridLabel("Mật khẩu", Color.WHITE));
         pnlGrid.add(createGridLabel("********", Color.WHITE));
 
         // Dòng 5: Số điện thoại
-        pnlGrid.add(createGridLabel("Phone", Color.WHITE));
+        pnlGrid.add(createGridLabel("Số điện thoại", Color.WHITE));
         pnlGrid.add(createGridLabel(user.getPhone(), Color.WHITE));
 
         // Dòng 6: Quyền hạn
-        pnlGrid.add(createGridLabel("Role", Color.WHITE));
+        pnlGrid.add(createGridLabel("Quyền hạn", Color.WHITE));
         String roleText = user.getRole();
         if ("admin".equalsIgnoreCase(roleText)) {
             roleText = "Admin";

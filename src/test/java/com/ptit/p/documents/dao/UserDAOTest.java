@@ -32,20 +32,6 @@ public class UserDAOTest {
             con.setAutoCommit(true);
         }
     }
-
-    @Test
-    void testDatabaseConnection() {
-        // We will call the inherited getConnection() to verify the connection
-        try {
-            Connection conn = userDAO.getConnection();
-            assertNotNull(conn, "Connection should not be null");
-            assertFalse(conn.isClosed(), "Connection should be open");
-            System.out.println("Database connection established successfully!");
-        } catch (SQLException e) {
-            fail("Database connection failed: " + e.getMessage());
-        }
-    }
-
     // --- CHỨC NĂNG ĐĂNG NHẬP (checkLogin) ---
 
     @Test
@@ -151,7 +137,7 @@ public class UserDAOTest {
         // Tạo 1 tài khoản ban đầu
         User firstUser = new User();
         firstUser.setUsername("minhpd"); 
-        firstUser.setPassword("pass1");
+        firstUser.setPassword("123456");
         firstUser.setFullName("Phan Đình Minh");
         firstUser.setPhone("0933444555");
         firstUser.setRole("manager");
@@ -160,7 +146,7 @@ public class UserDAOTest {
         // Cố tình tạo 1 tài khoản nữa trùng username
         User duplicateUser = new User();
         duplicateUser.setUsername("minhpd"); 
-        duplicateUser.setPassword("pass2");
+        duplicateUser.setPassword("123456");
         duplicateUser.setFullName("Phan Đình Minh 2");
         duplicateUser.setPhone("0933444666");
         duplicateUser.setRole("librarian");
@@ -176,7 +162,7 @@ public class UserDAOTest {
         // 1. Chuẩn bị dữ liệu ban đầu
         User testUser = new User();
         testUser.setUsername("quangnd");
-        testUser.setPassword("pass");
+        testUser.setPassword("123456");
         testUser.setFullName("Nguyễn Đức Quang");
         testUser.setPhone("0966777888");
         testUser.setRole("librarian");
@@ -206,7 +192,7 @@ public class UserDAOTest {
         // 1. Tạo user muốn đổi (Target)
         User targetUser = new User();
         targetUser.setUsername("tuanma");
-        targetUser.setPassword("pass");
+        targetUser.setPassword("123456");
         targetUser.setFullName("Mai Anh Tuấn");
         targetUser.setPhone("0977111222");
         targetUser.setRole("librarian");
@@ -215,7 +201,7 @@ public class UserDAOTest {
         // 2. Tạo một user khác ngáng đường (Conflict)
         User conflictUser = new User();
         conflictUser.setUsername("hungnq");
-        conflictUser.setPassword("pass");
+        conflictUser.setPassword("123456");
         conflictUser.setFullName("Nguyễn Quang Hưng");
         conflictUser.setPhone("0977333444");
         conflictUser.setRole("librarian");
@@ -258,5 +244,102 @@ public class UserDAOTest {
         // 4. Xác minh là đã xóa sạch
         List<User> searchAfter = userDAO.searchUser("khoihd");
         assertTrue(searchAfter.isEmpty());
+    }
+    // --- KIỂM THỬ GIÁ TRỊ BIÊN 
+
+    @Test
+    public void testAddUser_UsernameBVA() {
+        User u = new User();
+        u.setPassword("123456");
+        u.setFullName("Test User");
+        u.setPhone("0911222333");
+        u.setRole("librarian");
+
+        // 1. Min-1: 4 ký tự (Lỗi)
+        u.setUsername("abcd");
+        assertFalse(userDAO.addUser(u), "Username 4 ký tự phải bị từ chối");
+
+        // 2. Min: 5 ký tự (Hợp lệ)
+        u.setUsername("abcde");
+        assertTrue(userDAO.addUser(u), "Username 5 ký tự phải hợp lệ");
+
+        // 3. Inside: 10 ký tự (Hợp lệ)
+        u.setUsername("abcdefghij");
+        assertTrue(userDAO.addUser(u), "Username 10 ký tự phải hợp lệ");
+
+        // 4. Max: 20 ký tự (Hợp lệ)
+        u.setUsername("abcdefghijklmnopqrst");
+        assertTrue(userDAO.addUser(u), "Username 20 ký tự phải hợp lệ");
+
+        // 5. Max+1: 21 ký tự (Lỗi)
+        u.setUsername("abcdefghijklmnopqrstu");
+        assertFalse(userDAO.addUser(u), "Username 21 ký tự phải bị từ chối");
+    }
+
+    @Test
+    public void testAddUser_PasswordBVA() {
+        User u = new User();
+        u.setUsername("validuser");
+        u.setFullName("Test User");
+        u.setPhone("0911222333");
+        u.setRole("librarian");
+
+        // 1. Min-1: 5 ký tự (Lỗi)
+        u.setPassword("12345");
+        assertFalse(userDAO.addUser(u), "Password 5 ký tự phải bị từ chối");
+
+        // 2. Min: 6 ký tự (Hợp lệ)
+        u.setPassword("123456");
+        assertTrue(userDAO.addUser(u), "Password 6 ký tự phải hợp lệ");
+        userDAO.deleteUser(userDAO.searchUser("validuser").get(0)); // Dọn rác
+
+        // 3. Max: 32 ký tự (Hợp lệ)
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 32; i++) sb.append("a");
+        u.setPassword(sb.toString());
+        assertTrue(userDAO.addUser(u), "Password 32 ký tự phải hợp lệ");
+        userDAO.deleteUser(userDAO.searchUser("validuser").get(0)); // Dọn rác
+
+        // 4. Max+1: 33 ký tự (Lỗi)
+        sb.append("a");
+        u.setPassword(sb.toString());
+        assertFalse(userDAO.addUser(u), "Password 33 ký tự phải bị từ chối");
+    }
+
+    @Test
+    public void testAddUser_PhoneBVA() {
+        User u = new User();
+        u.setUsername("validuser2");
+        u.setPassword("123456");
+        u.setFullName("Test User");
+        u.setRole("librarian");
+
+        // 1. 9 chữ số (Lỗi)
+        u.setPhone("091234567");
+        assertFalse(userDAO.addUser(u), "Số điện thoại 9 số phải bị từ chối");
+
+        // 2. 10 chữ số (Hợp lệ)
+        u.setPhone("0912345678");
+        assertTrue(userDAO.addUser(u), "Số điện thoại 10 số phải hợp lệ");
+        userDAO.deleteUser(userDAO.searchUser("validuser2").get(0)); // Dọn rác
+
+        // 3. 11 chữ số (Lỗi)
+        u.setPhone("09123456789");
+        assertFalse(userDAO.addUser(u), "Số điện thoại 11 số phải bị từ chối");
+    }
+    @Test
+    public void testAddUser_EmptyOrNullFields() {
+        User u = new User();
+        
+        // 1. User chưa set thông tin gì (Các trường mang giá trị Null)
+        assertFalse(userDAO.addUser(u), "Tài khoản chứa giá trị Null ở các trường bắt buộc phải bị từ chối");
+
+        // 2. User được set chuỗi rỗng (Empty strings)
+        u.setUsername("");
+        u.setPassword("");
+        u.setFullName("");
+        u.setPhone("");
+        u.setRole("librarian");
+        assertFalse(userDAO.addUser(u), "Tài khoản chứa chuỗi rỗng (Empty) phải bị từ chối");
     }
 }

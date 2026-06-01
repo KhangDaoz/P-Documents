@@ -81,7 +81,7 @@ public class EditUserFrm extends JFrame implements ActionListener {
         pnlGrid.add(txtPhone);
 
         // Dòng 6: Quyền hạn
-        pnlGrid.add(createGridLabel("Vai trò", Color.WHITE, false));
+        pnlGrid.add(createGridLabel("Quyền hạn", Color.WHITE, false));
         txtRole = createGridTextField(user.getRole(), true);
         pnlGrid.add(txtRole);
 
@@ -164,7 +164,22 @@ public class EditUserFrm extends JFrame implements ActionListener {
             String role = txtRole.getText().trim();
 
             if (username.isEmpty() || password.isEmpty() || fullName.isEmpty() || phone.isEmpty() || role.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "All fields are required!", "Input Error", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Thiếu thông tin", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            if (username.length() < 5 || username.length() > 20) {
+                JOptionPane.showMessageDialog(this, "Tên đăng nhập phải từ 5 đến 20 ký tự!", "Lỗi nhập liệu", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            if (password.length() < 6 || password.length() > 32) {
+                JOptionPane.showMessageDialog(this, "Mật khẩu phải từ 6 đến 32 ký tự!", "Lỗi nhập liệu", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            if (!phone.matches("\\d{10}")) {
+                JOptionPane.showMessageDialog(this, "Số điện thoại phải bao gồm đúng 10 chữ số!", "Lỗi nhập liệu", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 

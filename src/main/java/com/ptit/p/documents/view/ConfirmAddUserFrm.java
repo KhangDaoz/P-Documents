@@ -61,7 +61,7 @@ public class ConfirmAddUserFrm extends JFrame implements ActionListener {
         pnlGrid.add(createGridLabel(user.getPhone(), Color.WHITE));
 
         // Dòng 5: Quyền hạn
-        pnlGrid.add(createGridLabel("Vai trò", Color.WHITE));
+        pnlGrid.add(createGridLabel("Quyền hạn", Color.WHITE));
         String roleText = user.getRole();
         if ("admin".equalsIgnoreCase(roleText)) {
             roleText = "Admin";

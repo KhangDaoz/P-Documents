@@ -121,7 +121,7 @@ public class SearchUserFrm extends JFrame implements ActionListener {
         pnlCenter.add(lblList, BorderLayout.NORTH);
 
         // Bảng dữ liệu
-        String[] columnNames = {"ID", "Full Name", "Username", "Password", "Phone", "Role", "", ""};
+        String[] columnNames = {"ID", "Họ tên", "Tên đăng nhập", "Mật khẩu", "Số điện thoại", "Quyền hạn", "", ""};
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {

@@ -31,8 +31,7 @@ public class SearchStudentFrm extends JFrame implements ActionListener {
     }
 
     private void initComponents() {
-        System.out.println("SearchStudentFrm initialized");
-        setTitle("Dat sach — Buoc 2: Tim kiem sinh vien");
+        setTitle("Đặt sách - Bước 2: Tìm kiếm sinh viên");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(680, 440);
         setLocationRelativeTo(null);
@@ -42,15 +41,15 @@ public class SearchStudentFrm extends JFrame implements ActionListener {
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 6));
         searchPanel.setBorder(BorderFactory.createTitledBorder("Tim kiem sinh vien"));
 
-        searchPanel.add(new JLabel("Ma SV / Ho ten:"));
+        searchPanel.add(new JLabel("Mã SV / Họ tên:"));
         txtSearch = new JTextField(20);
         searchPanel.add(txtSearch);
 
-        btnSearch = new JButton("Tim kiem");
+        btnSearch = new JButton("Tìm kiếm");
         btnSearch.addActionListener(this);
         searchPanel.add(btnSearch);
 
-        btnAddStudent = new JButton("Them sinh vien moi");
+        btnAddStudent = new JButton("Thêm sinh viên mới");
         btnAddStudent.addActionListener(this);
         searchPanel.add(btnAddStudent);
 
@@ -77,9 +76,10 @@ public class SearchStudentFrm extends JFrame implements ActionListener {
         add(new JScrollPane(tblListStudent), BorderLayout.CENTER);
 
         // ---- Status ----
-        lblStatus = new JLabel("Nhap tu khoa va nhan Tim kiem. Double-click de chon sinh vien.");
+        lblStatus = new JLabel("Nhập từ khóa và nhấn Tìm kiếm. Nhấp đúp để chọn sinh viên.");
         lblStatus.setBorder(BorderFactory.createEmptyBorder(4, 6, 4, 6));
         add(lblStatus, BorderLayout.SOUTH);
+
     }
 
     @Override

@@ -178,7 +178,7 @@ public class DeleteBookFrm extends JFrame implements ActionListener {
         btnCancel.setPreferredSize(new Dimension(100, 35));
         btnConfirmDelete.setBackground(UIManager.getColor("Button.background"));
         btnConfirmDelete.setForeground(Color.BLACK);
-        btnConfirmDelete.setFont(new Font("Arial", Font.BOLD, 13));
+        btnConfirmDelete.setFont(new Font("Arial", Font.PLAIN, 14));
         buttonPanel.add(btnConfirmDelete);
         buttonPanel.add(btnCancel);
 
@@ -191,6 +191,7 @@ public class DeleteBookFrm extends JFrame implements ActionListener {
         btnCancel.addActionListener(this);
 
         add(mainPanel);
+
     }
 
     @Override

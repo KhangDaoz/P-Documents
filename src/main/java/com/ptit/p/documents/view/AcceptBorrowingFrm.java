@@ -49,9 +49,11 @@ public class AcceptBorrowingFrm extends JFrame {
 
         // === UPPER PANEL ===
         JPanel pnlUpper = new JPanel(new BorderLayout(10, 10));
+        pnlUpper.setBackground(Color.WHITE);
         pnlUpper.setBorder(BorderFactory.createTitledBorder("Thông tin phiếu mượn"));
 
         JPanel pnlInfo = new JPanel(new GridLayout(3, 2, 10, 10));
+        pnlInfo.setBackground(Color.WHITE);
         lblStudentName = new JLabel("Họ tên: ");
         lblStudentId = new JLabel("Mã sinh viên: ");
         lblBorrowDate = new JLabel("Ngày hẹn nhận: ");
@@ -78,15 +80,18 @@ public class AcceptBorrowingFrm extends JFrame {
         };
         tblBooks = new JTable(tbmBooks);
         JScrollPane scrBooks = new JScrollPane(tblBooks);
+        scrBooks.getViewport().setBackground(Color.WHITE);
 
         pnlUpper.add(pnlInfo, BorderLayout.NORTH);
         pnlUpper.add(scrBooks, BorderLayout.CENTER);
 
         // === LOWER PANEL ===
         JPanel pnlLower = new JPanel(new BorderLayout(10, 10));
+        pnlLower.setBackground(Color.WHITE);
         pnlLower.setBorder(BorderFactory.createTitledBorder("Thông xử lý"));
 
         JPanel pnlStats = new JPanel(new GridLayout(1, 2));
+        pnlStats.setBackground(Color.WHITE);
         lblTotalBooks = new JLabel("Tổng số sách: " + borrowing.getNumberOfBooks());
         lblTotalFine = new JLabel("Tổng tiền phạt: 0 VNĐ");
         pnlStats.add(lblTotalBooks);
@@ -94,11 +99,15 @@ public class AcceptBorrowingFrm extends JFrame {
 
         lblNote = new JLabel("Ghi chú: ");
         JScrollPane scrNote = new JScrollPane(lblNote);
+        scrNote.getViewport().setBackground(Color.WHITE);
 
         JPanel pnlBtns = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        pnlBtns.setBackground(Color.WHITE);
         JButton btnConfirm = new JButton("Xác nhận phiếu");
         JButton btnCancel = new JButton("Hủy");
-        btnConfirm.setBackground(Color.GREEN);
+        btnConfirm.setBackground(Color.WHITE);
+        btnConfirm.setForeground(Color.BLACK);
+        btnConfirm.setBorder(BorderFactory.createLineBorder(new Color(160, 170, 185)));
         pnlBtns.add(btnConfirm);
         pnlBtns.add(btnCancel);
 

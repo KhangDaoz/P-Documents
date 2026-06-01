@@ -57,7 +57,7 @@ public class StockStatDAO extends DAO {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            ps = con.prepareStatement(sql.toString());
+            ps = getCon().prepareStatement(sql.toString());
             ps.setTimestamp(1, Timestamp.valueOf(from.atStartOfDay()));
             ps.setTimestamp(2, Timestamp.valueOf(to.atTime(23, 59, 59)));
             if (!filterAll && statusFilter != null) {

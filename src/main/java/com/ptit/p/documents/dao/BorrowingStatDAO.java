@@ -36,7 +36,7 @@ public class BorrowingStatDAO extends DAO {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            ps = con.prepareStatement(sql);
+            ps = getCon().prepareStatement(sql);
             
             ps.setTimestamp(1, Timestamp.valueOf(from.atStartOfDay()));
             ps.setTimestamp(2, Timestamp.valueOf(to.atTime(23, 59, 59)));

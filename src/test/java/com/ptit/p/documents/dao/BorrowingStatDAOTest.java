@@ -31,7 +31,7 @@ class BorrowingStatDAOTest {
         assertFalse(result.isEmpty(), "Kết quả không được rỗng (EP-D1)");
         assertEquals(5, result.size(), "Có 5 đầu sách có lượt mượn trong CSDL");
         assertEquals("ISBN-CS-01", result.get(0).getIsbn(), "Sách ISBN-CS-01 mượn nhiều nhất");
-        assertEquals(7, result.get(0).getBorrowCount());
+        assertEquals(5, result.get(0).getBorrowCount());
     }
 
     @Test

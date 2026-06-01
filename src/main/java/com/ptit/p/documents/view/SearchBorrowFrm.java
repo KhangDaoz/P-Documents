@@ -111,7 +111,7 @@ public class SearchBorrowFrm extends JFrame implements ActionListener {
         tblListBook = new JTable(tableModel);
         tblListBook.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        btnAddToCart = new JButton("Thêm vào phiếu mượn");
+        btnAddToCart = new JButton("Thêm vào giỏ");
         btnAddToCart.addActionListener(this);
 
         JPanel resultPanel = new JPanel(new BorderLayout(2, 2));
@@ -153,28 +153,30 @@ public class SearchBorrowFrm extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnSearch) {
-            doSearch();
+            BookDAO dao = new BookDAO();
+            searchResults = dao.searchBook(
+                    txtBookName.getText().trim(),
+                    txtAuthor.getText().trim(),
+                    txtGenre.getText().trim(),
+                    txtISBN.getText().trim());
+
+            tableModel.setRowCount(0);
+            for (Book b : searchResults) {
+                tableModel.addRow(new Object[]{
+                        b.getIsbn(), b.getTitle(), b.getAuthor(),
+                        b.getGenre(), b.getAvailableCopies()
+                });
+            }
         } else if (e.getSource() == btnAddToCart) {
             addBookToCart();
         } else if (e.getSource() == btnNext) {
-            proceedToStudentSearch();
-        }
-    }
-
-    private void doSearch() {
-        BookDAO dao = new BookDAO();
-        searchResults = dao.searchBook(
-                txtBookName.getText().trim(),
-                txtAuthor.getText().trim(),
-                txtGenre.getText().trim(),
-                txtISBN.getText().trim());
-
-        tableModel.setRowCount(0);
-        for (Book b : searchResults) {
-            tableModel.addRow(new Object[]{
-                    b.getIsbn(), b.getTitle(), b.getAuthor(),
-                    b.getGenre(), b.getAvailableCopies()
-            });
+            if (currentBorrowing.getBooks().isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "Vui lòng thêm ít nhất 1 cuốn sách vào phiếu mượn.",
+                        "Giỏ sách trống", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            new SearchStudentFrm(currentBorrowing).setVisible(true);
         }
     }
 
@@ -226,16 +228,5 @@ public class SearchBorrowFrm extends JFrame implements ActionListener {
                 selected.getAuthor(), String.format("%,.0f", selected.getPrice())
         });
         btnNext.setEnabled(currentBorrowing.getBooks().size() > 0);
-    }
-
-    private void proceedToStudentSearch() {
-        if (currentBorrowing.getBooks().isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                    "Vui lòng thêm ít nhất 1 cuốn sách vào phiếu mượn.",
-                    "Giỏ sách trống", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        new SearchStudentFrm(currentBorrowing).setVisible(true);
-        
     }
 }

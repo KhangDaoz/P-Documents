@@ -14,12 +14,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 public class BorrowingDAOTest {
 
     BorrowingDAO bd = new BorrowingDAO();
 
-    
     private void deleteTestBorrowing(int borrowingId) {
         if (borrowingId <= 0) return;
         try {
@@ -36,7 +36,6 @@ public class BorrowingDAOTest {
         }
     }
 
-    
     private Borrowing buildSampleBorrowing(String isbn) {
         User user  = new User(3, "librarian1", "Tran Thi Thu", "librarian");
         Student sv = new Student("SV001", "Do Huy Hoang", "hoang@ptit.edu.vn", "0911111111", "Hanoi");
@@ -53,9 +52,6 @@ public class BorrowingDAOTest {
         return b;
     }
 
-    
-
-    
     @Test
     public void testAddBorrowingStandard() {
         Borrowing b = buildSampleBorrowing("ISBN-CS-01");
@@ -65,7 +61,6 @@ public class BorrowingDAOTest {
         deleteTestBorrowing(b.getId());
     }
 
-    
     @Test
     public void testAddBorrowingExceptionNoBookItem() {
         Borrowing b = buildSampleBorrowing("ISBN-CS-03"); 
@@ -73,7 +68,6 @@ public class BorrowingDAOTest {
         Assert.assertFalse(ok);
     }
 
-    
     @Test
     public void testAddBorrowingExceptionInvalidStudent() {
         User user    = new User(3, "librarian1", "Tran Thi Thu", "librarian");
@@ -93,9 +87,6 @@ public class BorrowingDAOTest {
         Assert.assertFalse(ok);
     }
 
-    
-
-    
     @Test
     public void testSearchBorrowingException1() {
         ArrayList<Borrowing> list = bd.searchBorrowing("XXXXXXXXXX");
@@ -103,7 +94,6 @@ public class BorrowingDAOTest {
         Assert.assertEquals(0, list.size());
     }
 
-    
     @Test
     public void testSearchBorrowingStandard() {
         Borrowing b = buildSampleBorrowing("ISBN-CS-01");
@@ -119,7 +109,6 @@ public class BorrowingDAOTest {
         }
     }
 
-    
     @Test
     public void testCancelBorrowingStandard() {
         Borrowing b = buildSampleBorrowing("ISBN-CS-01");
@@ -129,7 +118,6 @@ public class BorrowingDAOTest {
             boolean cancelOk = bd.cancelBorrowing(b.getId());
             Assert.assertTrue(cancelOk);
 
-            
             ArrayList<Borrowing> list = bd.searchBorrowing("SV001");
             for (Borrowing item : list) {
                 Assert.assertNotEquals(b.getId(), item.getId());
@@ -139,14 +127,12 @@ public class BorrowingDAOTest {
         }
     }
 
-    
     @Test
     public void testCancelBorrowingExceptionNotExist() {
         boolean ok = bd.cancelBorrowing(999999);
         Assert.assertFalse(ok);
     }
 
-    
     @Test
     public void testCancelBorrowingExceptionNotPending() {
         Borrowing b = buildSampleBorrowing("ISBN-CS-01");
@@ -158,6 +144,40 @@ public class BorrowingDAOTest {
 
             boolean cancel2 = bd.cancelBorrowing(b.getId()); 
             Assert.assertFalse(cancel2);
+        } finally {
+            deleteTestBorrowing(b.getId());
+        }
+    }
+
+    @Test
+    public void testSearchBorrowing_Success() {
+        Borrowing b = buildSampleBorrowing("ISBN-CS-01");
+        boolean addOk = bd.addBorrowing(b);
+        Assert.assertTrue(addOk);
+        try {
+            List<Borrowing> results = bd.searchBorrowing("SV001", "");
+            Assert.assertFalse(results.isEmpty());
+            boolean found = false;
+            for (Borrowing item : results) {
+                if (item.getId() == b.getId()) {
+                    found = true;
+                    break;
+                }
+            }
+            Assert.assertTrue(found);
+        } finally {
+            deleteTestBorrowing(b.getId());
+        }
+    }
+
+    @Test
+    public void testUpdateBorrowing_Success() {
+        Borrowing b = buildSampleBorrowing("ISBN-CS-01");
+        boolean addOk = bd.addBorrowing(b);
+        Assert.assertTrue(addOk);
+        try {
+            boolean result = bd.updateBorrowing(b.getId(), LocalDate.now(), "borrowed");
+            Assert.assertTrue(result);
         } finally {
             deleteTestBorrowing(b.getId());
         }

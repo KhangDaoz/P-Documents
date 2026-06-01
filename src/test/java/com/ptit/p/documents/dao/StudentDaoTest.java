@@ -72,4 +72,12 @@ public class StudentDaoTest {
             try { con.rollback(); con.setAutoCommit(true); } catch (Exception ex) { ex.printStackTrace(); }
         }
     }
+
+    @Test
+    public void testSearchStudentEmptyKey() {
+        String key = "";
+        ArrayList<Student> list = sd.searchStudent(key);
+        Assert.assertNotNull(list);
+        Assert.assertTrue(list.size() > 0);
+    }
 }

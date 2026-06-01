@@ -182,4 +182,69 @@ public class BorrowingDAOTest {
             deleteTestBorrowing(b.getId());
         }
     }
+
+    @Test
+    public void testAddBorrowingExceptionEmptyBooks() {
+        Borrowing b = buildSampleBorrowing("ISBN-CS-01");
+        b.getBooks().clear();
+        boolean ok = bd.addBorrowing(b);
+        Assert.assertFalse(ok);
+    }
+
+    @Test
+    public void testAddBorrowingExceptionPastDate() {
+        Borrowing b = buildSampleBorrowing("ISBN-CS-01");
+        b.setExpectedReceiveDate(LocalDate.now().minusDays(1));
+        boolean ok = bd.addBorrowing(b);
+        Assert.assertFalse("Should not allow past expectedReceiveDate", ok);
+    }
+
+    @Test
+    public void testAddBorrowingSuccessToday() {
+        Borrowing b = buildSampleBorrowing("ISBN-CS-01");
+        b.setExpectedReceiveDate(LocalDate.now());
+        boolean ok = bd.addBorrowing(b);
+        Assert.assertTrue(ok);
+        deleteTestBorrowing(b.getId());
+    }
+
+    @Test
+    public void testCancelBorrowingExceptionZeroId() {
+        boolean ok = bd.cancelBorrowing(0);
+        Assert.assertFalse(ok);
+    }
+
+    @Test
+    public void testCancelBorrowingExceptionNegativeId() {
+        boolean ok = bd.cancelBorrowing(-1);
+        Assert.assertFalse(ok);
+    }
+
+    @Test
+    public void testCancelBorrowingExceptionAlreadyCancelled() {
+        Borrowing b = buildSampleBorrowing("ISBN-CS-01");
+        b.setStatus("cancelled");
+        boolean addOk = bd.addBorrowing(b);
+        Assert.assertTrue(addOk);
+        try {
+            boolean cancelOk = bd.cancelBorrowing(b.getId());
+            Assert.assertFalse("Should fail because status is already cancelled", cancelOk);
+        } finally {
+            deleteTestBorrowing(b.getId());
+        }
+    }
+
+    @Test
+    public void testCancelBorrowingExceptionBorrowedStatus() {
+        Borrowing b = buildSampleBorrowing("ISBN-CS-01");
+        b.setStatus("borrowed");
+        boolean addOk = bd.addBorrowing(b);
+        Assert.assertTrue(addOk);
+        try {
+            boolean cancelOk = bd.cancelBorrowing(b.getId());
+            Assert.assertFalse("Should fail because status is borrowed", cancelOk);
+        } finally {
+            deleteTestBorrowing(b.getId());
+        }
+    }
 }

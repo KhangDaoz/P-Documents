@@ -34,6 +34,12 @@ public class BorrowingDAO extends DAO {
             + " ) LIMIT 1";
 
     public boolean addBorrowing(Borrowing b) {
+        if (b.getBooks() == null || b.getBooks().isEmpty()) {
+            return false;
+        }
+        if (b.getExpectedReceiveDate() != null && b.getExpectedReceiveDate().isBefore(java.time.LocalDate.now())) {
+            return false;
+        }
         String sqlAddBorrowing = "INSERT INTO tblBorrowing(expectedReceiveDate, note, status, tblStudentID, tblUserID)"
                 + " VALUES(?,?,?,?,?)";
         String sqlAddBorrowedBook = "INSERT INTO tblBorrowedBook(expectedReturnDate, status, note, price, tblBookItemID, tblBorrowingID)"

@@ -16,7 +16,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
@@ -34,13 +34,13 @@ public class BillDAOTest {
     @Mock private ResultSet mockResultSet;
 
     @BeforeEach
-    void setUp() throws SQLException {
+    void setUp() {
         doReturn(mockConnection).when(billDAO).getCon();
     }
 
     @Test
     void testCreateBill_Success() throws SQLException {
-        
+        // Arrange: Giả lập lưu thành công và trả về ID tự tăng là 99
         when(mockConnection.prepareStatement(anyString(), eq(PreparedStatement.RETURN_GENERATED_KEYS))).thenReturn(mockStatement);
         when(mockStatement.executeUpdate()).thenReturn(1);
         when(mockStatement.getGeneratedKeys()).thenReturn(mockResultSet);
@@ -55,11 +55,11 @@ public class BillDAOTest {
         User user = new User();
         user.setId(2);
 
-        
+        // Act
         boolean result = billDAO.createBill(bill, user);
 
-        
+        // Assert
         assertTrue(result);
-        assertTrue(bill.getId() == 99);
+        assertEquals(99, bill.getId());
     }
 }

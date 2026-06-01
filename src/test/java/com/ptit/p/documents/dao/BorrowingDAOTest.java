@@ -14,7 +14,16 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.util.ArrayList;
-
+import java.util.List;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import org.junit.Before;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
+import org.mockito.ArgumentMatchers;
 public class BorrowingDAOTest {
 
     BorrowingDAO bd = new BorrowingDAO();
@@ -161,5 +170,54 @@ public class BorrowingDAOTest {
         } finally {
             deleteTestBorrowing(b.getId());
         }
+    }
+
+    // --- Bổ sung Unit Test với Mockito theo thiết kế ---
+
+    @Spy
+    @InjectMocks
+    private BorrowingDAO borrowingDAO;
+
+    @Mock private Connection mockConnection;
+    @Mock private PreparedStatement mockStatement;
+    @Mock private ResultSet mockResultSet;
+
+    @Before
+    public void setUpMock() {
+        MockitoAnnotations.openMocks(this);
+        // Giả lập kết nối trả về mockConnection
+        Mockito.doReturn(mockConnection).when(borrowingDAO).getCon();
+    }
+
+    @Test
+    public void testSearchBorrowing_Success() throws SQLException {
+        // Arrange
+        Mockito.when(mockConnection.prepareStatement(ArgumentMatchers.anyString())).thenReturn(mockStatement);
+        Mockito.when(mockStatement.executeQuery()).thenReturn(mockResultSet);
+        Mockito.when(mockResultSet.next()).thenReturn(true, false); // Trả về 1 bản ghi
+        Mockito.when(mockResultSet.getInt("ID")).thenReturn(1);
+        Mockito.when(mockResultSet.getString("status")).thenReturn("pending");
+        // Giả lập thêm dữ liệu mock ResultSet (tùy thuộc mapRow)
+
+        // Act
+        List<Borrowing> results = borrowingDAO.searchBorrowing("B21DCCN001", "", "pending");
+
+        // Assert
+        Assert.assertFalse(results.isEmpty());
+        Assert.assertEquals(1, results.size());
+        Assert.assertEquals("pending", results.get(0).getStatus());
+    }
+
+    @Test
+    public void testUpdateBorrowing_Success() throws SQLException {
+        // Arrange
+        Mockito.when(mockConnection.prepareStatement(ArgumentMatchers.anyString())).thenReturn(mockStatement);
+        Mockito.when(mockStatement.executeUpdate()).thenReturn(1); // Giả lập 1 dòng bị ảnh hưởng (cập nhật thành công)
+
+        // Act
+        boolean result = borrowingDAO.updateBorrowing(1, LocalDate.now(), "borrowed");
+
+        // Assert
+        Assert.assertTrue(result);
     }
 }

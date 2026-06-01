@@ -12,10 +12,10 @@ public class DAO {
         try {
             if (con == null || con.isClosed()) {
                 Class.forName("com.mysql.cj.jdbc.Driver");
-                String url = "jdbc:mysql:
+                String url = "jdbc:mysql:"
                         + "?useSSL=false&serverTimezone=UTC&characterEncoding=utf8&allowPublicKeyRetrieval=true";
                 String user = "root";
-                String[] passwords = { "08082005", "123456"};
+                String[] passwords = { "08082005", "123456","1812"};
                 SQLException last = null;
                 for (String pwd : passwords) {
                     try {

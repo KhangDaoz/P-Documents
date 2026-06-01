@@ -1,5 +1,7 @@
 package com.ptit.p.documents.view;
 
+import java.time.format.DateTimeFormatter;
+
 import com.ptit.p.documents.dao.BookDAO;
 import com.ptit.p.documents.model.Book;
 import com.ptit.p.documents.model.BorrowedBook;
@@ -15,11 +17,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Giao diện chon sach cho phieu muon — Buoc 1 cua module Dat Sach.
  */
 public class SearchBorrowFrm extends JFrame implements ActionListener {
+    // UI field for expected return date
+    private JTextField txtReturnDate;
+    // Stored expected return date
+    private LocalDate expectedReturnDate;
 
     private User      u;
     private JTextField txtBookName;
@@ -28,12 +35,10 @@ public class SearchBorrowFrm extends JFrame implements ActionListener {
     private JTextField txtISBN;
     private JButton    btnSearch;
     private JTable     tblListBook;
-    private JLabel     lblStatus;
+    private JButton    btnAddToCart;
 
     private JTable     tblCart;
-    private JButton    btnRemoveFromCart;
     private JButton    btnNext;
-    private JLabel     lblCartCount;
 
     private DefaultTableModel tableModel;
     private DefaultTableModel cartModel;
@@ -44,8 +49,15 @@ public class SearchBorrowFrm extends JFrame implements ActionListener {
         this.u = u;
         LocalDate today = LocalDate.now();
         LocalDate receiveDate = today.plusDays(2);
+        // Default return date is 14 days from now
+        this.expectedReturnDate = today.plusDays(14);
         currentBorrowing = new Borrowing(null, u, today, receiveDate);
         initComponents();
+        // Populate return date field after UI components are created
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        if (expectedReturnDate != null) {
+            txtReturnDate.setText(expectedReturnDate.format(dtf));
+        }
     }
 
     private void initComponents() {
@@ -80,7 +92,19 @@ public class SearchBorrowFrm extends JFrame implements ActionListener {
         btnSearch.addActionListener(this);
         searchPanel.add(btnSearch);
 
-        add(searchPanel, BorderLayout.NORTH);
+        // ---- Panel thông tin ngày trả dự kiến ----
+        JPanel datePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 6));
+        datePanel.setBorder(BorderFactory.createTitledBorder("Thông tin ngày"));
+        datePanel.add(new JLabel("Ngày trả dự kiến:"));
+        txtReturnDate = new JTextField(12);
+        datePanel.add(txtReturnDate);
+
+        // Combine datePanel and searchPanel
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(searchPanel, BorderLayout.CENTER);
+        topPanel.add(datePanel, BorderLayout.SOUTH);
+
+        add(topPanel, BorderLayout.NORTH);
 
         // ---- Bảng kết quả tìm kiếm ----
         String[] searchCols = {"ISBN", "Ten sach", "Tac gia", "The loai", "Con lai"};
@@ -90,17 +114,16 @@ public class SearchBorrowFrm extends JFrame implements ActionListener {
         tblListBook = new JTable(tableModel);
         tblListBook.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        lblStatus = new JLabel("Nhập từ khóa và nhấn Tìm kiếm. Nhấp đúp để thêm vào phiếu.");
-        tblListBook.addMouseListener(new MouseAdapter() {
-            @Override public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) addBookToCart();
-            }
-        });
+        btnAddToCart = new JButton("Thêm vào phiếu mượn");
+        btnAddToCart.addActionListener(this);
 
         JPanel resultPanel = new JPanel(new BorderLayout(2, 2));
         resultPanel.setBorder(BorderFactory.createTitledBorder("Kết quả tìm kiếm"));
         resultPanel.add(new JScrollPane(tblListBook), BorderLayout.CENTER);
-        resultPanel.add(lblStatus, BorderLayout.SOUTH);
+        
+        JPanel addToCartPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        addToCartPanel.add(btnAddToCart);
+        resultPanel.add(addToCartPanel, BorderLayout.SOUTH);
 
         // ---- Bảng giỏ sách ----
         String[] cartCols = {"STT", "ISBN", "Tên sách", "Tác giả", "Giá (VND)"};
@@ -110,17 +133,8 @@ public class SearchBorrowFrm extends JFrame implements ActionListener {
         tblCart = new JTable(cartModel);
         tblCart.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        lblCartCount = new JLabel("Giỏ sách: 0 cuốn");
-        btnRemoveFromCart = new JButton("Xóa sách khỏi giỏ");
-        btnRemoveFromCart.addActionListener(this);
-
-        JPanel cartTopBar = new JPanel(new BorderLayout());
-        cartTopBar.add(lblCartCount, BorderLayout.WEST);
-        cartTopBar.add(btnRemoveFromCart, BorderLayout.EAST);
-
         JPanel cartPanel = new JPanel(new BorderLayout(2, 2));
         cartPanel.setBorder(BorderFactory.createTitledBorder("Giỏ sách đã chọn"));
-        cartPanel.add(cartTopBar, BorderLayout.NORTH);
         cartPanel.add(new JScrollPane(tblCart), BorderLayout.CENTER);
 
         // ---- SplitPane ----
@@ -143,8 +157,8 @@ public class SearchBorrowFrm extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnSearch) {
             doSearch();
-        } else if (e.getSource() == btnRemoveFromCart) {
-            removeFromCart();
+        } else if (e.getSource() == btnAddToCart) {
+            addBookToCart();
         } else if (e.getSource() == btnNext) {
             proceedToStudentSearch();
         }
@@ -165,9 +179,6 @@ public class SearchBorrowFrm extends JFrame implements ActionListener {
                     b.getGenre(), b.getAvailableCopies()
             });
         }
-        lblStatus.setText(searchResults.isEmpty()
-                ? "Không tìm thấy sách phù hợp."
-                : "Tìm thấy " + searchResults.size() + " sách. Nhấp đúp để thêm vào phiếu.");
     }
 
     private void addBookToCart() {
@@ -192,7 +203,23 @@ public class SearchBorrowFrm extends JFrame implements ActionListener {
             }
         }
 
-        LocalDate returnDate = LocalDate.now().plusDays(14);
+        LocalDate returnDate;
+        try {
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            returnDate = LocalDate.parse(txtReturnDate.getText().trim(), dtf);
+            if (returnDate.isBefore(LocalDate.now())) {
+                JOptionPane.showMessageDialog(this,
+                        "Ngày dự kiến trả không được ở trong quá khứ.",
+                        "Lỗi ngày tháng", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this,
+                    "Định dạng ngày không hợp lệ. Vui lòng nhập theo định dạng dd/MM/yyyy.",
+                    "Lỗi ngày tháng", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         BorrowedBook bb = new BorrowedBook(selected, returnDate, selected.getPrice());
         currentBorrowing.getBooks().add(bb);
 
@@ -201,46 +228,7 @@ public class SearchBorrowFrm extends JFrame implements ActionListener {
                 stt, selected.getIsbn(), selected.getTitle(),
                 selected.getAuthor(), String.format("%,.0f", selected.getPrice())
         });
-        updateCartStatus();
-    }
-
-    private void removeFromCart() {
-        int row = tblCart.getSelectedRow();
-        if (row < 0 || row >= currentBorrowing.getBooks().size()) {
-            JOptionPane.showMessageDialog(this,
-                    "Vui lòng chọn một dòng sách trong giỏ để xóa.",
-                    "Chưa chọn sách", JOptionPane.INFORMATION_MESSAGE);
-            return;
-        }
-        int confirm = JOptionPane.showConfirmDialog(this,
-                "Xóa \"" + currentBorrowing.getBooks().get(row).getBook().getTitle() + "\" khỏi phiếu?",
-                "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
-        if (confirm != JOptionPane.YES_OPTION) return;
-
-        currentBorrowing.getBooks().remove(row);
-        rebuildCartTable();
-    }
-
-    private void rebuildCartTable() {
-        cartModel.setRowCount(0);
-        int stt = 1;
-        for (BorrowedBook bb : currentBorrowing.getBooks()) {
-            Book bk = bb.getBook();
-            cartModel.addRow(new Object[]{
-                    stt++,
-                    bk != null ? bk.getIsbn()   : "",
-                    bk != null ? bk.getTitle()  : "",
-                    bk != null ? bk.getAuthor() : "",
-                    bk != null ? String.format("%,.0f", bk.getPrice()) : ""
-            });
-        }
-        updateCartStatus();
-    }
-
-    private void updateCartStatus() {
-        int count = currentBorrowing.getBooks().size();
-        lblCartCount.setText("Giỏ sách: " + count + " cuốn");
-        btnNext.setEnabled(count > 0);
+        btnNext.setEnabled(currentBorrowing.getBooks().size() > 0);
     }
 
     private void proceedToStudentSearch() {

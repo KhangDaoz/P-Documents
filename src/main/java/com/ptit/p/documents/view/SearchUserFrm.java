@@ -153,8 +153,6 @@ public class SearchUserFrm extends JFrame implements ActionListener {
         for (int i = 0; i < tblUser.getColumnCount() - 2; i++) {
             tblUser.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
-
-        // Click trực tiếp vào icon Bút chì hoặc Thùng rác trên hàng để Sửa/Xoá
         tblUser.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {

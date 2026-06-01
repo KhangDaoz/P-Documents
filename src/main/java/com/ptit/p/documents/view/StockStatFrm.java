@@ -12,13 +12,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
-/**
- * Giao diện báo cáo sách hư hỏng / thất lạc (spec §2.a, §2.b bước 9-27).
- *
- * - Nhập khoảng thời gian + lý do (Tất cả/Hư hỏng/Thất lạc)
- * - "Tìm kiếm" -> gọi StockStatDAO.searchDamageLossRecords()
- * - "In báo cáo PDF" -> gọi StockStatDAO.exportToPDF()
- */
 public class StockStatFrm extends JFrame {
 
     private static final DateTimeFormatter DF = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -86,7 +79,7 @@ public class StockStatFrm extends JFrame {
             currentRows = dao.searchDamageLossRecords(from, to, reason);
             tableModel.setRowCount(0);
             for (StockStat s : currentRows) {
-                // BookItem.getId() trả về int; hiển thị dạng chuỗi
+                
                 String itemId = s.getBook().getItems().isEmpty()
                         ? "" : String.valueOf(s.getBook().getItems().get(0).getId());
                 tableModel.addRow(new Object[]{

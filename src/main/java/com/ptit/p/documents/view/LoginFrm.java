@@ -17,7 +17,6 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-
 import com.ptit.p.documents.dao.UserDAO;
 import com.ptit.p.documents.model.User;
 
@@ -51,7 +50,7 @@ public class LoginFrm extends JFrame implements ActionListener {
         JLabel lblUser = new JLabel("Tên đăng nhập:", JLabel.RIGHT);
         lblUser.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         lblUser.setForeground(new Color(71, 85, 105));
-        lblUser.setBounds(60, 130, 90, 30);
+        lblUser.setBounds(10, 130, 140, 30);
         pnl.add(lblUser);
 
         txtUsername = new JTextField(15);
@@ -64,7 +63,7 @@ public class LoginFrm extends JFrame implements ActionListener {
         JLabel lblPass = new JLabel("Mật khẩu:", JLabel.RIGHT);
         lblPass.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         lblPass.setForeground(new Color(71, 85, 105));
-        lblPass.setBounds(60, 200, 90, 30);
+        lblPass.setBounds(10, 200, 140, 30);
         pnl.add(lblPass);
 
         txtPassword = new JPasswordField(15);

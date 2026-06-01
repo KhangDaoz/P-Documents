@@ -10,9 +10,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
-/**
- * Giao dien tim kiem sinh vien — Buoc 2 cua module Dat Sach.
- */
 public class SearchStudentFrm extends JFrame implements ActionListener {
 
     private Borrowing b;
@@ -37,7 +34,7 @@ public class SearchStudentFrm extends JFrame implements ActionListener {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(4, 4));
 
-        // ---- Panel tìm kiếm ----
+        
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 6));
         searchPanel.setBorder(BorderFactory.createTitledBorder("Tim kiem sinh vien"));
 
@@ -55,7 +52,7 @@ public class SearchStudentFrm extends JFrame implements ActionListener {
 
         add(searchPanel, BorderLayout.NORTH);
 
-        // ---- Bảng kết quả ----
+        
         String[] cols = { "Ma sinh vien", "Ho ten", "Email", "So dien thoai", "Dia chi" };
         tableModel = new DefaultTableModel(cols, 0) {
             @Override
@@ -75,7 +72,7 @@ public class SearchStudentFrm extends JFrame implements ActionListener {
 
         add(new JScrollPane(tblListStudent), BorderLayout.CENTER);
 
-        // ---- Status ----
+        
         lblStatus = new JLabel("Nhập từ khóa và nhấn Tìm kiếm. Nhấp đúp để chọn sinh viên.");
         lblStatus.setBorder(BorderFactory.createEmptyBorder(4, 6, 4, 6));
         add(lblStatus, BorderLayout.SOUTH);

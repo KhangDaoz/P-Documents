@@ -35,34 +35,34 @@ public class EditUserFrm extends JFrame implements ActionListener {
         pnl.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240), 1));
         pnlMain.add(pnl);
 
-        // Tiêu đề form (hiển thị phẳng đẹp, không giống nút bấm)
+        
         JLabel lblHeader = new JLabel("Cập nhật thông tin tài khoản", JLabel.CENTER);
         lblHeader.setFont(new Font("Segoe UI", Font.BOLD, 16));
         lblHeader.setForeground(new Color(30, 41, 59));
         lblHeader.setBounds(100, 30, 400, 35);
         pnl.add(lblHeader);
 
-        // Grid panel cho bảng thông tin
+        
         JPanel pnlGrid = new JPanel(new GridLayout(6, 2, 0, 0));
         pnlGrid.setBounds(100, 75, 400, 210);
         pnlGrid.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240), 1));
 
-        // Dòng 1: MNV
+        
         pnlGrid.add(createGridLabel("Mã nhân viên", Color.WHITE, false));
         String mnvStr = "NV" + String.format("%03d", user.getId());
         pnlGrid.add(createGridLabel(mnvStr, new Color(248, 250, 252), false));
 
-        // Dòng 2: Họ tên
+        
         pnlGrid.add(createGridLabel("Họ và tên", Color.WHITE, false));
         txtFullName = createGridTextField(user.getFullName(), true);
         pnlGrid.add(txtFullName);
 
-        // Dòng 3: Tên đăng nhập
+        
         pnlGrid.add(createGridLabel("Tên đăng nhập", Color.WHITE, false));
         txtUsername = createGridTextField(user.getUsername(), true);
         pnlGrid.add(txtUsername);
 
-        // Dòng 4: Mật khẩu
+        
         pnlGrid.add(createGridLabel("Mật khẩu", Color.WHITE, false));
         txtPassword = new JPasswordField(user.getPassword());
         txtPassword.putClientProperty("JPasswordField.showRevealButton", true);
@@ -72,22 +72,22 @@ public class EditUserFrm extends JFrame implements ActionListener {
         txtPassword.setHorizontalAlignment(JTextField.CENTER);
         txtPassword.setBackground(Color.WHITE);
         txtPassword.setForeground(Color.BLACK);
-        // Đã xoá setBorder để FlatLaf tự động quản lý viền và hiển thị nút mắt
+        
         pnlGrid.add(txtPassword);
 
-        // Dòng 5: Số điện thoại
+        
         pnlGrid.add(createGridLabel("Số điện thoại", Color.WHITE, false));
         txtPhone = createGridTextField(user.getPhone(), true);
         pnlGrid.add(txtPhone);
 
-        // Dòng 6: Quyền hạn
-        pnlGrid.add(createGridLabel("Vai trò", Color.WHITE, false));
+        
+        pnlGrid.add(createGridLabel("Quyền hạn", Color.WHITE, false));
         txtRole = createGridTextField(user.getRole(), true);
         pnlGrid.add(txtRole);
 
         pnl.add(pnlGrid);
 
-        // Nút Huỷ và Cập nhật
+        
         btnCancel = new JButton("Hủy");
         btnCancel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         btnCancel.setBackground(Color.WHITE);
@@ -164,7 +164,22 @@ public class EditUserFrm extends JFrame implements ActionListener {
             String role = txtRole.getText().trim();
 
             if (username.isEmpty() || password.isEmpty() || fullName.isEmpty() || phone.isEmpty() || role.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "All fields are required!", "Input Error", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Thiếu thông tin", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            if (username.length() < 5 || username.length() > 20) {
+                JOptionPane.showMessageDialog(this, "Tên đăng nhập phải từ 5 đến 20 ký tự!", "Lỗi nhập liệu", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            if (password.length() < 6 || password.length() > 32) {
+                JOptionPane.showMessageDialog(this, "Mật khẩu phải từ 6 đến 32 ký tự!", "Lỗi nhập liệu", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            if (!phone.matches("\\d{10}")) {
+                JOptionPane.showMessageDialog(this, "Số điện thoại phải bao gồm đúng 10 chữ số!", "Lỗi nhập liệu", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
@@ -174,21 +189,21 @@ public class EditUserFrm extends JFrame implements ActionListener {
                 return;
             }
 
-            // Gọi lớp User để cập nhật dữ liệu vào thực thể (thông qua các hàm set)
+            
             user.setUsername(username);
             user.setPassword(password);
             user.setFullName(fullName);
             user.setPhone(phone);
             user.setRole(role);
 
-            // Gọi phương thức updateUser() của lớp UserDAO
+            
             UserDAO userDAO = new UserDAO();
             boolean success = userDAO.updateUser(user);
 
             if (success) {
-                // Hệ thống hiển thị thông báo thành công
+                
                 JOptionPane.showMessageDialog(this, "Account updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                // Admin click nút OK trên thông báo -> gọi lại lớp UserManageFrm
+                
                 this.dispose();
                 UserManageFrm manageFrm = new UserManageFrm();
                 manageFrm.setVisible(true);

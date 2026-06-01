@@ -13,6 +13,22 @@ public class UserDAO extends DAO {
         super();
     }
 
+    private boolean validateUser(User u) {
+        if (u == null || u.getUsername() == null || u.getPassword() == null || u.getPhone() == null) {
+            return false;
+        }
+        
+        if (u.getUsername().length() < 5 || u.getUsername().length() > 20) return false;
+        
+        
+        if (u.getPassword().length() < 6 || u.getPassword().length() > 32) return false;
+        
+        
+        if (!u.getPhone().matches("\\d{10}")) return false;
+        
+        return true;
+    }
+
     public User checkLogin(String username, String password) {
         User loginUser = new User();
         loginUser.setUsername(username);
@@ -26,7 +42,7 @@ public class UserDAO extends DAO {
         }
 
         String sql = "SELECT * FROM tblUser WHERE username = ? AND password = ?";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+        try (PreparedStatement ps = getCon().prepareStatement(sql)) {
             ps.setString(1, u.getUsername());
             ps.setString(2, u.getPassword());
             try (ResultSet rs = ps.executeQuery()) {
@@ -50,7 +66,7 @@ public class UserDAO extends DAO {
         List<User> result = new ArrayList<>();
         String key = (keyword == null) ? "" : keyword.trim();
         String sql = "SELECT * FROM tblUser WHERE username LIKE ? OR fullName LIKE ? OR phone LIKE ?";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+        try (PreparedStatement ps = getCon().prepareStatement(sql)) {
             String searchPattern = "%" + key + "%";
             ps.setString(1, searchPattern);
             ps.setString(2, searchPattern);
@@ -73,12 +89,12 @@ public class UserDAO extends DAO {
     }
 
     public boolean addUser(User u) {
-        if (u == null || u.getUsername() == null) {
+        if (!validateUser(u)) {
             return false;
         }
 
         String checkSql = "SELECT ID FROM tblUser WHERE username = ?";
-        try (PreparedStatement checkPs = con.prepareStatement(checkSql)) {
+        try (PreparedStatement checkPs = getCon().prepareStatement(checkSql)) {
             checkPs.setString(1, u.getUsername());
             try (ResultSet rs = checkPs.executeQuery()) {
                 if (rs.next()) {
@@ -91,7 +107,7 @@ public class UserDAO extends DAO {
         }
 
         String sql = "INSERT INTO tblUser(username, password, fullName, phone, role) VALUES(?, ?, ?, ?, ?)";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+        try (PreparedStatement ps = getCon().prepareStatement(sql)) {
             ps.setString(1, u.getUsername());
             ps.setString(2, u.getPassword());
             ps.setString(3, u.getFullName());
@@ -105,12 +121,12 @@ public class UserDAO extends DAO {
     }
 
     public boolean updateUser(User u) {
-        if (u == null) {
+        if (!validateUser(u)) {
             return false;
         }
 
         String checkSql = "SELECT ID FROM tblUser WHERE username = ? AND ID != ?";
-        try (PreparedStatement checkPs = con.prepareStatement(checkSql)) {
+        try (PreparedStatement checkPs = getCon().prepareStatement(checkSql)) {
             checkPs.setString(1, u.getUsername());
             checkPs.setInt(2, u.getId());
             try (ResultSet rs = checkPs.executeQuery()) {
@@ -124,7 +140,7 @@ public class UserDAO extends DAO {
         }
 
         String sql = "UPDATE tblUser SET username=?, password=?, fullName=?, phone=?, role=? WHERE ID=?";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+        try (PreparedStatement ps = getCon().prepareStatement(sql)) {
             ps.setString(1, u.getUsername());
             ps.setString(2, u.getPassword());
             ps.setString(3, u.getFullName());
@@ -144,7 +160,7 @@ public class UserDAO extends DAO {
         }
 
         String sql = "DELETE FROM tblUser WHERE ID=?";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+        try (PreparedStatement ps = getCon().prepareStatement(sql)) {
             ps.setInt(1, u.getId());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {

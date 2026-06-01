@@ -1,7 +1,4 @@
-/*
- * Hệ thống Quản lý Thư viện — PTIT
- * Entry point của ứng dụng.
- */
+
 
 package com.ptit.p.documents;
 
@@ -11,13 +8,10 @@ import com.ptit.p.documents.view.LoginFrm;
 import javax.swing.*;
 import java.awt.Color;
 
-/**
- * Lớp khởi chạy ứng dụng Quản lý Thư viện.
- */
 public class PDocuments {
 
     public static void main(String[] args) {
-        // Dùng FlatLaf để giao diện đẹp hơn
+        
         try {
             boolean success = com.formdev.flatlaf.FlatIntelliJLaf.setup();
             System.out.println("DEBUG: FlatLaf setup success? " + success);
@@ -42,8 +36,8 @@ public class PDocuments {
             System.err.println("FlatLaf Look and Feel setup failed: " + ex.getMessage());
         }
 
-        // ---- Kiểm tra kết nối CSDL (việc mở kết nối nằm hoàn toàn trong DAO) ----
-        // Schema + dữ liệu mẫu: chạy src/main/resources/schema.sql trong MySQL một lần trước khi chạy app.
+        
+        
         try {
             new DAO();
         } catch (RuntimeException ex) {
@@ -58,7 +52,7 @@ public class PDocuments {
             System.exit(1);
         }
 
-        // Khởi chạy trên Event Dispatch Thread (EDT) — bắt buộc với Swing
+        
         SwingUtilities.invokeLater(() -> {
             new LoginFrm().setVisible(true);
         });

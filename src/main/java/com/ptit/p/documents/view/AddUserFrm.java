@@ -37,22 +37,22 @@ public class AddUserFrm extends JFrame implements ActionListener {
         lblHeader.setBounds(100, 30, 400, 35);
         pnl.add(lblHeader);
 
-        // Grid panel cho bảng thông tin
+        
         JPanel pnlGrid = new JPanel(new GridLayout(5, 2, 0, 0));
         pnlGrid.setBounds(100, 75, 400, 175);
         pnlGrid.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240), 1));
 
-        // Dòng 1: Họ tên
+        
         pnlGrid.add(createGridLabel("Họ và tên", Color.WHITE));
         txtFullName = createGridTextField();
         pnlGrid.add(txtFullName);
 
-        // Dòng 2: Tên đăng nhập
+        
         pnlGrid.add(createGridLabel("Tên đăng nhập", Color.WHITE));
         txtUsername = createGridTextField();
         pnlGrid.add(txtUsername);
 
-        // Dòng 3: Mật khẩu
+        
         pnlGrid.add(createGridLabel("Mật khẩu", Color.WHITE));
         txtPassword = new JPasswordField();
         txtPassword.putClientProperty("JPasswordField.showRevealButton", true);
@@ -64,19 +64,19 @@ public class AddUserFrm extends JFrame implements ActionListener {
         txtPassword.setForeground(Color.BLACK);
         pnlGrid.add(txtPassword);
 
-        // Dòng 4: Số điện thoại
+        
         pnlGrid.add(createGridLabel("Số điện thoại", Color.WHITE));
         txtPhone = createGridTextField();
         pnlGrid.add(txtPhone);
 
-        // Dòng 5: Quyền hạn
-        pnlGrid.add(createGridLabel("Vai trò", Color.WHITE));
+        
+        pnlGrid.add(createGridLabel("Quyền hạn", Color.WHITE));
         txtRole = createGridTextField();
         pnlGrid.add(txtRole);
 
         pnl.add(pnlGrid);
 
-        // Nút Thêm mới và Huỷ
+        
         btnAddnew = new JButton("Thêm mới");
         btnAddnew.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         btnAddnew.setBackground(Color.WHITE);
@@ -121,7 +121,7 @@ public class AddUserFrm extends JFrame implements ActionListener {
 
     }
 
-    // Constructor nhận dữ liệu cũ để điền lại khi người dùng nhấn Back từ màn hình Confirm
+    
     public AddUserFrm(User user) {
         this();
         if (user != null) {
@@ -163,7 +163,22 @@ public class AddUserFrm extends JFrame implements ActionListener {
             String role = txtRole.getText().trim();
 
             if (username.isEmpty() || password.isEmpty() || fullName.isEmpty() || phone.isEmpty() || role.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please fill out all fields before saving!", "Missing Information", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Thiếu thông tin", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            if (username.length() < 5 || username.length() > 20) {
+                JOptionPane.showMessageDialog(this, "Tên đăng nhập phải từ 5 đến 20 ký tự!", "Lỗi nhập liệu", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            if (password.length() < 6 || password.length() > 32) {
+                JOptionPane.showMessageDialog(this, "Mật khẩu phải từ 6 đến 32 ký tự!", "Lỗi nhập liệu", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            if (!phone.matches("\\d{10}")) {
+                JOptionPane.showMessageDialog(this, "Số điện thoại phải bao gồm đúng 10 chữ số!", "Lỗi nhập liệu", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
@@ -173,7 +188,7 @@ public class AddUserFrm extends JFrame implements ActionListener {
                 return;
             }
 
-            // Gọi lớp User để thực hiện đóng gói dữ liệu. Các hàm set được gọi.
+            
             User user = new User();
             user.setUsername(username);
             user.setPassword(password);
@@ -181,7 +196,7 @@ public class AddUserFrm extends JFrame implements ActionListener {
             user.setPhone(phone);
             user.setRole(role);
 
-            // Phương thức actionPerformed() gọi lớp ConfirmAddUserFrm
+            
             this.dispose();
             ConfirmAddUserFrm confirmFrm = new ConfirmAddUserFrm(user);
             confirmFrm.setVisible(true);

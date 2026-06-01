@@ -6,7 +6,6 @@ public class BorrowedBookFine {
     private double totalFine;
     private Fine fine;
 
-
     public BorrowedBookFine() {
     }
 

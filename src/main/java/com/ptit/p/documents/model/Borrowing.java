@@ -5,10 +5,6 @@ import java.util.ArrayList;
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * Đại diện cho một phiếu mượn (borrowing slip) trong hệ thống thư viện.
- * Tương ứng với bảng tblBorrowing trong CSDL.
- */
 public class Borrowing {
     private int id;
     private LocalDate expectedReceiveDate;
@@ -24,7 +20,7 @@ public class Borrowing {
         this.books = new ArrayList<>();
     }
 
-    /** Constructor rút gọn từ sang branch */
+    
     public Borrowing(int id, Student student, LocalDate createdAt) {
         this.id = id;
         this.student = student;
@@ -32,7 +28,7 @@ public class Borrowing {
         this.books = new ArrayList<>();
     }
 
-    /** Constructors từ huy branch */
+    
     public Borrowing(int id, LocalDate expectedReceiveDate, LocalDate actualReceiveDate, 
                      String status, List<BorrowedBook> books, Student student, User user) {
         this.id = id;
@@ -62,7 +58,7 @@ public class Borrowing {
         this.books = new ArrayList<>();
     }
 
-    // -------- Getters & Setters --------
+    
 
     public int getId() {
         return id;
@@ -112,7 +108,7 @@ public class Borrowing {
         this.createdAt = createdAt;
     }
 
-    /** Ngày đặt mượn (borrowDate trong CNPM.md) — ánh xạ tới cột createdAt. */
+    
     public LocalDate getBorrowDate() {
         return createdAt;
     }

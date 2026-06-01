@@ -14,12 +14,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 public class BorrowingDAOTest {
 
     BorrowingDAO bd = new BorrowingDAO();
 
-    // Xoa du lieu test de tranh anh huong den DB sau khi test
     private void deleteTestBorrowing(int borrowingId) {
         if (borrowingId <= 0) return;
         try {
@@ -36,7 +36,6 @@ public class BorrowingDAOTest {
         }
     }
 
-    // Helper: tao phieu muon mau voi ISBN cho truoc
     private Borrowing buildSampleBorrowing(String isbn) {
         User user  = new User(3, "librarian1", "Tran Thi Thu", "librarian");
         Student sv = new Student("SV001", "Do Huy Hoang", "hoang@ptit.edu.vn", "0911111111", "Hanoi");
@@ -53,9 +52,6 @@ public class BorrowingDAOTest {
         return b;
     }
 
-    // ---- MODULE DAT SACH ----
-
-    // TT11: SV va sach ton tai, con ban sao — dat thanh cong
     @Test
     public void testAddBorrowingStandard() {
         Borrowing b = buildSampleBorrowing("ISBN-CS-01");
@@ -65,15 +61,13 @@ public class BorrowingDAOTest {
         deleteTestBorrowing(b.getId());
     }
 
-    // TT12: Sach khong con ban sao kha dung — dat that bai
     @Test
     public void testAddBorrowingExceptionNoBookItem() {
-        Borrowing b = buildSampleBorrowing("ISBN-CS-03"); // 0 BookItem trong seed
+        Borrowing b = buildSampleBorrowing("ISBN-CS-03"); 
         boolean ok = bd.addBorrowing(b);
         Assert.assertFalse(ok);
     }
 
-    // TT13: Sinh vien khong ton tai — dat that bai (FK violation)
     @Test
     public void testAddBorrowingExceptionInvalidStudent() {
         User user    = new User(3, "librarian1", "Tran Thi Thu", "librarian");
@@ -93,9 +87,6 @@ public class BorrowingDAOTest {
         Assert.assertFalse(ok);
     }
 
-    // ---- MODULE HUY DAT SACH ----
-
-    // TT14: Khong co phieu pending cua tu khoa nay
     @Test
     public void testSearchBorrowingException1() {
         ArrayList<Borrowing> list = bd.searchBorrowing("XXXXXXXXXX");
@@ -103,7 +94,6 @@ public class BorrowingDAOTest {
         Assert.assertEquals(0, list.size());
     }
 
-    // TT15: Co phieu pending — setup trong test, xoa sau khi test
     @Test
     public void testSearchBorrowingStandard() {
         Borrowing b = buildSampleBorrowing("ISBN-CS-01");
@@ -119,7 +109,6 @@ public class BorrowingDAOTest {
         }
     }
 
-    // TT16: Huy phieu dang pending — thanh cong
     @Test
     public void testCancelBorrowingStandard() {
         Borrowing b = buildSampleBorrowing("ISBN-CS-01");
@@ -129,7 +118,6 @@ public class BorrowingDAOTest {
             boolean cancelOk = bd.cancelBorrowing(b.getId());
             Assert.assertTrue(cancelOk);
 
-            // Sau huy: phieu nay khong con trong danh sach pending
             ArrayList<Borrowing> list = bd.searchBorrowing("SV001");
             for (Borrowing item : list) {
                 Assert.assertNotEquals(b.getId(), item.getId());
@@ -139,14 +127,12 @@ public class BorrowingDAOTest {
         }
     }
 
-    // TT17: Huy phieu khong ton tai — that bai
     @Test
     public void testCancelBorrowingExceptionNotExist() {
         boolean ok = bd.cancelBorrowing(999999);
         Assert.assertFalse(ok);
     }
 
-    // TT18: Huy phieu khong o trang thai pending — that bai (huy lan 2)
     @Test
     public void testCancelBorrowingExceptionNotPending() {
         Borrowing b = buildSampleBorrowing("ISBN-CS-01");
@@ -156,8 +142,42 @@ public class BorrowingDAOTest {
             boolean cancel1 = bd.cancelBorrowing(b.getId());
             Assert.assertTrue(cancel1);
 
-            boolean cancel2 = bd.cancelBorrowing(b.getId()); // phieu da la 'cancelled'
+            boolean cancel2 = bd.cancelBorrowing(b.getId()); 
             Assert.assertFalse(cancel2);
+        } finally {
+            deleteTestBorrowing(b.getId());
+        }
+    }
+
+    @Test
+    public void testSearchBorrowing_Success() {
+        Borrowing b = buildSampleBorrowing("ISBN-CS-01");
+        boolean addOk = bd.addBorrowing(b);
+        Assert.assertTrue(addOk);
+        try {
+            List<Borrowing> results = bd.searchBorrowing("SV001", "");
+            Assert.assertFalse(results.isEmpty());
+            boolean found = false;
+            for (Borrowing item : results) {
+                if (item.getId() == b.getId()) {
+                    found = true;
+                    break;
+                }
+            }
+            Assert.assertTrue(found);
+        } finally {
+            deleteTestBorrowing(b.getId());
+        }
+    }
+
+    @Test
+    public void testUpdateBorrowing_Success() {
+        Borrowing b = buildSampleBorrowing("ISBN-CS-01");
+        boolean addOk = bd.addBorrowing(b);
+        Assert.assertTrue(addOk);
+        try {
+            boolean result = bd.updateBorrowing(b.getId(), LocalDate.now(), "borrowed");
+            Assert.assertTrue(result);
         } finally {
             deleteTestBorrowing(b.getId());
         }

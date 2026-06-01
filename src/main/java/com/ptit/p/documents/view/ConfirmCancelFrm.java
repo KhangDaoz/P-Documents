@@ -10,9 +10,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.time.format.DateTimeFormatter;
 
-/**
- * Giao dien xac nhan huy dat sach — Buoc cuoi cua module Huy Dat Sach.
- */
 public class ConfirmCancelFrm extends JFrame implements ActionListener {
 
     private Borrowing b;
@@ -27,7 +24,7 @@ public class ConfirmCancelFrm extends JFrame implements ActionListener {
         initComponents();
     }
 
-    /** Constructor tuong thich cu khong co User. */
+    
     public ConfirmCancelFrm(Borrowing b) {
         this(b, null);
     }
@@ -40,7 +37,7 @@ public class ConfirmCancelFrm extends JFrame implements ActionListener {
         setResizable(false);
         setLayout(new BorderLayout(6, 6));
 
-        // ---- Thông tin phiếu ----
+        
         outInfo = new JTextArea(buildInfoText());
         outInfo.setEditable(false);
         outInfo.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13));
@@ -55,7 +52,7 @@ public class ConfirmCancelFrm extends JFrame implements ActionListener {
 
         add(infoPanel, BorderLayout.CENTER);
 
-        // ---- Nút ----
+        
         JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 8));
         btnBack    = new JButton("Quay lại");
         btnConfirm = new JButton("Xác nhận hủy");

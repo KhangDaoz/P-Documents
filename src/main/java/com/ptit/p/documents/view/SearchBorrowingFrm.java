@@ -31,7 +31,7 @@ public class SearchBorrowingFrm extends JFrame {
 
     private List<Borrowing> searchResults;
 
-    // Inline Detail Panel components
+    
     private JSplitPane mainSplitPane;
     private JPanel pnlBorrowingDetail;
     private JLabel lblDetailName;
@@ -63,7 +63,7 @@ public class SearchBorrowingFrm extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        // NORTH: pnlSearch
+        
         JPanel pnlSearch = new JPanel(new GridBagLayout());
         pnlSearch.setBorder(BorderFactory.createTitledBorder("Tìm kiếm"));
         GridBagConstraints gbc = new GridBagConstraints();
@@ -90,7 +90,7 @@ public class SearchBorrowingFrm extends JFrame {
 
         add(pnlSearch, BorderLayout.NORTH);
 
-        // CENTER: tblResult inside JSplitPane
+        
         String[] columns = {"#", "Mã PM", "Tên sinh viên", "Ngày tạo", "Ngày hẹn nhận", "Trạng thái"};
         tbmResult = new DefaultTableModel(columns, 0) {
             @Override
@@ -102,7 +102,7 @@ public class SearchBorrowingFrm extends JFrame {
         tblResult.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane scrResult = new JScrollPane(tblResult);
 
-        // SOUTH: pnlActions
+        
         JPanel pnlActions = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         String btnSelectText = "Chọn phiếu";
         if (mode == SearchMode.RETURN_BOOK) btnSelectText = "Chọn phiếu trả";
@@ -113,12 +113,12 @@ public class SearchBorrowingFrm extends JFrame {
         pnlActions.add(btnSelect);
         pnlActions.add(btnBack);
 
-        // Wrapper for TOP part
+        
         JPanel pnlTopWrap = new JPanel(new BorderLayout());
         pnlTopWrap.add(scrResult, BorderLayout.CENTER);
         pnlTopWrap.add(pnlActions, BorderLayout.SOUTH);
 
-        // Details Panel (Bottom part for SplitPane)
+        
         pnlBorrowingDetail = new JPanel(new BorderLayout());
         pnlBorrowingDetail.setBorder(BorderFactory.createTitledBorder("Chi tiết phiếu mượn"));
         pnlBorrowingDetail.setVisible(false);
@@ -154,7 +154,7 @@ public class SearchBorrowingFrm extends JFrame {
         mainSplitPane.setResizeWeight(0.6);
         add(mainSplitPane, BorderLayout.CENTER);
 
-        // Event Listeners
+        
         btnSearch.addActionListener(e -> searchAction());
         btnClear.addActionListener(e -> clearAction());
         btnBack.addActionListener(e -> dispose());
@@ -170,7 +170,7 @@ public class SearchBorrowingFrm extends JFrame {
         btnAddFine.addActionListener(e -> addFineAction());
         btnDetailBack.addActionListener(e -> {
             pnlBorrowingDetail.setVisible(false);
-            mainSplitPane.setDividerLocation(1.0); // Hide bottom
+            mainSplitPane.setDividerLocation(1.0); 
         });
         btnContinue.addActionListener(e -> {
             if (selectedBorrowing == null) {
@@ -226,12 +226,12 @@ public class SearchBorrowingFrm extends JFrame {
 
         if (mode == SearchMode.CONFIRM_BORROW) {
             new AcceptBorrowingFrm(currentUser, selectedBorrowing).setVisible(true);
-            // this.dispose();
+            
         } else if (mode == SearchMode.CANCEL_BORROW) {
             new ConfirmCancelFrm(selectedBorrowing, currentUser).setVisible(true);
             this.dispose();
         } else {
-            // INLINE DETAIL for RETURN_BOOK
+            
             showInlineDetail();
         }
     }
@@ -251,7 +251,7 @@ public class SearchBorrowingFrm extends JFrame {
             String bookName = "Sách ID: " + (bb.getBookItem() != null ? bb.getBookItem().getId() : "N/A");
             int bookItemId = bb.getBookItem() != null ? bb.getBookItem().getId() : -1;
             
-            // Summarize fines
+            
             long fineCount = 0;
             if (bb.getBorrowedBookFines() != null) {
                 fineCount = bb.getBorrowedBookFines().size();
@@ -282,7 +282,7 @@ public class SearchBorrowingFrm extends JFrame {
 
         new AddFineDlg(this, selectedBorrowedBook).setVisible(true);
         selectedBorrowing.updateBorrowedBook(selectedBorrowedBook);
-        // After dialog closes, refresh the inline panel to show updated fines
+        
         showInlineDetail(); 
     }
 }

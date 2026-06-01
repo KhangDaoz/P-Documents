@@ -9,10 +9,6 @@ import java.awt.*;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-/**
- * Chi tiết lịch sử mượn trả của một cuốn sách (spec §1.b bước 23-37).
- * 6 cột theo spec §1.b bước 34: mã SV, tên SV, ngày mượn, hạn trả, ngày trả, trạng thái.
- */
 public class BorrowDetailFrm extends JFrame {
 
     private static final DateTimeFormatter SDF = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -48,7 +44,7 @@ public class BorrowDetailFrm extends JFrame {
         south.add(btnBack);
         add(south, BorderLayout.SOUTH);
 
-        // Spec §1.b bước 25-33: gọi DAO ngay khi khởi tạo
+        
         List<BorrowedBook> history = dao.getBorrowHistoryByBook(isbn);
         for (BorrowedBook bb : history) {
             tm.addRow(new Object[]{
@@ -61,7 +57,7 @@ public class BorrowDetailFrm extends JFrame {
             });
         }
 
-        // Spec §1.b bước 35-37: Trở về -> BorrowingStatFrm vẫn đang mở
+        
         btnBack.addActionListener(e -> dispose());
 
     }

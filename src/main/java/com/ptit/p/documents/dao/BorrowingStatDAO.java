@@ -17,17 +17,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * DAO truy vấn CSDL thống kê sách mượn nhiều và xuất Excel.
- * Truy vấn trên schema p_documents: tblBook, tblBookItem, tblBorrowedBook, tblBorrowing.
- * Dùng tblBorrowing.createdAt thay cho borrow_date.
- */
 public class BorrowingStatDAO extends DAO {
 
-    /**
-     * Lấy danh sách top N đầu sách được mượn nhiều nhất trong khoảng [from, to].
-     * Lọc theo tblBorrowing.createdAt (thay cho borrow_date không còn trong schema final).
-     */
+    
     public List<BorrowingStat> getTopBorrowedBooks(LocalDate from, LocalDate to, int topN) {
         List<BorrowingStat> result = new ArrayList<>();
         String sql =
@@ -44,8 +36,8 @@ public class BorrowingStatDAO extends DAO {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            ps = con.prepareStatement(sql);
-            // createdAt là TIMESTAMP, nên dùng Timestamp cho phạm vi ngày đầy đủ
+            ps = getCon().prepareStatement(sql);
+            
             ps.setTimestamp(1, Timestamp.valueOf(from.atStartOfDay()));
             ps.setTimestamp(2, Timestamp.valueOf(to.atTime(23, 59, 59)));
             ps.setInt(3, topN);
@@ -69,17 +61,14 @@ public class BorrowingStatDAO extends DAO {
         return result;
     }
 
-    /**
-     * Xuất danh sách thống kê ra file .xlsx.
-     * Cột: Mã sách, Tên sách, Tác giả, Thể loại, Lượt mượn.
-     */
+    
     public boolean exportToExcel(List<BorrowingStat> rows, String filePath) {
         try (Workbook wb = new XSSFWorkbook();
              FileOutputStream out = new FileOutputStream(filePath)) {
 
             Sheet sheet = wb.createSheet("Thống kê sách mượn nhiều");
 
-            // Header
+            
             Row header = sheet.createRow(0);
             String[] cols = {"Mã sách", "Tên sách", "Tác giả", "Thể loại", "Lượt mượn"};
             CellStyle headerStyle = wb.createCellStyle();
@@ -92,7 +81,7 @@ public class BorrowingStatDAO extends DAO {
                 c.setCellStyle(headerStyle);
             }
 
-            // Data
+            
             int r = 1;
             for (BorrowingStat s : rows) {
                 Row row = sheet.createRow(r++);

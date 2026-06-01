@@ -36,7 +36,7 @@ public class DeleteBookFrm extends JFrame implements ActionListener {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.WEST;
 
-        // Title
+        
         JLabel lblTitle = new JLabel("XÁC NHẬN XÓA SÁCH", SwingConstants.CENTER);
         lblTitle.setFont(new Font("Arial", Font.BOLD, 18));
         lblTitle.setForeground(Color.BLACK);
@@ -45,21 +45,21 @@ public class DeleteBookFrm extends JFrame implements ActionListener {
         gbc.gridwidth = 2;
         mainPanel.add(lblTitle, gbc);
 
-        // Warning
+        
         JLabel lblWarning = new JLabel("Bạn có chắc muốn xóa sách sau đây?", SwingConstants.CENTER);
         lblWarning.setFont(new Font("Arial", Font.ITALIC, 13));
         lblWarning.setForeground(Color.BLACK);
         gbc.gridy = 1;
         mainPanel.add(lblWarning, gbc);
 
-        // Separator
+        
         gbc.gridy = 2;
-        // mainPanel.add(new JSeparator(), gbc);
+        
 
         gbc.gridwidth = 1;
         int row = 3;
 
-        // Hiển thị thông tin sách (chỉ đọc)
+        
         gbc.gridy = row;
         gbc.gridx = 0;
         gbc.gridwidth = 1;
@@ -164,12 +164,12 @@ public class DeleteBookFrm extends JFrame implements ActionListener {
         mainPanel.add(lblCopiesValue, gbc);
         row++;
 
-        // Separator
+        
         gbc.gridy = row;
         gbc.gridwidth = 2;
-        // mainPanel.add(new JSeparator(), gbc);
+        
 
-        // Buttons
+        
         row++;
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 0));
         btnConfirmDelete = new JButton("Xác nhận xóa");
@@ -208,11 +208,11 @@ public class DeleteBookFrm extends JFrame implements ActionListener {
                 return;
             }
 
-            // Bước 1: Xóa tất cả bản sách vật lý (BookItem)
+            
             BookItemDAO bookItemDAO = new BookItemDAO();
             bookItemDAO.deleteBookItem(isbn);
 
-            // Bước 2: Xóa đầu sách (Book)
+            
             boolean success = bookDAO.deleteBook(isbn);
 
             if (success) {

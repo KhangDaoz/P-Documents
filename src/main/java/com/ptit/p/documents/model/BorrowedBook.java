@@ -3,10 +3,6 @@ package com.ptit.p.documents.model;
 import java.util.ArrayList;
 import java.time.LocalDate;
 
-/**
- * Đại diện cho một cuốn sách cụ thể trong một phiếu mượn.
- * Tương ứng với bảng tblBorrowedBook trong CSDL.
- */
 public class BorrowedBook {
     private int id;
     private LocalDate expectedReturnDate;
@@ -59,7 +55,7 @@ public class BorrowedBook {
         this.borrowedBookFine = borrowedBookFine != null ? borrowedBookFine : new ArrayList<>();
     }
 
-    // -------- Getters & Setters --------
+    
 
     public int getId() {
         return id;

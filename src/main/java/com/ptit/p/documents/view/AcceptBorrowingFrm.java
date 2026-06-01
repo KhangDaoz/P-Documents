@@ -47,7 +47,7 @@ public class AcceptBorrowingFrm extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10, 10));
 
-        // === UPPER PANEL ===
+        
         JPanel pnlUpper = new JPanel(new BorderLayout(10, 10));
         pnlUpper.setBackground(Color.WHITE);
         pnlUpper.setBorder(BorderFactory.createTitledBorder("Thông tin phiếu mượn"));
@@ -85,7 +85,7 @@ public class AcceptBorrowingFrm extends JFrame {
         pnlUpper.add(pnlInfo, BorderLayout.NORTH);
         pnlUpper.add(scrBooks, BorderLayout.CENTER);
 
-        // === LOWER PANEL ===
+        
         JPanel pnlLower = new JPanel(new BorderLayout(10, 10));
         pnlLower.setBackground(Color.WHITE);
         pnlLower.setBorder(BorderFactory.createTitledBorder("Thông xử lý"));
@@ -115,14 +115,14 @@ public class AcceptBorrowingFrm extends JFrame {
         pnlLower.add(scrNote, BorderLayout.CENTER);
         pnlLower.add(pnlBtns, BorderLayout.SOUTH);
 
-        // === ADD TO MAIN FRAME ===
+        
         add(pnlUpper, BorderLayout.CENTER);
         add(pnlLower, BorderLayout.SOUTH);
 
-        // === LOAD DATA ===
+        
         loadBookData();
 
-        // === LISTENERS ===
+        
         btnConfirm.addActionListener(e -> confirmAction());
         btnCancel.addActionListener(e -> dispose());
     }
@@ -130,11 +130,11 @@ public class AcceptBorrowingFrm extends JFrame {
     private void loadBookData() {
         List<BorrowedBook> borrowedBooks = borrowing.getBooks();
 
-        // Clear existing data
+        
         tbmBooks.setRowCount(0);
         DateTimeFormatter sdf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        // Load books
+        
         for (int i = 0; i < borrowedBooks.size(); i++) {
             BorrowedBook bb = borrowedBooks.get(i);
             
@@ -160,7 +160,7 @@ public class AcceptBorrowingFrm extends JFrame {
     }
 
     private void confirmAction() {
-        // Validate
+        
         if (borrowing.getBooks() == null || borrowing.getBooks().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Phiếu mượn không có sách!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
@@ -171,7 +171,7 @@ public class AcceptBorrowingFrm extends JFrame {
         }
 
         if (borrowingDAO.confirmBorrowing(borrowing.getId(), java.time.LocalDate.now())) {
-            // Update book statuses to BORROWING
+            
             for (BorrowedBook bb : borrowing.getBooks()) {
                 if (bb.getBookItem() != null) {
                     bookItemDAO.updateStatus(bb.getBookItem().getId(), "borrowed");

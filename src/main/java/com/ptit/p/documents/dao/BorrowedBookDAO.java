@@ -11,17 +11,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * DAO quản lý dữ liệu mượn trả của sách (tblBorrowedBook).
- * Kết hợp chức năng mượn trả của Huy/Hieu và báo cáo thống kê của Sang.
- */
 public class BorrowedBookDAO extends DAO {
 
     public BorrowedBookDAO() {
         super();
     }
 
-    /** Lấy chi tiết sách mượn theo Borrowing ID (phục vụ trả sách) */
+    
     public List<BorrowedBook> findByBorrowingId(int borrowingId) {
         List<BorrowedBook> results = new ArrayList<>();
         String sql = "SELECT bb.ID, bb.expectedReturnDate, bb.actualReturnDate, bb.status, bb.note, bb.price, "
@@ -63,7 +59,7 @@ public class BorrowedBookDAO extends DAO {
         return results;
     }
 
-    /** Cập nhật trạng thái trả của từng cuốn sách */
+    
     public boolean updateReturnStatus(BorrowedBook bb) {
         String sql = "UPDATE tblBorrowedBook SET actualReturnDate = ?, status = ?, note = ?, price = ? WHERE ID = ?";
         try (PreparedStatement statement = con.prepareStatement(sql)) {
@@ -81,7 +77,7 @@ public class BorrowedBookDAO extends DAO {
         }
     }
 
-    /** Thiết lập phạt áp dụng cho lượt mượn sách hỏng/mất */
+    
     public boolean setBorrowedBookFine(BorrowedBookFine fine, BorrowedBook bb) {
         String sql = "INSERT INTO tblBorrowedBookFine (fineRate, tblBorrowedBookID, tblFineID) VALUES (?, ?, ?)";
         try (PreparedStatement statement = con.prepareStatement(sql)) {
@@ -96,11 +92,7 @@ public class BorrowedBookDAO extends DAO {
         }
     }
 
-    /**
-     * Lấy toàn bộ lịch sử mượn trả của một đầu sách theo ISBN (phục vụ Thống kê báo
-     * cáo).
-     * Kết quả chứa: BorrowedBook -> Borrowing -> Student.
-     */
+    
     public List<BorrowedBook> getBorrowHistoryByBook(String isbn) {
         List<BorrowedBook> result = new ArrayList<>();
         String sql = "SELECT bb.ID, bb.expectedReturnDate, bb.actualReturnDate, bb.status, " +

@@ -24,7 +24,7 @@ public class BorrowingDAO extends DAO {
         super();
     }
 
-    // Tìm bản sao status='good' chưa nằm trong phiếu pending/borrowed
+    
     private static final String SQL_FIND_BOOK_ITEM = "SELECT ID FROM tblBookItem"
             + " WHERE tblBookISBN = ? AND status = 'good'"
             + " AND ID NOT IN ("
@@ -183,7 +183,7 @@ public class BorrowingDAO extends DAO {
                     user.setRole(resultSet.getString("role"));
                     borrowing.setUser(user);
 
-                    // Get BorrowedBooks using the master method
+                    
                     List<BorrowedBook> books = loadBorrowedBooks(borrowing.getId());
                     borrowing.setBooks(books);
 
@@ -360,18 +360,12 @@ public class BorrowingDAO extends DAO {
         }
     }
 
-    /**
-     * Xác nhận nhận sách (module nhận sách trong CNPM.md): cập nhật trạng thái
-     * phiếu mượn sang "borrowed" và ghi nhận ngày nhận thực tế.
-     */
+    
     public boolean confirmBorrowing(int borrowingId, java.time.LocalDate actualReceiveDate) {
         return updateBorrowingStatus(borrowingId, actualReceiveDate, "borrowed");
     }
 
-    /**
-     * Cập nhật phiếu mượn khi trả sách (module trả sách trong CNPM.md): ghi nhận
-     * ngày trả thực tế và trạng thái mới của phiếu.
-     */
+    
     public boolean updateBorrowing(int borrowingId, java.time.LocalDate actualReceiveDate, String status) {
         return updateBorrowingStatus(borrowingId, actualReceiveDate, status);
     }

@@ -32,40 +32,40 @@ public class ConfirmDeleteUserFrm extends JFrame implements ActionListener {
         pnl.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240), 1));
         pnlMain.add(pnl);
 
-        // Tiêu đề form (hiển thị phẳng đẹp, không giống nút bấm)
+        
         JLabel lblHeader = new JLabel("Xác nhận xóa tài khoản", JLabel.CENTER);
         lblHeader.setFont(new Font("Segoe UI", Font.BOLD, 16));
         lblHeader.setForeground(new Color(30, 41, 59));
         lblHeader.setBounds(100, 30, 400, 35);
         pnl.add(lblHeader);
 
-        // Grid panel cho bảng thông tin
+        
         JPanel pnlGrid = new JPanel(new GridLayout(6, 2, 0, 0));
         pnlGrid.setBounds(100, 75, 400, 210);
         pnlGrid.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240), 1));
 
-        // Dòng 1: MNV
+        
         pnlGrid.add(createGridLabel("Mã nhân viên", Color.WHITE));
         String mnvStr = "NV" + String.format("%03d", user.getId());
         pnlGrid.add(createGridLabel(mnvStr, new Color(248, 250, 252)));
 
-        // Dòng 2: Họ tên
+        
         pnlGrid.add(createGridLabel("Họ và tên", Color.WHITE));
         pnlGrid.add(createGridLabel(user.getFullName(), Color.WHITE));
 
-        // Dòng 3: Tên đăng nhập
+        
         pnlGrid.add(createGridLabel("Tên đăng nhập", Color.WHITE));
         pnlGrid.add(createGridLabel(user.getUsername(), Color.WHITE));
 
-        // Dòng 4: Mật khẩu
+        
         pnlGrid.add(createGridLabel("Mật khẩu", Color.WHITE));
         pnlGrid.add(createGridLabel("********", Color.WHITE));
 
-        // Dòng 5: Số điện thoại
+        
         pnlGrid.add(createGridLabel("Số điện thoại", Color.WHITE));
         pnlGrid.add(createGridLabel(user.getPhone(), Color.WHITE));
 
-        // Dòng 6: Quyền hạn
+        
         pnlGrid.add(createGridLabel("Quyền hạn", Color.WHITE));
         String roleText = user.getRole();
         if ("admin".equalsIgnoreCase(roleText)) {
@@ -79,7 +79,7 @@ public class ConfirmDeleteUserFrm extends JFrame implements ActionListener {
 
         pnl.add(pnlGrid);
 
-        // Nút Huỷ và Xác nhận xoá
+        
         btnCancel = new JButton("Hủy");
         btnCancel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         btnCancel.setBackground(Color.WHITE);
@@ -138,12 +138,12 @@ public class ConfirmDeleteUserFrm extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnConfirm) {
-            // Gọi UserDAO để thực hiện lệnh xoá bản ghi tương ứng
+            
             UserDAO userDAO = new UserDAO();
             boolean success = userDAO.deleteUser(user);
 
             if (success) {
-                // Hệ thống hiển thị thông báo "Xoá tài khoản thành công"
+                
                 JOptionPane.showMessageDialog(this, "Account deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
                 UserManageFrm manageFrm = new UserManageFrm();

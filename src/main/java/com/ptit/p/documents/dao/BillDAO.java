@@ -61,7 +61,7 @@ public class BillDAO extends DAO {
         List<BorrowedBook> borrowedBooks = borrowing.getBooks();
         if (borrowedBooks != null) {
             for (BorrowedBook bb : borrowedBooks) {
-                // Calculate overdue fine
+                
                 if (bb.getExpectedReturnDate() != null) {
                     long days = ChronoUnit.DAYS.between(bb.getExpectedReturnDate(), LocalDate.now());
                     if (days > 0) {
@@ -70,7 +70,7 @@ public class BillDAO extends DAO {
                     }
                 }
                 
-                // Save overdue fine to BorrowedBookFine
+                
                 Fine fineOverdue = new Fine();
                 fineOverdue.setName("Trả muộn");
                 fineOverdue.setFineRate(overdueRatePerDay);
@@ -81,7 +81,7 @@ public class BillDAO extends DAO {
                 overdueFine.setTotalFine(totalFine);
                 bb.addBorrowedBookFine(overdueFine);
                 
-                // Add damage fines
+                
                 if (bb.getBorrowedBookFines() != null) {
                     for (BorrowedBookFine fine : bb.getBorrowedBookFines()) {
                         totalFine += fine.getFineRate();
@@ -112,25 +112,25 @@ public class BillDAO extends DAO {
         normalized = normalized.toLowerCase();
         return normalized.contains("tra tre") || normalized.contains("qua han") || normalized.contains("overdue");
     }
-    // public Bill findById(int id, Borrowing borrowing) {
-    // String sql = "SELECT * FROM tblBill WHERE id = ?";
-    // try (Connection connection = con;
-    // PreparedStatement statement = connection.prepareStatement(sql)) {
+    
+    
+    
+    
 
-    // statement.setInt(1, id);
-    // java.sql.ResultSet resultSet = statement.executeQuery();
-    // if (resultSet.next()) {
-    // Bill bill = new Bill();
-    // bill.setId(resultSet.getInt("id"));
-    // bill.setPaymentDate(resultSet.getDate("paymentDate").toLocalDate());
-    // bill.setNote(resultSet.getString("note"));
-    // bill.setPaymentType(resultSet.getString("paymentType"));
-    // bill.setBorrowing(borrowing);
-    // return bill;
-    // }
-    // } catch (SQLException ex) {
-    // ex.printStackTrace();
-    // }
-    // return null;
-    // }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }

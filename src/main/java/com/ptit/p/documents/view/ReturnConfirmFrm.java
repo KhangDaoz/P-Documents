@@ -63,7 +63,7 @@ public class ReturnConfirmFrm extends JFrame {
     private final Map<Integer, Double> borrowedBookFineTotals = new HashMap<>();
 
     private JPanel buildStudentInfoPanel() {
-        // Student info header panel with read-only fields.
+        
         JPanel pnlStudentInfo = new JPanel(new GridBagLayout());
         pnlStudentInfo.setBorder(BorderFactory.createTitledBorder("Thông tin sinh viên"));
         GridBagConstraints gbc = new GridBagConstraints();
@@ -103,7 +103,7 @@ public class ReturnConfirmFrm extends JFrame {
     }
 
     private JPanel buildBookDetailPanel() {
-        // Table panel listing returned books and fine details.
+        
         JPanel pnlBookDetail = new JPanel(new BorderLayout());
         pnlBookDetail.setBorder(BorderFactory.createTitledBorder("Chi tiết sách trả"));
 
@@ -121,7 +121,7 @@ public class ReturnConfirmFrm extends JFrame {
     }
 
     private JPanel buildBillSummaryPanel() {
-        // Bill summary panel with totals and payment inputs.
+        
         JPanel pnlBillSummary = new JPanel(new GridBagLayout());
         pnlBillSummary.setBorder(BorderFactory.createTitledBorder("Tóm tắt hóa đơn"));
         GridBagConstraints gbc = new GridBagConstraints();
@@ -196,7 +196,7 @@ public class ReturnConfirmFrm extends JFrame {
     }
 
     private JPanel buildActionsPanel() {
-        // Action buttons for saving or canceling the return process.
+        
         JPanel pnlActions = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton btnSaveBill = new JButton("Lưu hóa đơn & Xác nhận trả");
         JButton btnCancel = new JButton("Hủy");
@@ -226,7 +226,7 @@ public class ReturnConfirmFrm extends JFrame {
 
     private void initComponents() {
         System.out.println("ReturnConfirmFrm intialized");
-        // Build and arrange all UI sections for the return confirmation screen.
+        
         setTitle("Xác nhận trả sách - Phiếu #" + borrowing.getId());
         setSize(850, 600);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -248,17 +248,17 @@ public class ReturnConfirmFrm extends JFrame {
     }
 
     private JTextField createReadOnlyField(int columns) {
-        // Helper to create a disabled text field used for display-only data.
+        
         JTextField field = new JTextField(columns);
         field.setEditable(false);
         return field;
     }
 
     private void loadBorrowingData() {
-        // Load borrowing details and refresh UI tables and totals.
-        // if (borrowing.getBooks() == null || borrowing.getBooks().isEmpty()) {
-        // borrowing.setBooks(borrowingDAO.loadBorrowedBooks(borrowing.getId()));
-        // }
+        
+        
+        
+        
 
         if (borrowing.getStudent() != null) {
             txtStudentId.setText(borrowing.getStudent().getStudentId());
@@ -272,7 +272,7 @@ public class ReturnConfirmFrm extends JFrame {
     }
 
     private void populateBookTable() {
-        // Populate the return books table and compute per-book fines.
+        
         tbmReturnBooks.setRowCount(0);
         borrowedBookFineTotals.clear();
 
@@ -328,7 +328,7 @@ public class ReturnConfirmFrm extends JFrame {
     }
 
     private void calculateSummary() {
-        // Compute and display the bill summary totals.
+        
         bill = billDAO.calculateFine(borrowing);
         if (bill == null) {
             bill = new Bill();
@@ -354,7 +354,7 @@ public class ReturnConfirmFrm extends JFrame {
     }
 
     private void saveBillAction() {
-        // Persist return updates and create the final bill after confirmation.
+        
         if (!borrowing.getStatus().equals("borrowed")) {
             JOptionPane.showMessageDialog(this, "Phiếu mượn không ở trạng thái chờ trả", "Lỗi",
                     JOptionPane.ERROR_MESSAGE);
@@ -420,7 +420,7 @@ public class ReturnConfirmFrm extends JFrame {
     }
 
     private String resolveBookTitle(BorrowedBook bb) {
-        // Resolve book title from its ISBN for display purposes.
+        
         if (bb.getBookItem() == null) {
             return "Không xác định";
         }
@@ -429,7 +429,7 @@ public class ReturnConfirmFrm extends JFrame {
     }
 
     private String buildFineSummary(BorrowedBook bb) {
-        // Add overdue fine
+        
         FineDAO fineDAO = new FineDAO();
         List<Fine> fines = fineDAO.findAll();
         Fine overdueFine = null;
@@ -445,12 +445,10 @@ public class ReturnConfirmFrm extends JFrame {
         overdueFineBBF.setTotalFine(overdueFine.getFineRate() * totalOverdueDays);
         bb.addBorrowedBookFine(overdueFineBBF);
 
-
-        // Build a comma-separated summary of fine names for a borrowed book.
+        
         if (bb.getBorrowedBookFines() == null || bb.getBorrowedBookFines().isEmpty()) {
             return "Không có";
         }
-
 
         StringBuilder summary = new StringBuilder();
         for (BorrowedBookFine fine : bb.getBorrowedBookFines()) {
@@ -465,7 +463,7 @@ public class ReturnConfirmFrm extends JFrame {
     }
 
     private double sumDamageFine(BorrowedBook bb) {
-        // Sum damage-related fine rates for a borrowed book.
+        
         double total = 0.0;
         if (bb.getBorrowedBookFines() != null) {
             for (BorrowedBookFine fine : bb.getBorrowedBookFines()) {
@@ -476,7 +474,7 @@ public class ReturnConfirmFrm extends JFrame {
     }
 
     private double resolveOverdueRate() {
-        // Find the overdue fine rate from the configured fine list.
+        
         List<Fine> fines = fineDAO.findAll();
         for (Fine fine : fines) {
             if (fine.getName() != null && isOverdueFineName(fine.getName())) {
@@ -487,14 +485,14 @@ public class ReturnConfirmFrm extends JFrame {
     }
 
     private boolean isOverdueFineName(String name) {
-        // Heuristic match for fine names related to overdue penalties.
+        
         String normalized = Normalizer.normalize(name, Normalizer.Form.NFD).replaceAll("\\p{M}", "");
         normalized = normalized.toLowerCase();
         return normalized.contains("tra tre") || normalized.contains("qua han") || normalized.contains("overdue");
     }
 
     private String mapBookItemStatus(String status) {
-        // Map borrowed book status to a book item status.
+        
         if (status == null) {
             return "good";
         }

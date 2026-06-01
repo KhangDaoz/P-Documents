@@ -3,11 +3,6 @@ package com.ptit.p.documents.view;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Menu các loại thống kê (spec §1.a, §2.a).
- * - "Thống kê sách mượn nhiều"          -> BorrowingStatFrm (Modul 1)
- * - "Báo cáo sách hư hỏng / thất lạc"   -> StockStatFrm     (Modul 2)
- */
 public class StatMenuFrm extends JFrame {
 
     private final ManagerHomeFrm parent;
@@ -46,9 +41,9 @@ public class StatMenuFrm extends JFrame {
 
         add(center, BorderLayout.CENTER);
 
-        // spec §1.b bước 7-8
+        
         btnBorrowing.addActionListener(e -> new BorrowingStatFrm(this).setVisible(true));
-        // spec §2.b bước 7-8
+        
         btnStock.addActionListener(e -> new StockStatFrm(this).setVisible(true));
         btnBack.addActionListener(e -> {
             dispose();

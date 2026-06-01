@@ -20,7 +20,7 @@ public class SearchBookFrm extends JFrame implements ActionListener {
     private JTable tblResults;
     private DefaultTableModel tableModel;
     private User currentUser;
-    private String mode; // "edit" hoặc "delete"
+    private String mode; 
     private List<Book> searchResults;
 
     public SearchBookFrm(User user, String mode) {
@@ -40,13 +40,13 @@ public class SearchBookFrm extends JFrame implements ActionListener {
         mainPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         mainPanel.setBackground(Color.WHITE);
 
-        // Title
+        
         JLabel lblTitle = new JLabel(titleText.toUpperCase(), SwingConstants.CENTER);
         lblTitle.setFont(new Font("Arial", Font.BOLD, 18));
         lblTitle.setForeground(Color.BLACK);
         mainPanel.add(lblTitle, BorderLayout.NORTH);
 
-        // Search panel
+        
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         searchPanel.setBackground(Color.WHITE);
         searchPanel.add(new JLabel("Từ khóa (tên sách/tác giả/ISBN):"));
@@ -65,20 +65,20 @@ public class SearchBookFrm extends JFrame implements ActionListener {
         btnBack.setBorder(BorderFactory.createLineBorder(new Color(160, 170, 185)));
         searchPanel.add(btnBack);
 
-        // Đặt search panel ở trên bảng
+        
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setBackground(Color.WHITE);
         topPanel.add(searchPanel, BorderLayout.SOUTH);
         mainPanel.add(topPanel, BorderLayout.NORTH);
 
-        // Thay đổi: đặt title và search vào topPanel
+        
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBackground(Color.WHITE);
         headerPanel.add(lblTitle, BorderLayout.NORTH);
         headerPanel.add(searchPanel, BorderLayout.SOUTH);
         mainPanel.add(headerPanel, BorderLayout.NORTH);
 
-        // Table
+        
         String[] columns = {"ISBN", "Tên sách", "Tác giả", "Thể loại", "Nhà xuất bản",
                 "Năm XB", "Giá bìa", "Mô tả", "Số lượng"};
         tableModel = new DefaultTableModel(columns, 0) {
@@ -96,7 +96,7 @@ public class SearchBookFrm extends JFrame implements ActionListener {
         JScrollPane scrollPane = new JScrollPane(tblResults);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
-        // Hint label
+        
         String hintText = mode.equals("edit")
                 ? "Click vào một dòng sách để chỉnh sửa thông tin"
                 : "Click vào một dòng sách để xóa";
@@ -105,7 +105,7 @@ public class SearchBookFrm extends JFrame implements ActionListener {
         lblHint.setForeground(Color.BLACK);
         mainPanel.add(lblHint, BorderLayout.SOUTH);
 
-        // Event handlers
+        
         btnSearch.addActionListener(this);
         btnBack.addActionListener(this);
 
@@ -126,7 +126,7 @@ public class SearchBookFrm extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnSearch) {
-            // performSearch() inlined
+            
             String keyword = txtKeyword.getText().trim();
             if (keyword.isEmpty()) {
                 JOptionPane.showMessageDialog(this,
@@ -138,7 +138,7 @@ public class SearchBookFrm extends JFrame implements ActionListener {
             BookDAO bookDAO = new BookDAO();
             searchResults = bookDAO.searchBook(keyword);
 
-            // Xóa dữ liệu cũ
+            
             tableModel.setRowCount(0);
 
             if (searchResults.isEmpty()) {
@@ -148,7 +148,7 @@ public class SearchBookFrm extends JFrame implements ActionListener {
                 return;
             }
 
-            // Hiển thị kết quả
+            
             for (Book book : searchResults) {
                 Object[] rowData = {
                         book.getISBN(),
@@ -167,7 +167,7 @@ public class SearchBookFrm extends JFrame implements ActionListener {
             new BookManageFrm(currentUser).setVisible(true);
             this.dispose();
         } else if (e.getSource() == tblResults) {
-            // handleBookSelection() inlined for table click
+            
             int selectedRow = tblResults.getSelectedRow();
             if (selectedRow >= 0 && searchResults != null && selectedRow < searchResults.size()) {
                 Book selectedBook = searchResults.get(selectedRow);
@@ -175,7 +175,7 @@ public class SearchBookFrm extends JFrame implements ActionListener {
                     new EditBookFrm(currentUser, selectedBook).setVisible(true);
                     this.dispose();
                 } else if (mode.equals("delete")) {
-                    // Kiểm tra tình trạng mượn
+                    
                     BookDAO bookDAO = new BookDAO();
                     boolean isBeingBorrowed = bookDAO.checkBookStatus(selectedBook.getISBN(), false);
 
@@ -184,7 +184,7 @@ public class SearchBookFrm extends JFrame implements ActionListener {
                                 "Sách đang có phiếu mượn ở trạng thái \"Đang mượn\" hoặc \"Chờ nhận sách\"!\n"
                                         + "Không thể xóa sách này.",
                                 "Cảnh báo", JOptionPane.WARNING_MESSAGE);
-                        // Quay về trang chủ quản lý
+                        
                         new ManagerHomeFrm(currentUser).setVisible(true);
                         this.dispose();
                     } else {

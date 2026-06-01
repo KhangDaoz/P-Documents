@@ -1,9 +1,5 @@
 package com.ptit.p.documents.model;
 
-/**
- * Thực thể thống kê sách mượn nhiều - kế thừa Book.
- * Bổ sung thuộc tính borrowCount để hiển thị cột "Lượt mượn".
- */
 public class BorrowingStat extends Book {
     private int borrowCount;
 

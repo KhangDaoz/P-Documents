@@ -152,8 +152,7 @@ public class AddFineDlg extends JDialog {
         borrowedBookFine.setFineRate(fine.getFineRate());
         borrowedBookFine.setTotalFine(fine.getFineRate());
 
-
-        // Add BorrowedBookFine to BorrowedBook object in memory
+        
         borrowedBook.addBorrowedBookFine(borrowedBookFine);
 
         String note = txtNote.getText().trim();

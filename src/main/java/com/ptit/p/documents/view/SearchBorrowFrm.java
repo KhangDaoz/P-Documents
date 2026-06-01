@@ -19,13 +19,10 @@ import java.util.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-/**
- * Giao diện chon sach cho phieu muon — Buoc 1 cua module Dat Sach.
- */
 public class SearchBorrowFrm extends JFrame implements ActionListener {
-    // UI field for expected return date
+    
     private JTextField txtReturnDate;
-    // Stored expected return date
+    
     private LocalDate expectedReturnDate;
 
     private User      u;
@@ -49,11 +46,11 @@ public class SearchBorrowFrm extends JFrame implements ActionListener {
         this.u = u;
         LocalDate today = LocalDate.now();
         LocalDate receiveDate = today.plusDays(2);
-        // Default return date is 14 days from now
+        
         this.expectedReturnDate = today.plusDays(14);
         currentBorrowing = new Borrowing(null, u, today, receiveDate);
         initComponents();
-        // Populate return date field after UI components are created
+        
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         if (expectedReturnDate != null) {
             txtReturnDate.setText(expectedReturnDate.format(dtf));
@@ -68,7 +65,7 @@ public class SearchBorrowFrm extends JFrame implements ActionListener {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(4, 4));
 
-        // ---- Panel tìm kiếm ----
+        
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 6));
         searchPanel.setBorder(BorderFactory.createTitledBorder("Tìm kiếm sách"));
 
@@ -92,21 +89,21 @@ public class SearchBorrowFrm extends JFrame implements ActionListener {
         btnSearch.addActionListener(this);
         searchPanel.add(btnSearch);
 
-        // ---- Panel thông tin ngày trả dự kiến ----
+        
         JPanel datePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 6));
         datePanel.setBorder(BorderFactory.createTitledBorder("Thông tin ngày"));
         datePanel.add(new JLabel("Ngày trả dự kiến:"));
         txtReturnDate = new JTextField(12);
         datePanel.add(txtReturnDate);
 
-        // Combine datePanel and searchPanel
+        
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.add(searchPanel, BorderLayout.CENTER);
         topPanel.add(datePanel, BorderLayout.SOUTH);
 
         add(topPanel, BorderLayout.NORTH);
 
-        // ---- Bảng kết quả tìm kiếm ----
+        
         String[] searchCols = {"ISBN", "Ten sach", "Tac gia", "The loai", "Con lai"};
         tableModel = new DefaultTableModel(searchCols, 0) {
             @Override public boolean isCellEditable(int r, int c) { return false; }
@@ -125,7 +122,7 @@ public class SearchBorrowFrm extends JFrame implements ActionListener {
         addToCartPanel.add(btnAddToCart);
         resultPanel.add(addToCartPanel, BorderLayout.SOUTH);
 
-        // ---- Bảng giỏ sách ----
+        
         String[] cartCols = {"STT", "ISBN", "Tên sách", "Tác giả", "Giá (VND)"};
         cartModel = new DefaultTableModel(cartCols, 0) {
             @Override public boolean isCellEditable(int r, int c) { return false; }
@@ -137,12 +134,12 @@ public class SearchBorrowFrm extends JFrame implements ActionListener {
         cartPanel.setBorder(BorderFactory.createTitledBorder("Giỏ sách đã chọn"));
         cartPanel.add(new JScrollPane(tblCart), BorderLayout.CENTER);
 
-        // ---- SplitPane ----
+        
         JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, resultPanel, cartPanel);
         splitPane.setResizeWeight(0.6);
         add(splitPane, BorderLayout.CENTER);
 
-        // ---- Footer ----
+        
         btnNext = new JButton("Tiếp theo: Chọn sinh viên");
         btnNext.setEnabled(false);
         btnNext.addActionListener(this);
@@ -239,6 +236,6 @@ public class SearchBorrowFrm extends JFrame implements ActionListener {
             return;
         }
         new SearchStudentFrm(currentBorrowing).setVisible(true);
-        // this.dispose();
+        
     }
 }

@@ -24,27 +24,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * DAO truy vấn sách hư hỏng / thất lạc và xuất PDF.
- * Schema final KHÔNG có bảng stock_reports.
- * Thay vào đó, dùng tblBookItem.status ('damaged'/'lost') và tblBookItem.updatedAt
- * làm ngày báo cáo (khi status bị cập nhật thành damaged/lost).
- *
- * Mapping hiển thị:
- *   'damaged' -> "Hư hỏng"
- *   'lost'    -> "Thất lạc"
- */
 public class StockStatDAO extends DAO {
 
-    /**
-     * Tra cứu sách hư hỏng/thất lạc theo khoảng thời gian và lý do.
-     * @param reason "Tất cả" | "Hư hỏng" | "Thất lạc"
-     */
+    
     public List<StockStat> searchDamageLossRecords(LocalDate from, LocalDate to, String reason) {
         List<StockStat> result = new ArrayList<>();
         boolean filterAll = reason == null || reason.equalsIgnoreCase("Tất cả");
 
-        // Map lý do tiếng Việt -> giá trị ENUM tiếng Anh
+        
         String statusFilter = null;
         if (!filterAll) {
             if ("Hư hỏng".equals(reason)) {
@@ -89,7 +76,7 @@ public class StockStatDAO extends DAO {
                     rs.getString("item_status")
                 ));
 
-                // Map status ENUM -> hiển thị tiếng Việt
+                
                 String statusEnum = rs.getString("item_status");
                 String displayReason;
                 if ("damaged".equals(statusEnum)) {
@@ -118,10 +105,7 @@ public class StockStatDAO extends DAO {
         return result;
     }
 
-    /**
-     * Xuất danh sách báo cáo ra PDF.
-     * Cột: Tên sách, Mã bản sách, Tình trạng, Ngày báo cáo.
-     */
+    
     public boolean exportToPDF(List<StockStat> rows, String filePath) {
         Document doc = new Document(PageSize.A4);
         try {

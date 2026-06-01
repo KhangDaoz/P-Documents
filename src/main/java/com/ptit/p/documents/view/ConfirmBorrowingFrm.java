@@ -9,9 +9,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.time.format.DateTimeFormatter;
 
-/**
- * Giao dien xac nhan thong tin dat sach — Buoc cuoi cua module Dat Sach.
- */
 public class ConfirmBorrowingFrm extends JFrame implements ActionListener {
 
     private Borrowing b;
@@ -32,7 +29,7 @@ public class ConfirmBorrowingFrm extends JFrame implements ActionListener {
         setResizable(false);
         setLayout(new BorderLayout(6, 6));
 
-        // ---- Thông tin xác nhận ----
+        
         outBorrowingInfo = new JTextArea(buildInfoText());
         outBorrowingInfo.setEditable(false);
         outBorrowingInfo.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13));
@@ -42,7 +39,7 @@ public class ConfirmBorrowingFrm extends JFrame implements ActionListener {
         infoPanel.add(new JScrollPane(outBorrowingInfo), BorderLayout.CENTER);
         add(infoPanel, BorderLayout.CENTER);
 
-        // ---- Nút ----
+        
         JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 8));
         btnBack = new JButton("Quay lại");
         btnConfirm = new JButton("Lưu đặt sách");

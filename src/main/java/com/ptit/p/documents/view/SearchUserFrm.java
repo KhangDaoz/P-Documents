@@ -39,12 +39,12 @@ public class SearchUserFrm extends JFrame implements ActionListener {
         setSize(860, 560);
         setLocationRelativeTo(null);
 
-        // pnlMain là khung chứa nội dung sử dụng BorderLayout
+        
         JPanel pnlMain = new JPanel(new BorderLayout(0, 15));
         pnlMain.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
         setContentPane(pnlMain);
 
-        // Panel phía trên dành cho các trường tìm kiếm
+        
         JPanel pnlTop = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
         pnlTop.setOpaque(false);
 
@@ -79,7 +79,7 @@ public class SearchUserFrm extends JFrame implements ActionListener {
             public void insertUpdate(javax.swing.event.DocumentEvent e) { checkEmpty(); }
             private void checkEmpty() {
                 String text = txtKey.getText();
-                // Chỉ nạp lại bảng nếu thanh tìm kiếm thực sự bị xóa trắng 
+                
                 if (text.trim().isEmpty() && !text.equals("Nhập từ khóa tìm kiếm...")) {
                     performSearch();
                 }
@@ -111,7 +111,7 @@ public class SearchUserFrm extends JFrame implements ActionListener {
 
         pnlMain.add(pnlTop, BorderLayout.NORTH);
 
-        // Panel trung tâm dành cho bảng và nhãn
+        
         JPanel pnlCenter = new JPanel(new BorderLayout(0, 10));
         pnlCenter.setOpaque(false);
 
@@ -120,7 +120,7 @@ public class SearchUserFrm extends JFrame implements ActionListener {
         lblList.setForeground(new Color(30, 41, 59));
         pnlCenter.add(lblList, BorderLayout.NORTH);
 
-        // Bảng dữ liệu
+        
         String[] columnNames = {"ID", "Họ tên", "Tên đăng nhập", "Mật khẩu", "Số điện thoại", "Quyền hạn", "", ""};
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
@@ -160,11 +160,11 @@ public class SearchUserFrm extends JFrame implements ActionListener {
                 int col = tblUser.columnAtPoint(evt.getPoint());
                 if (row >= 0 && row < searchResults.size()) {
                     User selectedUser = searchResults.get(row);
-                    if (col == 6) { // Cột sửa (✎)
+                    if (col == 6) { 
                         dispose();
                         EditUserFrm editFrm = new EditUserFrm(selectedUser);
                         editFrm.setVisible(true);
-                    } else if (col == 7) { // Cột xoá (🗑)
+                    } else if (col == 7) { 
                         dispose();
                         ConfirmDeleteUserFrm confirmDeleteFrm = new ConfirmDeleteUserFrm(selectedUser);
                         confirmDeleteFrm.setVisible(true);
@@ -180,7 +180,6 @@ public class SearchUserFrm extends JFrame implements ActionListener {
         pnlCenter.add(scrollPane, BorderLayout.CENTER);
 
         pnlMain.add(pnlCenter, BorderLayout.CENTER);
-
 
         tblUser.getColumnModel().getColumn(0).setPreferredWidth(60);  
         tblUser.getColumnModel().getColumn(1).setPreferredWidth(170); 
@@ -220,7 +219,7 @@ public class SearchUserFrm extends JFrame implements ActionListener {
 
         btnAction = new JButton();
 
-        // Load danh sách người dùng ban đầu
+        
         performSearch();
 
     }
@@ -230,13 +229,13 @@ public class SearchUserFrm extends JFrame implements ActionListener {
         if (keyword.equals("Nhập từ khóa tìm kiếm...")) {
             keyword = "";
         }
-        // Gọi phương thức searchUser() của lớp UserDAO
+        
         searchResults = userDAO.searchUser(keyword);
 
-        // Xóa dữ liệu cũ trên bảng
+        
         tableModel.setRowCount(0);
 
-        // Hiển thị danh sách kết quả lên bảng
+        
         for (User u : searchResults) {
             String roleText = "Librarian";
             if ("admin".equalsIgnoreCase(u.getRole())) {

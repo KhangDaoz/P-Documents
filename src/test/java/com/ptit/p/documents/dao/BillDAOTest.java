@@ -40,12 +40,12 @@ public class BillDAOTest {
 
     @Test
     void testCreateBill_Success() throws SQLException {
-        // Arrange
+        
         when(mockConnection.prepareStatement(anyString(), eq(PreparedStatement.RETURN_GENERATED_KEYS))).thenReturn(mockStatement);
         when(mockStatement.executeUpdate()).thenReturn(1);
         when(mockStatement.getGeneratedKeys()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(true);
-        when(mockResultSet.getInt(1)).thenReturn(99); // Mocked generated ID
+        when(mockResultSet.getInt(1)).thenReturn(99); 
 
         Bill bill = new Bill();
         Borrowing borrowing = new Borrowing();
@@ -55,10 +55,10 @@ public class BillDAOTest {
         User user = new User();
         user.setId(2);
 
-        // Act
+        
         boolean result = billDAO.createBill(bill, user);
 
-        // Assert
+        
         assertTrue(result);
         assertTrue(bill.getId() == 99);
     }

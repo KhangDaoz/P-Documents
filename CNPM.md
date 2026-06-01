@@ -1,6 +1,4 @@
-##  **Module : Quản lý tài khoản**
 
-## **I. Pha yêu cầu**
 
 * Chức năng *thêm tài khoản người dùng :* Admin tiếp nhận thông tin yêu cầu tạo tài khoản mới (từ nhân viên mới hoặc theo danh sách phê duyệt) → Amin đăng nhập vào hệ thống với quyền quản trị → chọn chức năng "Quản lý tài khoản" → Giao diện hiện ra có 3 lựa chọn là thêm, sửa, xoá tài khoản → Admin click vào nút "Thêm tài khoản mới" → giao diện thêm tài khoản mới với các ô trống như Họ tên, Số điện thoại, Tên đăng nhập, Mật khẩu và Vai trò→ Admin nhập đầy đủ thông tin của nhân viên mới theo hồ sơ nhân sự và chọn vai trò tương ứng → Admin click "Add new" \-\> hiển thị giao diện tổng hợp thông tin tài khoản vừa nhập để Admin rà soát lại lần cuối → Admin kiểm tra kỹ các thông tin và click "Lưu tài khoản" → hệ thống kiểm tra tính hợp lệ của thông tin vừa nhập, bao gồm kiểm tra các trường bắt buộc không được để trống, tên đăng nhập không được trùng với tài khoản đã có trong hệ thống \-\> Nếu thông tin không hợp lệ , hệ thống báo lỗi tương ứng và yêu cầu admin nhập lại \-\> Nếu thông tin hợp lệ → hệ thống khởi tạo tài khoản, lưu vào cơ sở dữ liệu và hiển thị thông báo "Thêm tài khoản thành công" và quay về trang quản lí tài khoản→ Admin bàn giao thông tin đăng nhập cho nhân viên mới.  
 * Chức năng *sửa tài khoản người dùng:* Admin đăng nhập vào hệ thống với quyền quản trị → chọn chức năng "Quản lý tài khoản" → Giao diện hiện ra có 3 lựa chọn là thêm, sửa, xoá tài khoản → Admin click vào nút "Sửa tài khoản " →  giao diện tìm kiếm tài khoản hiện ra với ô nhập từ khoá như tên tài khoản, họ tên, số điện thoại và nút tìm → Admin nhập từ khoá và click “Tìm” →  danh sách tài khoản có thông tin chứa từ khoá nhập liệu hiện ra dưới dạng bảng mỗi dòng gồm đầy đủ thông tin: mã nhân viên, họ tên, tên đăng nhập, quyền hạn → Admin tìm đúng người dùng cần chỉnh sửa và click vào chọn "Sửa" → giao diện "Chỉnh sửa thông tin" hiện ra, hiển thị sẵn các thông tin của người dùng trong các ô nhập liệu → Admin tiến hành thay đổi các thông tin cần thiết như họ tên, số điện thoại, quyền hạn ( trừ mã nhân viên không được phép chỉnh sửa ) → Admin rà soát lại và click "Lưu thay đổi" → hệ thống kiểm tra tính hợp lệ của thông tin vừa nhập và cập nhật dữ liệu mới vào cơ sở dữ liệu, hiển thị thông báo "Cập nhật tài khoản thành công" và quay về trang quản lí tài khoản  
@@ -16,14 +14,6 @@ Mô tả các use case:
 * Search book: UC này cho phép tìm thông tin một tài khoản để phục vụ UC sửa, hoặc xóa tài khoản. 
 
 Việc tìm kiếm có thể tìm tài khoản theo từ khoá như họ tên , tên đăng nhập, số điện thoại
-
-![][image1]
-
-## **II. Pha phân tích**
-
-### ***1\. Các kịch bản***
-
-#### a. Kịch bản sửa thông tin tài khoản 
 
 1. Quản trị viên (Admin) vào hệ thống để sửa thông tin tài khoản nhân viên.  
 2. Hệ thống hiện giao diện đăng nhập, có ô nhập tên đăng nhập, mật khẩu và nút đăng nhập.  
@@ -57,8 +47,6 @@ Việc tìm kiếm có thể tìm tài khoản theo từ khoá như họ tên , 
 
 * **9\.** Hệ thống báo "Không tìm thấy người dùng phù hợp với thông tin nhập vào" nếu tên đăng nhập hoặc tên không tồn tại.  
 * **15\.** Hệ thống báo lỗi "Các thông tin đã tồn tại" (nếu Admin sửa các thông tin liên quan trùng với tài khoản khác) và yêu cầu nhập lại.
-
-#### b. Kịch bản tạo tài khoản mới 
 
 ( Bỏ qua đăng nhập ) 
 
@@ -95,8 +83,6 @@ Ngoại lệ:
 * **10\.** Hệ thống báo lỗi "Tên đăng nhập đã tồn tại" nếu tên đăng nhập bị trùng trong CSDL và yêu cầu nhập lại.  
 * **10\.** Hệ thống báo lỗi "Thông tin không hợp lệ" nếu các ô bắt buộc (Họ tên, Mật khẩu) bị bỏ trống.
 
-#### c. Kịch bản xoá tài khoản 
-
 ( Bỏ qua đăng nhập )
 
 1. Tại giao diện chính của Quản trị viên, Admin chọn chức năng Quản lý tài khoản.  
@@ -127,10 +113,6 @@ Ngoại lệ:
 
 * 6\. Hệ thống hiển thị: "Không tìm thấy người dùng nào phù hợp" với kết quả tìm kiếm
 
-### ***2\. Phân tích chi tiết từng module*** 
-
-#### a. Chức năng chỉnh sửa thông tin tài khoản
-
 Phân tích chi tiết chức năng sửa thông tin tài khoản diễn ra như sau:
 
 * Vào hệ thống \-\> Giao diện login hiện lên \-\> Đề xuất lớp LoginView, có 2 ô nhập username, password và nút Login.  
@@ -145,8 +127,6 @@ Phân tích chi tiết chức năng sửa thông tin tài khoản diễn ra như
 * Cập nhật xong, hệ thống hiển thị thông báo thành công và quay về giao diện UserManageView .
 
 Như vậy, kết quả thu được biểu đồ lớp cho chức năng sửa thông tin tài khoản như sau : 
-
-![][image2]
 
 Kịch bản chi tiết cho chức năng sửa thông tin tài khoản diễn ra như sau:
 
@@ -179,10 +159,6 @@ Kịch bản chi tiết cho chức năng sửa thông tin tài khoản diễn ra
 * Lớp EditUserView gọi lại lớp UserManageView.  
 * Lớp UserManageView hiển thị lại cho Admin.
 
-![][image3]
-
-#### b. Chức năng tạo tài khoản mới 
-
 Phân tích chi tiết chức năng tạo tài khoản mới diễn ra như sau:
 
 * Sau khi đăng nhập thành công, giao diện chính của admin hiện ra \-\> Đề xuất lớp AdminHomeView, có nút chức năng Quản lý tài khoản.  
@@ -194,7 +170,6 @@ Phân tích chi tiết chức năng tạo tài khoản mới diễn ra như sau:
 
 Như vậy, kết quả thu được biểu đồ lớp phân tích chức năng tạo tài khoản mới như sau:
 
-![][image4]  
 Kịch bản chi tiết cho chức năng tạo tài khoản mới diễn ra như sau:
 
 * Admin click vào chức năng Quản lý tài khoản ở giao diện AdminHomeView sau khi đăng nhập thành công  
@@ -214,10 +189,6 @@ Kịch bản chi tiết cho chức năng tạo tài khoản mới diễn ra như
 * Admin click nút OK trên thông báo.  
 * Lớp ConfirmUserView gọi quay lại lớp UserManageView để Admin tiếp tục quản lý.
 
-![][image5]
-
-#### c. Chức năng xoá tài khoản
-
 Phân tích chi tiết chức năng xoá tài khoản diễn ra như sau:
 
 * Sau khi đăng nhập thành công giao diện chính của admin hiện ra-\> Đề xuất lớp AdminHomeView, có nút chức năng Quản lý tài khoản.  
@@ -230,8 +201,6 @@ Phân tích chi tiết chức năng xoá tài khoản diễn ra như sau:
 * Xóa thành công \-\> Hệ thống hiển thị thông báo "Xóa tài khoản thành công" và trở về giao diện của UserManageView
 
 Như vậy, kết quả thu được biểu đồ lớp cho chức năng xoá tài khoản như sau:
-
-![][image6]
 
 Kịch bản chi tiết cho chức năng xoá tài khoản diễn ra như sau:
 
@@ -254,26 +223,6 @@ Kịch bản chi tiết cho chức năng xoá tài khoản diễn ra như sau:
 * Admin click OK trên thông báo.  
 * Lớp ConfirmDeleteView gọi quay lại lớp UserManageView để Admin tiếp tục quản lý.
 
- 
-
-![][image7]
-
-## **III. Pha thiết kế**
-
-### ***1\. Chỉnh sửa thông tin tài khoản*** 
-
-#### 1.1. Thiết kế giao diện
-
-![][image8]
-
-![][image9]
-
-![][image10]  
-![][image11]  
-![][image12]
-
-#### 1.2. Mô tả thiết kế tĩnh cho module chỉnh sửa thông tin tài khoản
-
 Ở bước thiết kế tĩnh, chúng ta cần các lớp theo mô hình MVC cho module này như sau:
 
 * **Các lớp tầng giao diện (View):**  
@@ -288,10 +237,6 @@ Kịch bản chi tiết cho chức năng xoá tài khoản diễn ra như sau:
   * **DAO:** Lớp cơ sở chứa các thiết lập kết nối cơ sở dữ liệu dùng chung. Lớp UserDAO kế thừa từ lớp này để sử dụng lại cơ chế kết nối.  
 * **Các lớp tầng thực thể (Entity/Model):**  
   * **User:** Lớp mô tả đối tượng người dùng với các thuộc tính như ID, username, password, fullName, phone, role.
-
-![][image13]
-
-#### 1.3. Đối với thiết kế động, các bước thực hiện diễn ra trong module này như sau
 
 1. Admin nhập thông tin và click đăng nhập trên giao diện **LoginFrm**.  
 2. Hàm **actionPerformed()** của lớp **LoginFrm** được gọi.  
@@ -338,17 +283,6 @@ Kịch bản chi tiết cho chức năng xoá tài khoản diễn ra như sau:
 43. Phương thức **actionPerformed()** gọi lại lớp **UserManageFrm**.  
 44. Giao diện **UserManageFrm** hiển thị lại giao diện cho admin
 
-![][image14]
-
-### ***2\. Thêm mới tài khoản***
-
-#### 2.1. Thiết kế giao diện
-
-![][image15]  
-![][image16]
-
-#### 2.2. Mô tả thiết kế tĩnh cho module thêm mới tài khoản  Ở bước thiết kế tĩnh, chúng ta cần các lớp theo mô hình MVC cho module này như sau:
-
 * Các lớp tầng giao diện (View):  
   * **AdminHomeFrm:** Giao diện chính của quản trị viên, cung cấp các điều hướng chức năng hệ thống.  
   * **UserManageFrm:** Giao diện quản lý người dùng, nơi Admin chọn chức năng thêm mới tài khoản.  
@@ -360,12 +294,6 @@ Kịch bản chi tiết cho chức năng xoá tài khoản diễn ra như sau:
   * **DAO:** Lớp cơ sở đảm nhận việc thiết lập và quản lý kết nối (Connection) tới cơ sở dữ liệu, là lớp cha của UserDAO.  
 * Các lớp tầng thực thể (Entity/Model):  
   * **User:** Lớp mô tả đối tượng người dùng với đầy đủ các thuộc tính thông tin như ID, username, password, fullName, phone, role. Đối tượng này dùng để đóng gói và truyền tải dữ liệu giữa các tầng trong kiến trúc MVC.
-
-![][image17]
-
-#### 2.3. Đối với thiết kế động, các bước thực hiện diễn ra trong module này như sau  
-
-### ***![][image18]***
 
 1. Admin click chọn chức năng quản lý tài khoản người dùng (**click user management**) trên giao diện **AdminHomeFrm**.  
 2. Hàm **actionPerformed()** của lớp **AdminHomeFrm** được gọi.  
@@ -395,15 +323,6 @@ Kịch bản chi tiết cho chức năng xoá tài khoản diễn ra như sau:
 26. Phương thức **actionPerformed()** gọi lại lớp **UserManageFrm**.  
 27. Giao diện **UserManageFrm** hiển thị lại cho Admin.
 
-### ***3\. Xóa tài khoản***
-
-#### 3.1. Thiết kế giao diện
-
-![][image19]  
-![][image20]
-
-#### 3.2. Mô tả thiết kế tĩnh cho module xóa tài khoản
-
 Ở bước thiết kế tĩnh, chúng ta cần các lớp theo mô hình MVC cho module này như sau:
 
 * **Các lớp tầng giao diện (View):**  
@@ -417,12 +336,6 @@ Kịch bản chi tiết cho chức năng xoá tài khoản diễn ra như sau:
   * **DAO:** Lớp cơ sở quản lý kết nối cơ sở dữ liệu (Connection), cung cấp nền tảng cho UserDAO hoạt động.  
 * **Các lớp tầng thực thể (Entity/Model):**  
   * **User:** Lớp thực thể lưu trữ thông tin tài khoản (ID, username, fullName, role...). Trong module này, đối tượng User được dùng để xác định chính xác tài khoản nào sẽ bị tác động trong lệnh xoá.
-
-#### ![][image21]
-
-#### 3.3. Đối với thiết kế động, các bước thực hiện diễn ra trong module này như sau  
-
-![][image22]
 
 1. Admin click chọn chức năng quản lý tài khoản người dùng (**click user management**) trên giao diện **AdminHomeFrm**.  
 2. Hàm **actionPerformed()** của lớp **AdminHomeFrm** được gọi để xử lý sự kiện.  
@@ -458,10 +371,6 @@ Kịch bản chi tiết cho chức năng xoá tài khoản diễn ra như sau:
 32. Phương thức **actionPerformed()** gọi lại lớp **UserManageFrm**   
 33. Giao diện **UserManageFrm** hiển thị lại cho admin
 
-# **Module : Quản lý sách**
-
-## **I. Pha yêu cầu**
-
 Quản lý thư viện có thể thực hiện chức năng quản lý sách bao gồm thêm, sửa, xóa sách với chi tiết từng chức năng hoạt động như sau:
 
 * Chức năng thêm sách: Quản lý đăng nhập vào hệ thống → giao diện quản lý chung hiện ra có các chức năng quản lý thông tin sách → chọn chức năng "Quản lý thông tin sách" → giao diện hiện ra có 3 lựa chọn là thêm, sửa, xóa thông tin sách → click chọn "Thêm thông tin sách" → giao diện thêm sách mới hiện ra với các ô nhập thông tin trống bao gồm ISBN, tên sách, tác giả, thể loại, nhà xuất bản, năm xuất bản, giá bìa, mô tả, số lượng bản copy (mặc định để 0\) → quản lý nhập đầy đủ các thông tin bắt buộc vào các ô tương ứng → quản lý click "Lưu" → hệ thống kiểm tra tính hợp lệ của thông tin vừa nhập, bao gồm kiểm tra các trường bắt buộc không được để trống, ISBN không được trùng với đầu sách đã có trong hệ thống, giá bìa phải là số dương → nếu thông tin không hợp lệ, hệ thống hiển thị thông báo lỗi tương ứng và yêu cầu quản lý nhập lại → nếu thông tin hợp lệ, hệ thống lưu toàn bộ thông tin vào cơ sở dữ liệu, thông báo thêm sách thành công và quay về trang chủ của quản lý.  
@@ -479,21 +388,11 @@ Mô tả các use case:
 
 Việc tìm kiếm có thể tìm phòng theo tên, theo ISBN hoặc theo tác giả.
 
-###### *![][image23]*
-
-## **II. Pha phân tích**
-
-### ***1\. Các kịch bản***
-
-#### a. Kịch bản thêm sách
-
 | Nhân viên quản lý (QL) vào hệ thống để thêm một đầu sách mới. Hệ thống hiện giao diện đăng nhập, có ô nhập tên đăng nhập, mật khẩu, và nút đăng nhập. Nhân viên nhập thông tin tài khoản của mình và click đăng nhập. Hệ thống hiện giao diện chính của nhân viên quản lý, có các chức năng lựa chọn: quản lý thông tin sách, xem thống kê. Nhân viên chọn chức năng quản lý thông tin sách. Hệ thống hiện giao diện quản lý sách, có 3 chức năng lựa chọn: thêm, sửa, xóa sách. Nhân viên chọn vào chức năng thêm sách. Hệ thống hiển thị giao diện thêm sách mới với các ô nhập thông tin trống:            ISBN:             Tên sách:              Tác giả:              Thể loại:              Nhà xuất bản:              Năm xuất bản:              Giá bìa:              Mô tả:              Số lượng bản copy: mặc định để 0             nút Lưu và nút Reset QL nhập đầy đủ thông tin sách mới vào các ô tương ứng và click nút Lưu. Hệ thống kiểm tra tính hợp lệ của thông tin vừa nhập, bao gồm các trường bắt buộc không được để trống, ISBN không trùng với sách đã có, giá bìa phải là số dương. Hệ thống báo thêm sách thành công và quay về trang chủ của người quản lý. |
 | :---- |
 
 Ngoại lệ:  
 10\. Hệ thống phát hiện thông tin không hợp lệ (ví dụ: ISBN đã tồn tại hoặc giá bìa không phải số dương), hiển thị thông báo lỗi tương ứng và yêu cầu QL nhập lại thông tin.
-
-#### b. Kịch bản sửa thông tin sách
 
 | Nhân viên quản lý (QL) vào hệ thống để sửa thông tin sách có tên "Python cơ bản". Nhân viên chọn chức năng quản lý thông tin sách sau khi đăng nhập. Hệ thống hiện giao diện quản lý sách, có 3 chức năng lựa chọn: thêm, sửa, xóa sách. Nhân viên chọn vào chức năng sửa sách. Hệ thống hiển thị giao diện tìm sách để sửa: ô nhập tên sách, tác giả, ISBN và nút tìm. QL nhập tên sách "Python cơ bản" và click vào nút Tìm. Hệ thống hiển thị danh sách các sách tìm thấy dưới dạng bảng: ISBN Tên sách Tác giả Thể loại Nhà xuất bản Năm xuất bản Giá bìa  Mô tả Số lượng bản copy ABC Python cơ bản Nguyễn Văn A CNTT Giáo Dục 2020 150.000 Cơ bản 5 123 Python nâng cao Trần Văn B CNTT Bách Khoa 2021 200.000 Nâng cao 3  QL click vào dòng thứ nhất, tương ứng với sách "Python cơ bản". Hệ thống hiện giao diện sửa thông tin sách với các thuộc tính chứa sẵn thông tin             Tên sách: Lập trình Python cơ bản             Tác giả: Nguyễn Văn A             Thể loại: CNTT             Nhà xuất bản: Giáo Dục             Năm xuất bản: 2020             Giá bìa: 150.000             Mô tả: Giáo trình lập trình Python dành cho người mới bắt đầu             nút Lưu và nút Reset QL sửa giá bìa thành 180.000 và click nút Lưu. Hệ thống kiểm tra tính hợp lệ của thông tin, báo cập nhật thành công và quay về trang chủ của người quản lý. |
 | :---- |
@@ -501,18 +400,12 @@ Ngoại lệ:
 Ngoại lệ:  
 10\. Hệ thống báo không có sách nào trong kết quả tìm kiếm.
 
-#### c. Kịch bản xóa sách
-
 | Nhân viên quản lý (QL) vào hệ thống để xóa đầu sách có tên "Giáo trình Cơ sở dữ liệu". Nhân viên chọn chức năng quản lý thông tin sách sau khi đăng nhập. Hệ thống hiện giao diện quản lý sách, có 3 chức năng lựa chọn: thêm, sửa, xóa sách. Nhân viên chọn vào chức năng xóa sách. Hệ thống hiển thị giao diện tìm sách để xóa: ô nhập tên sách, tác giả, ISBN và nút tìm. QL nhập tên sách "Giáo trình Cơ sở dữ liệu" và click vào nút Tìm. Hệ thống hiển thị danh sách các sách tìm thấy dưới dạng bảng: ISBN Tên sách Tác giả Thể loại Nhà xuất bản Năm xuất bản Giá bìa Số lượng bản copy ABC01 Giáo trình Cơ sở dữ liệu Lê Văn C CNTT Đại Học Quốc Gia 2019 120.000 4 ABC02 Cơ sở dữ liệu nâng cao Phạm Văn D CNTT Bách Khoa 2022 180.000 2  QL click vào dòng thứ nhất, tương ứng với sách "Giáo trình Cơ sở dữ liệu". Hệ thống kiểm tra tình trạng mượn của sách và xác nhận sách không có phiếu mượn nào đang kích hoạt, hiển thị màn hình xác nhận xóa với đầy đủ thông tin của sách cần xóa. QL kiểm tra lại thông tin và click nút Xác nhận xóa. Hệ thống xóa các bản copy và đầu sách khỏi cơ sở dữ liệu, báo xóa thành công và quay về trang chủ của người quản lý. |
 | :---- |
 
 Ngoại lệ:  
 10\. Hệ thống báo không có sách nào trong kết quả tìm kiếm.  
 12\. Hệ thống phát hiện sách đang có phiếu mượn ở trạng thái "Đang mượn" hoặc "Chờ nhận sách", hiển thị cảnh báo và từ chối xóa, quay về trang chủ của người quản lý.
-
-### ***2\. Phân tích chi tiết***
-
-#### a. Chức năng thêm sách:
 
 Phân tích chi tiết chức năng thêm sách diễn ra như sau:
 
@@ -526,7 +419,7 @@ Phân tích chi tiết chức năng thêm sách diễn ra như sau:
 * Thành công, hệ thống quay về giao diện chính của nhân viên quản lý ManagerHomeView.
 
 Như vậy, kết quả thu được biểu đồ lớp cho chức năng thêm sách như sau:  
-![][image24]  
+
 Kịch bản chi tiết cho chức năng thêm sách diễn ra như sau:
 
 * Nhân viên quản lý nhập username/password vào giao diện đăng nhập và click nút Login.  
@@ -553,10 +446,6 @@ Kịch bản chi tiết cho chức năng thêm sách diễn ra như sau:
 * Lớp AddBookView gọi lại lớp ManagerHomeView.  
 * Lớp ManagerHomeView hiển thị cho nhân viên quản lý.
 
-![][image25]
-
-#### b. Chức năng sửa thông tin sách:
-
 Phân tích chi tiết chức năng sửa thông tin sách diễn ra như sau:
 
 * Vào hệ thống → giao diện chính của quản lý hiện lên → đề xuất lớp ManagerHomeView, có ít nhất nút chọn vào quản lý thông tin sách.  
@@ -569,7 +458,7 @@ Phân tích chi tiết chức năng sửa thông tin sách diễn ra như sau:
 * Cập nhật xong, hệ thống quay về giao diện chính của nhân viên quản lý ManagerHomeView.
 
 Như vậy, kết quả thu được biểu đồ lớp cho chức năng sửa thông tin sách như sau:  
-![][image26]  
+
 Kịch bản chi tiết cho chức năng sửa thông tin sách diễn ra như sau:
 
 * Nhân viên click vào chức năng quản lý thông tin sách.  
@@ -595,10 +484,6 @@ Kịch bản chi tiết cho chức năng sửa thông tin sách diễn ra như s
 * Lớp EditBookView gọi lại lớp ManagerHomeView.  
 * Lớp ManagerHomeView hiển thị cho nhân viên quản lý.
 
-![][image27]
-
-#### e. Chức năng xoá sách:
-
 Phân tích chi tiết chức năng xoá sách diễn ra như sau:
 
 * Vào hệ thống → giao diện chính của quản lý hiện lên → đề xuất lớp ManagerHomeView, có ít nhất nút chọn vào quản lý thông tin sách.  
@@ -614,7 +499,7 @@ Phân tích chi tiết chức năng xoá sách diễn ra như sau:
 * Xóa thành công, hệ thống quay về giao diện chính của nhân viên quản lý ManagerHomeView.
 
 Như vậy, kết quả thu được biểu đồ lớp cho chức năng xoá sách như sau:  
-![][image28]  
+
 Kịch bản chi tiết cho chức năng xoá sách diễn ra như sau:
 
 * Nhân viên click vào chức năng quản lý thông tin sách.  
@@ -646,21 +531,6 @@ Kịch bản chi tiết cho chức năng xoá sách diễn ra như sau:
 * Lớp DeleteBookView gọi lại lớp ManagerHomeView.  
 * Lớp ManagerHomeView hiển thị cho nhân viên quản lý.
 
-#### ![][image29]
-
-## **III. Pha thiết kế**
-
-### ***1\. Thêm sách mới***
-
-#### 1.1. Thiết kế giao diện
-
-![][image30]  
-![][image31]  
-![][image32]  
-![][image33]
-
-#### 1.2. Mô tả thiết kế tĩnh cho module thêm sách mới
-
 Ở bước thiết kế tĩnh, chúng ta cần các lớp theo mô hình MVC cho module này như sau:
 
 **Các lớp tầng giao diện (View):**
@@ -682,10 +552,6 @@ Kịch bản chi tiết cho chức năng xoá sách diễn ra như sau:
 * User: Lớp mô tả đối tượng người dùng với các thuộc tính như ID, username, password, fullName, phone, role.  
 * Book: Lớp mô tả đối tượng sách với các thuộc tính như ISBN, title, author, genre, publisher,...  
 * BookItem: Lớp mô tả đối tượng bản sách vật lý với các thuộc tính như mã bản sách, trạng thái,...
-
-![][image34]
-
-#### 1.3. Đối với thiết kế động, các bước thực hiện diễn ra trong module này như sau
 
 1. Manager nhập thông tin và click đăng nhập trên giao diện LoginFrm.  
 2. Hàm actionPerformed() của lớp LoginFrm được gọi.  
@@ -723,19 +589,6 @@ Kịch bản chi tiết cho chức năng xoá sách diễn ra như sau:
 34. Phương thức actionPerformed() gọi lại lớp ManagerHomeFrm.  
 35. Giao diện ManagerHomeFrm hiển thị lại.
 
-![][image35]
-
-### 
-
-### ***2\. Chỉnh sửa thông tin sách***
-
-#### 2.1. Thiết kế giao diện
-
-![][image36]  
-![][image37]
-
-#### 2.2. Mô tả thiết kế tĩnh cho module chỉnh sửa thông tin sách Ở bước thiết kế tĩnh, chúng ta cần các lớp theo mô hình MVC cho module này như sau:
-
 * **Các lớp tầng giao diện (View):**  
   * ManagerHomeFrm: Giao diện chính dành cho quản lý (Manager).  
   * BookManageFrm: Giao diện quản lý thông tin sách.  
@@ -746,10 +599,6 @@ Kịch bản chi tiết cho chức năng xoá sách diễn ra như sau:
   * DAO: Lớp cơ sở chứa các thiết lập kết nối cơ sở dữ liệu dùng chung.  
 * **Các lớp tầng thực thể (Entity/Model):**  
   * Book: Lớp mô tả đối tượng sách với các thuộc tính như ISBN, title, author, genre, publisher,...
-
-![][image38]
-
-#### 2.3. Đối với thiết kế động, các bước thực hiện diễn ra trong module này như sau  
 
 1. Manager click chọn chức năng quản lý thông tin sách (click book manage).  
 2. Hàm actionPerformed() của lớp ManagerHomeFrm được gọi.  
@@ -788,17 +637,6 @@ Kịch bản chi tiết cho chức năng xoá sách diễn ra như sau:
 35. Phương thức actionPerformed() gọi lại lớp ManagerHomeFrm.  
 36. Giao diện ManagerHomeFrm hiển thị lại.
 
-![][image39]
-
-### ***3 Xóa sách***
-
-#### 3.1. Thiết kế giao diện
-
-![][image36]  
-![][image40]
-
-#### 3.2.1. Mô tả thiết kế tĩnh cho module xóa sách
-
 Ở bước thiết kế tĩnh, chúng ta cần các lớp theo mô hình MVC cho module này như sau:
 
 **Các lớp tầng giao diện (View):**
@@ -819,10 +657,6 @@ Kịch bản chi tiết cho chức năng xoá sách diễn ra như sau:
 * User: Lớp mô tả đối tượng người dùng với các thuộc tính như ID, username, password, fullName, phone, role.  
 * Book: Lớp mô tả đối tượng sách với các thuộc tính như ISBN, title, author, genre, publisher,...  
 * BookItem: Lớp mô tả đối tượng bản sách vật lý cụ thể, liên kết với đầu sách Book thông qua ISBN.
-
-![][image41]
-
-#### 3.2.2. Đối với thiết kế động, các bước thực hiện diễn ra trong module này như sau
 
 1. Manager click chọn chức năng quản lý thông tin sách (click book manage).  
 2. Hàm actionPerformed() của lớp ManagerHomeFrm được gọi.  
@@ -865,19 +699,11 @@ Kịch bản chi tiết cho chức năng xoá sách diễn ra như sau:
 39. Phương thức actionPerformed() gọi lại lớp ManagerHomeFrm.  
 40. Giao diện ManagerHomeFrm hiển thị lại.
 
-![][image42]
-
-## **IV. Pha cài đặt và tích hợp**
-
-## **V. Pha kiểm thử** 
-
 **Module đặt sách**
 
 **I. Pha yêu cầu**
 
 * Chức năng *đặt sách* (trực tiếp tại quầy hoặc qua điện thoại)**:** Sinh viên đến quầy hoặc gọi điện đến thư viện yêu cầu đặt mượn sách → thủ thư tiếp nhận yêu cầu và đăng nhập vào hệ thống → chọn chức năng "Đặt sách" → giao diện tìm kiếm sách hiện ra, có các ô nhập từ khóa tìm kiếm như tên sách, tác giả, thể loại, ISBN → thủ thư nhập thông tin theo yêu cầu của sinh viên và click "Tìm kiếm" → danh sách các đầu sách phù hợp hiện lên dưới dạng bảng, mỗi dòng gồm mã sách, tên sách, tác giả, thể loại, số lượng còn sẵn → thủ thư thông báo các đầu sách còn sẵn cho sinh viên và yêu cầu sinh viên xác nhận cuốn sách và ngày trả mong muốn → sinh viên xác nhận và thủ thư click vào dòng đúng với cuốn sách sinh viên yêu cầu → giao diện tìm kiếm thông tin sinh viên hiện ra, có ô nhập để tìm → thủ thư hỏi xin sinh viên họ tên và mã sinh viên, sau đó nhập vào để tìm kiếm → danh sách các sinh viên có tên hoặc mã khớp với từ khóa vừa nhập hiện lên dạng bảng, mỗi dòng gồm đầy đủ thông tin: mã sinh viên, họ tên, email, số điện thoại → thủ thư click vào dòng đúng với sinh viên vừa báo (nếu không tìm thấy thì thủ thư click chức năng thêm sinh viên mới) → hệ thống chuyển sang màn hình xác nhận thông tin đặt sách, hiển thị đầy đủ thông tin sinh viên, thông tin sách và ngày nhận sách dự kiến → thủ thư xác nhận lại toàn bộ thông tin với sinh viên → sinh viên xác nhận, thủ thư click "Lưu đặt sách" → hệ thống tạo phiếu mượn với trạng thái "Chờ nhận sách", thông báo đặt sách thành công và quay về trang chủ của thủ thư → thủ thư thông báo kết quả đặt sách thành công cho sinh viên.
-
-###### *Use case đặt sách:* 
 
 Muốn thực hiện đặt sách, nhân viên thủ thư phải đăng nhập, tìm sách còn khả dụng, tìm sinh viên xem đã có trong hệ thống chưa, nếu chưa có thì phải thêm sinh viên mới.  
 Mô tả các use case:
@@ -886,7 +712,6 @@ Mô tả các use case:
 * Search student: UC này cho phép thủ thư tìm thông tin sinh viên theo mã sinh viên hoặc số điện thoại trong hệ thống.  
 * Add student: UC này cho phép thủ thư thêm thông tin sinh viên mới vào hệ thống khi không tìm thấy.
 
-![][image43]  
 **II. Pha phân tích**  
 Đặt sách qua điện thoại (bỏ qua các bước đăng nhập):
 
@@ -899,9 +724,6 @@ Ngoại lệ:
 15\. Không có sinh viên nào hiện lên trong kết quả tìm kiếm, hoặc không có sinh viên đúng với thông tin đã cung cấp.  
 19\. Sinh viên không xác nhận thông tin đặt sách.  
 21\. Hệ thống báo lỗi khi tạo phiếu mượn, không cập nhật dữ liệu.  
-![][image44]
-
-### ***Phân tích chi tiết cho từng module***
 
 Phân tích chi tiết chức năng đặt sách (bỏ qua giai đoạn đăng nhập) diễn ra như sau:
 
@@ -917,9 +739,8 @@ Phân tích chi tiết chức năng đặt sách (bỏ qua giai đoạn đăng n
 * Hệ thống lưu xong báo lại lớp ConfirmBorrowingView, lớp này báo thành công cho thủ thư \-\> thủ thư click OK \-\> hệ thống quay về lớp LibrarianHomeView.
 
 Như vậy, kết quả thu được biểu đồ lớp cho chức năng đặt sách như sau:  
-![][image45]  
+
 Biểu đồ tuần tự phân tích chức năng đặt sách diễn ra như sau:  
-![][image46]
 
 Kịch bản chi tiết cho chức năng đặt sách diễn ra như sau:
 
@@ -962,36 +783,13 @@ Kịch bản chi tiết cho chức năng đặt sách diễn ra như sau:
 
 **III. Pha thiết kế**
 
-### ***1\. Thiết kế lớp thực thể***
-
-![][image47]
-
-### ***2\. Thiết kế cơ sở dữ liệu***
-
-![][image48]
-
-### ***3\. Thiết kế chi tiết module.***
-
-![][image49]  
-![][image50]  
-![][image51]  
-![][image52]
-
-#### **Mô tả thiết kế tĩnh cho module đặt sách**
-
 Đối với thiết kế tĩnh, bỏ qua phần đăng nhập, module này cần các lớp theo ba tầng MVC như sau:
 
 * **Tầng giao diện:** LibrarianHomeFrm là giao diện chính của thủ thư. SearchBorrowFrm là giao diện tìm kiếm sách. SearchStudentFrm là giao diện tìm kiếm sinh viên. ConfirmBorrowingFrm là giao diện xác nhận đặt sách.  
 * **Tầng điều khiển:** BookDAO cần để thực hiện tìm sách. StudentDAO cần để thực hiện tìm sinh viên. BorrowingDAO cần để thêm thông tin đặt sách mới. Các lớp này đều kế thừa từ lớp DAO để điều khiển truy nhập chung vào CSDL.  
 * **Tầng thực thể:** Cần các lớp Book, Student, Borrowing. Lớp Borrowing cần có các lớp thành phần BorrowedBook, BookItem và User.
 
-![][image53]
-
-#### **Mô tả thiết kế động cho module đặt sách**
-
 Các bước hoạt động của module này, bỏ qua phần xử lí đăng nhập, được mô tả tuần tự như sau:
-
-![][image54]
 
 1. Sinh viên đến hoặc gọi điện cho thủ thư yêu cầu đặt sách.  
 2. Thủ thư click chức năng đặt sách trên giao diện chính của mình (sau khi đăng nhập).  
@@ -1060,13 +858,11 @@ Các bước hoạt động của module này, bỏ qua phần xử lí đăng n
 1. **Pha yêu cầu**  
 * Chức năng *huỷ đặt sách:* Sinh viên đến quầy hoặc gọi điện đến thư viện yêu cầu hủy đặt mượn sách → thủ thư tiếp nhận yêu cầu và đăng nhập vào hệ thống → chọn chức năng "Hủy đặt sách" → giao diện tìm kiếm phiếu mượn hiện ra, có các ô nhập từ khóa tìm kiếm như mã sinh viên, họ tên sinh viên → thủ thư hỏi xin thông tin sinh viên và nhập vào để tìm kiếm → danh sách các phiếu mượn đang ở trạng thái "Chờ nhận sách" của sinh viên hiện lên dưới dạng bảng, mỗi dòng gồm mã phiếu mượn, tên sách, ngày đặt mượn, trạng thái → thủ thư thông báo danh sách các phiếu đặt sách hiện có cho sinh viên và yêu cầu sinh viên xác nhận phiếu muốn hủy → sinh viên xác nhận và thủ thư click vào dòng đúng với phiếu mượn sinh viên muốn hủy → hệ thống chuyển sang màn hình xác nhận thông tin hủy đặt sách, hiển thị đầy đủ thông tin sinh viên, thông tin sách và ngày đặt mượn tương ứng → thủ thư xác nhận lại toàn bộ thông tin với sinh viên và yêu cầu sinh viên xác nhận hủy → sinh viên xác nhận, thủ thư click "Xác nhận hủy" → hệ thống cập nhật trạng thái phiếu mượn thành "Đã hủy", cập nhật số lượng sách trong kho, thông báo hủy đặt sách thành công và quay về trang chủ của thủ thư → thủ thư thông báo kết quả hủy đặt sách thành công cho sinh viên.
 
-###### *b). Use case hủy đặt sách :* 
-
 Muốn hủy một phiếu đặt mượn sách, sinh viên yêu cầu đến quầy hoặc gọi điện. Thủ thư cần đăng nhập, tìm kiếm các phiếu mượn đang chờ nhận sách theo thông tin sinh viên, chọn phiếu cần hủy, xác nhận thông tin.  
 Mô tả các use case:  
 • Librarian login: UC này cho phép thủ thư đăng nhập vào hệ thống để thực hiện chức năng hủy đặt sách.  
 • Search waiting loan slip: UC này cho phép thủ thư tìm kiếm các phiếu mượn đang ở trạng thái "Chờ nhận sách" theo mã sinh viên hoặc họ tên sinh viên.  
-![][image55]  
+
 **III. Pha phân tích**  
 **b. Kịch bản hủy đặt sách**  
 Hủy đặt sách tại quầy (bỏ qua các bước đăng nhập):
@@ -1079,11 +875,6 @@ Ngoại lệ:
 8\. Sinh viên không chọn phiếu nào trong danh sách phiếu thủ thư thông báo.  
 13\. Sinh viên không xác nhận hủy đặt sách.  
 15\. Hệ thống phát hiện phiếu đã đổi trạng thái (không còn Chờ nhận sách) hoặc lỗi cập nhật dữ liệu, nên từ chối hủy.  
-![][image44]
-
-#### 
-
-### ***Phân tích chi tiết cho module***
 
 Phân tích chi tiết chức năng hủy đặt sách diễn ra như sau:
 
@@ -1096,10 +887,9 @@ Phân tích chi tiết chức năng hủy đặt sách diễn ra như sau:
 * Hệ thống lưu xong báo lại lớp ConfirmCancelView, lớp này báo thành công cho thủ thư \-\> thủ thư click OK \-\> hệ thống quay về lớp LibrarianHomeView.
 
 Như vậy, kết quả thu được biểu đồ lớp cho chức năng hủy đặt sách như sau:  
-![][image56]
 
 Biểu đồ tuần tự phân tích chức năng hủy đặt sách diễn ra như sau:  
-![][image57]  
+
 Kịch bản chi tiết cho chức năng hủy đặt sách diễn ra như sau:
 
 * Thủ thư click chức năng hủy đặt sách trên giao diện LibrarianHomeView sau khi nhận yêu cầu hủy đặt sách của sinh viên.  
@@ -1131,36 +921,13 @@ Kịch bản chi tiết cho chức năng hủy đặt sách diễn ra như sau:
 
 **III. Pha thiết kế**
 
-### ***1\. Thiết kế lớp thực thể***
-
-![][image47]
-
-### ***2\. Thiết kế cơ sở dữ liệu***
-
-![][image48]
-
-### ***3\. Thiết kế chi tiết module.***
-
-![][image58]  
-![][image59]  
-![][image60]  
-![][image61]
-
-#### **Mô tả thiết kế tĩnh cho module hủy đặt sách**
-
 Đối với thiết kế tĩnh, bỏ qua phần đăng nhập, module này cần các lớp theo ba tầng MVC như sau:
 
 * **Tầng giao diện:** LibrarianHomeFrm là giao diện chính của thủ thư. SearchBorrowingFrm là giao diện tìm kiếm phiếu đặt sách. ConfirmCancelFrm là giao diện xác nhận hủy đặt sách.  
 * **Tầng điều khiển:** BorrowingDAO cần để thực hiện tìm kiếm phiếu mượn đang chờ và cập nhật trạng thái hủy phiếu. Lớp này kế thừa từ lớp DAO để điều khiển truy nhập chung vào CSDL.  
 * **Tầng thực thể:** Cần các lớp Borrowing, Student. Lớp Borrowing cần có các lớp thành phần BookItem, BorrowedBook và User.
 
-![][image62]
-
-#### **Mô tả thiết kế động cho module hủy đặt sách**
-
 Các bước hoạt động của module này, bỏ qua phần xử lí đăng nhập, được mô tả tuần tự như sau:
-
-![][image63]
 
 1. Sinh viên gọi điện hoặc đến gặp thủ thư yêu cầu hủy đặt sách.  
 2. Thủ thư click chức năng hủy đặt sách trên giao diện chính của mình (sau khi đăng nhập).  
@@ -1199,10 +966,6 @@ Các bước hoạt động của module này, bỏ qua phần xử lí đăng n
 35. Giao diện LibrarianHomeFrm được hiển thị.  
 36. Thủ thư xác nhận hủy đặt sách thành công với sinh viên.
 
-### ***3.1. Xử lý nhận sách***
-
-#### 3.1.1. Mô tả thiết kế tĩnh
-
 * **Các lớp tầng giao diện (View):**  
   * LoginFrm: Giao diện đăng nhập để xác thực người dùng vào hệ thống.  
   * LibrarianHomeFrm: Giao diện chính dành cho thủ thư (Librarian), chứa nút btnConfirmBorrowing.  
@@ -1222,9 +985,6 @@ Các bước hoạt động của module này, bỏ qua phần xử lí đăng n
   * BookItem: Lớp mô tả bản ghi sách cụ thể với các thuộc tính: id, status.
 
 Biểu đồ lớp:  
-![][image64]
-
-#### 3.1.2. Mô tả thiết kế động, các bước thực hiện của module diễn ra theo trình tự sau:
 
 1. Nhân viên thư viện nhập tên đăng nhập, mật khẩu và click đăng nhập trên giao diện LoginFrm.  
 2. Hàm actionPerformed() của lớp LoginFrm được gọi.  
@@ -1269,11 +1029,6 @@ Biểu đồ lớp:
 41. Giao diện LibrarianHomeFrm hiển thị.
 
 Biểu đồ tuần tự:  
-![][image65]
-
-### ***3.2. Xử lý trả sách \- Bỏ qua bước đăng nhập***
-
-#### 3.1.1. Mô tả thiết kế tĩnh
 
 * **Các lớp tầng giao diện (View):**  
   * LibrarianHomeFrm: Giao diện chính dành cho thủ thư, chứa nút btnReturnBook.  
@@ -1297,9 +1052,6 @@ Biểu đồ tuần tự:
   * Bill: Lớp mô tả hóa đơn với thuộc tính: id, bookStatus, paymentDate, overdueDay, fine, amount, paymentType, note và liên kết đến borrowing.
 
 Biểu đồ lớp:  
-![][image66]
-
-#### 3.1.2. Mô tả thiết kế động, các bước thực hiện của module diễn ra theo trình tự sau:
 
 1. Nhân viên click nút TRẢ SÁCH \- btnReturnBook.  
 2. Phương thức actionPerformed() được kích hoạt.  
@@ -1360,29 +1112,17 @@ Biểu đồ lớp:
 57. Nhân viên thư viện nhận tiền thanh toán từ sinh viên, giao hóa đơn cho sinh viên và thông báo hoàn tất quá trình trả sách.
 
 Biểu đồ tuần tự:  
-![][image67]  
-![][image68]
 
 **Module thống kê sách mượn nhiều**  
 **I. Pha yêu cầu** 
 
 * Chức năng *xem thống kê sách mượn nhiều:* Quản lý đăng nhập vào hệ thống thư viện → chọn chức năng "Báo cáo thống kê" trên thanh điều hướng → hệ thống hiển thị menu các loại thống kê → quản lý chọn mục "Thống kê sách mượn nhiều" → giao diện tùy chọn thống kê hiện ra, chứa các ô nhập khoảng thời gian (từ ngày, đến ngày) và ô chọn giới hạn số lượng (vd: top 10, top 20\) → quản lý nhập khoảng thời gian cần xem, chọn giới hạn hiển thị và click "Thống kê" → danh sách các tựa sách được quan tâm nhiều nhất hiện lên dưới dạng bảng tổng quát, mỗi dòng gồm mã sách, tên sách, tác giả, thể loại, tổng số lượt mượn trong kỳ → quản lý muốn xác minh số liệu nên click vào dòng của một cuốn sách bất kỳ trên bảng → giao diện chi tiết lịch sử mượn trả của sách đó hiện lên với danh sách các sinh viên đã mượn dưới dạng bảng, mỗi dòng gồm mã sinh viên, họ tên sinh viên, ngày mượn, hạn trả, ngày trả thực tế, trạng thái phiếu (đã trả/quá hạn/chưa trả) → quản lý kiểm tra, đối chiếu thông tin xong và click "Trở về" → hệ thống quay về màn hình bảng danh sách top sách mượn nhiều ban đầu → quản lý click "Xuất Excel" → hệ thống tự động xuất và tải tệp báo cáo về máy.
 
-###### *Usecase xem thống kê sách mượn nhiều:*
-
 Manager có thể xem báo cáo các sách được mượn nhiều nhất trong một khoảng thời gian tùy chọn  
 Mô tả các usecase:
 
 * View a specific book’s borrow : UC này cho phép quản lý xem thông tin chi tiết lịch sử mượn sách trong khoảng thời gian đã chọn.  
 * Export to PDF/Excel: UC này cho phép quản lý xuất bản báo cáo dưới dạng PDF hoặc excel
-
-![][image69]
-
-# **PHẦN II — PHA PHÂN TÍCH HƯỚNG ĐỐI TƯỢNG (MODULE BÁO CÁO & THỐNG KÊ)**
-
-### ***1\. Các kịch bản (Scenarios)***
-
-#### a. Kịch bản chức năng thống kê sách mượn nhiều
 
 1. Quản lý đăng nhập vào hệ thống thư viện.  
 2. Chọn chức năng "Báo cáo thống kê" trên thanh điều hướng.  
@@ -1416,8 +1156,6 @@ Mô tả các usecase:
 
 1. Bước 7: Nếu không có lượt mượn nào trong khoảng thời gian đã chọn, hệ thống hiển thị thông báo "Không có dữ liệu thống kê trong khoảng thời gian này".
 
-#### b. Kịch bản chức năng xem báo cáo sách hư hỏng / thất lạc
-
 2. Quản lý đăng nhập vào hệ thống.  
 3. Chọn chức năng "Báo cáo thống kê" trên thanh điều hướng.  
 4. Chọn mục "Báo cáo sách hư hỏng/thất lạc".  
@@ -1437,10 +1175,6 @@ Mô tả các usecase:
 **Ngoại lệ:**
 
 - Bước 6: Nếu không có ghi nhận sách nào hư hỏng/thất lạc trong khoảng thời gian đó, hệ thống hiển thị thông báo "Không có dữ liệu".
-
-### ***3\. Phân tích chi tiết từng modul***
-
-#### a. Chức năng thống kê sách mượn nhiều
 
 **Phân tích tĩnh — các lớp cần thiết:**
 
@@ -1493,10 +1227,6 @@ Mô tả các usecase:
 30. Lớp BorrowingStat trả lại kết quả cho lớp BorrowingStatView.  
 31. Lớp BorrowingStatView hiển thị thông báo xuất file thành công cho nhân viên quản lí.
 
-![][image71]
-
-#### b. Chức năng xem báo cáo sách hư hỏng / thất lạc
-
 **Phân tích tĩnh — các lớp cần thiết:**
 
 * Sau khi nhân viên quản lý đăng nhập thành công, giao diện chính của quản lý hiện ra \--\> tái sử dụng lớp ManagerHomeView và lớp LoginView, User (đã phân tích ở chức năng a).  
@@ -1507,8 +1237,6 @@ Mô tả các usecase:
 * Kết quả được hệ thống trả lại cho StockReportView để hiển thị dưới dạng bảng: mã hóa đơn, tên tựa sách, mã vạch sách, họ tên sinh viên, lý do (rách trang/mất sách/cháy xém...), lệ phí phạt.  
 * Quản lý click nút "In báo cáo PDF" \--\> hệ thống xử lý xuất báo cáo \--\> cần chức năng exportToPDF() \--\> chức năng này là hành động của đối tượng StockStat.  
 * Hệ thống hiển thị thông báo tiến trình và tự động tải tệp PDF về máy.
-
-![][image72]
 
 **Phân tích động — biểu đồ tuần tự:**
 
@@ -1529,14 +1257,7 @@ Mô tả các usecase:
 15. Lớp StockStat trả lại kết quả cho lớp StockReportView.  
 16. Lớp StockReportView hiển thị thông báo tải thành công cho nhân viên quản lí.
 
-![][image73]
-
-## **Modul 1: Thống kê sách mượn nhiều**
-
 Thiết kế giao diện:  
-![][image74]
-
-### ***a. Thiết kế tĩnh — Biểu đồ lớp thiết kế chi tiết***
 
 Bỏ qua phần đăng nhập (đã thiết kế ở chức năng khác), modul này cần các lớp:  
 **Tầng giao diện (View):**
@@ -1558,10 +1279,6 @@ Bỏ qua phần đăng nhập (đã thiết kế ở chức năng khác), modul 
 Các lớp DAO đều kế thừa lớp DAO để dùng chung cơ chế truy cập CSDL.
 
 **Tầng thực thể:** BorrowingStat, Borrowing, BorrowedBook, Book, BookItem, Student.  
-    
-![][image75]
-
-### ***b. Thiết kế động — Biểu đồ tuần tự chi tiết***
 
 Bỏ qua phần đăng nhập, các bước hoạt động:
 
@@ -1608,14 +1325,6 @@ Bỏ qua phần đăng nhập, các bước hoạt động:
 41. BorrowingStatDAO trả kết quả cho BorrowingStatFrm.  
 42. BorrowingStatFrm thông báo xuất file thành công cho **NV**.
 
-![][image76]
-
-## **Modul 2: Báo cáo sách hư hỏng / thất lạc**
-
-![][image77]
-
-### ***a. Thiết kế tĩnh — Biểu đồ lớp thiết kế chi tiết***
-
 Bỏ qua phần đăng nhập, modul này cần các lớp:
 
 **Tầng giao diện (View):**
@@ -1635,9 +1344,6 @@ Bỏ qua phần đăng nhập, modul này cần các lớp:
 Các lớp DAO đều kế thừa lớp DAO để dùng chung cơ chế truy cập CSDL.
 
 **Tầng thực thể:** StockStat, Book, BookItem  
-![][image78]
-
-### ***b. Thiết kế động — Biểu đồ tuần tự chi tiết***
 
 Bỏ qua phần đăng nhập, các bước hoạt động:
 
@@ -1669,15 +1375,7 @@ Bỏ qua phần đăng nhập, các bước hoạt động:
 26. StockStatDAO trả kết quả cho StockReportFrm.  
 27. StockReportFrm thông báo tải thành công cho **NV**.
 
-![][image79]
-
-# **V. Pha Kiểm thử**
-
 [https://github.com/lightzgls/P-Documents](https://github.com/lightzgls/P-Documents)
-
-## **1\. Kiểm thử Black Box**
-
-### ***a) Lập kế hoạch test***
 
 Áp dụng hai kỹ thuật **Phân vùng tương đương (Equivalence Partitioning)** và **Phân tích giá trị biên (Boundary Value Analysis)** để thiết kế test case cho cả hai chức năng.
 
@@ -1694,10 +1392,6 @@ Bỏ qua phần đăng nhập, các bước hoạt động:
 |  | BVA | Đến ngày \= 1 ngày trước / đúng ngày báo cáo sớm nhất (BVA-D1, D2) |
 |  | BVA | Từ ngày \= đúng ngày / 1 ngày sau báo cáo muộn nhất (BVA-D3, D4) |
 |  | BVA | Từ ngày \= Đến ngày — có/không có báo cáo (BVA-D5, D6) |
-
-### ***b) Các test case cho chức năng Thống kê sách mượn nhiều***
-
-#### Bảng phân vùng tương đương và giá trị biên
 
 **Biến đầu vào:**
 
@@ -1753,11 +1447,7 @@ Bỏ qua phần đăng nhập, các bước hoạt động:
 | BVA-N6 | Trên tổng số sách có lượt mượn | 7 | Hiển thị 6 đầu sách (không lỗi, trả hết) |
 | BVA-N7 | Số âm (dưới biên dưới xa) | \-1 | Lỗi: "Top N phải là số nguyên dương." |
 
-#### Các test case
-
 **\+ Test case 1: Khoảng thời gian có dữ liệu, Top N hợp lệ — xem chi tiết — xuất Excel *(EP-D1, EP-N2, bỏ qua phần login)***
-
-##### CSDL trước khi test:
 
 **\- books:**
 
@@ -1838,8 +1528,6 @@ Bỏ qua phần đăng nhập, các bước hoạt động:
 | 16 | 7 | BC0012 | 16/04/2026 | NULL | Đang mượn |
 | 17 | 8 | BC0013 | 29/04/2026 | 30/04/2026 | Đã trả |
 
-##### Các bước thực hiện và Kết quả mong đợi:
-
 | Các bước thực hiện | Kết quả mong đợi |
 | :---- | :---- |
 | **1\.** Nhân viên (Manager) đã đăng nhập. Click "Báo cáo thống kê" trên ManagerHomeFrm. | Giao diện StatMenuFrm hiển thị menu thống kê gồm 2 mục: "Thống kê sách mượn nhiều", "Báo cáo sách hư hỏng/thất lạc". |
@@ -1850,270 +1538,168 @@ Bỏ qua phần đăng nhập, các bước hoạt động:
 | **6\.** Click nút "Xuất Excel". Chọn đường dẫn file top\_borrowed.xlsx. | Hệ thống tạo file top\_borrowed.xlsx chứa các cột: Mã sách, Tên sách, Tác giả, Thể loại, Lượt mượn. Thông báo: "Xuất file thành công\!". |
 | **7\.** Click nút OK của thông báo. | Quay trở về BorrowingStatFrm. |
 
-##### CSDL sau khi test:
-
 * Tất cả các bảng giữ nguyên (chức năng thống kê chỉ đọc dữ liệu, không sửa đổi). Kết quả ngoài CSDL là file top\_borrowed.xlsx được sinh ra trên hệ thống tệp tin.
 
 **\+ Test case 2: Top N \= 1 — biên dưới hợp lệ *(BVA-N2)***
 
-##### CSDL trước khi test:
-
 Giống Test case 1\.
-
-##### Các bước thực hiện và Kết quả mong đợi:
 
 | Các bước thực hiện | Kết quả mong đợi |
 | :---- | :---- |
 | **1\.** Tại BorrowingStatFrm, nhập: \- Từ ngày \= 01/01/2026 \- Đến ngày \= 31/05/2026 \- Top N \= 1 *(BVA-N2: biên dưới)* Click "Thống kê". | Bảng kết quả chỉ hiển thị 1 dòng duy nhất — đầu sách mượn nhiều nhất: B001 | Nhà Giả Kim | Paulo Coelho | Tiểu thuyết | 7 |
 
-##### CSDL sau khi test:
-
 * Tất cả các bảng giữ nguyên.
 
 **\+ Test case 3: Top N \= 6 — đúng bằng tổng số đầu sách có lượt mượn *(BVA-N5)***
 
-##### CSDL trước khi test:
-
 Giống Test case 1\.
-
-##### Các bước thực hiện và Kết quả mong đợi:
 
 | Các bước thực hiện | Kết quả mong đợi |
 | :---- | :---- |
 | **1\.** Tại BorrowingStatFrm, nhập: \- Từ ngày \= 01/01/2026 \- Đến ngày \= 31/05/2026 \- Top N \= 6 *(BVA-N5: đúng bằng tổng)* Click "Thống kê". | Bảng kết quả hiển thị đủ 6 đầu sách, sắp theo lượt mượn giảm dần (giống bước 3 Test case 1). |
 
-##### CSDL sau khi test:
-
 * Tất cả các bảng giữ nguyên.
 
 **\+ Test case 4: Top N \= 7 — vượt tổng số đầu sách có lượt mượn *(BVA-N6)***
 
-##### CSDL trước khi test:
-
 Giống Test case 1\.
-
-##### Các bước thực hiện và Kết quả mong đợi:
 
 | Các bước thực hiện | Kết quả mong đợi |
 | :---- | :---- |
 | **1\.** Tại BorrowingStatFrm, nhập: \- Từ ngày \= 01/01/2026 \- Đến ngày \= 31/05/2026 \- Top N \= 7 *(BVA-N6: trên tổng)* Click "Thống kê". | Bảng kết quả vẫn hiển thị 6 đầu sách (hệ thống trả hết dữ liệu, không lỗi). |
 
-##### CSDL sau khi test:
-
 * Tất cả các bảng giữ nguyên.
 
 **\+ Test case 5: Top N \= 0 — biên dưới không hợp lệ *(BVA-N1, EP-N3)***
 
-##### CSDL trước khi test:
-
 Giống Test case 1\.
-
-##### Các bước thực hiện và Kết quả mong đợi:
 
 | Các bước thực hiện | Kết quả mong đợi |
 | :---- | :---- |
 | **1\.** Tại BorrowingStatFrm, nhập: \- Từ ngày \= 01/01/2026 \- Đến ngày \= 31/05/2026 \- Top N \= 0 *(BVA-N1: dưới biên dưới)* Click "Thống kê". | Thông báo lỗi: "Top N phải là số nguyên dương." Không gọi DAO. |
 
-##### CSDL sau khi test:
-
 * Tất cả các bảng giữ nguyên.
 
 **\+ Test case 6: Top N \= \-1 — số âm *(BVA-N7, EP-N4)***
 
-##### CSDL trước khi test:
-
 Giống Test case 1\.
-
-##### Các bước thực hiện và Kết quả mong đợi:
 
 | Các bước thực hiện | Kết quả mong đợi |
 | :---- | :---- |
 | **1\.** Tại BorrowingStatFrm, nhập: \- Từ ngày \= 01/01/2026 \- Đến ngày \= 31/05/2026 \- Top N \= \-1 *(BVA-N7: số âm)* Click "Thống kê". | Thông báo lỗi: "Top N phải là số nguyên dương." Không gọi DAO. |
 
-##### CSDL sau khi test:
-
 * Tất cả các bảng giữ nguyên.
 
 **\+ Test case 7: Top N \= "abc" — chuỗi không phải số *(EP-N5)***
 
-##### CSDL trước khi test:
-
 Giống Test case 1\.
-
-##### Các bước thực hiện và Kết quả mong đợi:
 
 | Các bước thực hiện | Kết quả mong đợi |
 | :---- | :---- |
 | **1\.** Tại BorrowingStatFrm, nhập: \- Từ ngày \= 01/01/2026 \- Đến ngày \= 31/05/2026 \- Top N \= "abc" *(EP-N5)* Click "Thống kê". | Thông báo lỗi: "Top N phải là số nguyên dương." |
 
-##### CSDL sau khi test:
-
 * Tất cả các bảng giữ nguyên.
 
 **\+ Test case 8: Top N \= 3.5 — số thực *(EP-N6)***
 
-##### CSDL trước khi test:
-
 Giống Test case 1\.
-
-##### Các bước thực hiện và Kết quả mong đợi:
 
 | Các bước thực hiện | Kết quả mong đợi |
 | :---- | :---- |
 | **1\.** Tại BorrowingStatFrm, nhập: \- Từ ngày \= 01/01/2026 \- Đến ngày \= 31/05/2026 \- Top N \= 3.5 *(EP-N6)* Click "Thống kê". | Thông báo lỗi: "Top N phải là số nguyên dương." |
 
-##### CSDL sau khi test:
-
 * Tất cả các bảng giữ nguyên.
 
 **\+ Test case 9: Top N để trống *(EP-N7)***
 
-##### CSDL trước khi test:
-
 Giống Test case 1\.
-
-##### Các bước thực hiện và Kết quả mong đợi:
 
 | Các bước thực hiện | Kết quả mong đợi |
 | :---- | :---- |
 | **1\.** Tại BorrowingStatFrm, nhập: \- Từ ngày \= 01/01/2026 \- Đến ngày \= 31/05/2026 \- Top N \= (trống) *(EP-N7)* Click "Thống kê". | Thông báo lỗi: "Top N phải là số nguyên dương." |
 
-##### CSDL sau khi test:
-
 * Tất cả các bảng giữ nguyên.
 
 **\+ Test case 10: Ngày bắt đầu \> Ngày kết thúc *(EP-D3)***
 
-##### CSDL trước khi test:
-
 Giống Test case 1\.
-
-##### Các bước thực hiện và Kết quả mong đợi:
 
 | Các bước thực hiện | Kết quả mong đợi |
 | :---- | :---- |
 | **1\.** Tại BorrowingStatFrm, nhập: \- Từ ngày \= 31/05/2026 *(EP-D3)* \- Đến ngày \= 01/01/2026 *(EP-D3)* \- Top N \= 10 Click "Thống kê". | Thông báo lỗi: "Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc." Không gọi DAO, bảng kết quả giữ nguyên trạng thái cũ (rỗng). |
 
-##### CSDL sau khi test:
-
 * Tất cả các bảng giữ nguyên.
 
 **\+ Test case 11: Đến ngày \= 1 ngày trước lượt mượn đầu tiên *(BVA-D1)***
 
-##### CSDL trước khi test:
-
 Giống Test case 1\.
-
-##### Các bước thực hiện và Kết quả mong đợi:
 
 | Các bước thực hiện | Kết quả mong đợi |
 | :---- | :---- |
 | **1\.** Tại BorrowingStatFrm, nhập: \- Từ ngày \= 01/01/2026 \- Đến ngày \= 09/01/2026 *(BVA-D1: 1 ngày trước 10/01)* \- Top N \= 10 Click "Thống kê". | Bảng rỗng. Thông báo: "Không có dữ liệu trong khoảng thời gian đã chọn." |
 
-##### CSDL sau khi test:
-
 * Tất cả các bảng giữ nguyên.
 
 **\+ Test case 12: Đến ngày \= đúng ngày lượt mượn đầu tiên *(BVA-D2)***
 
-##### CSDL trước khi test:
-
 Giống Test case 1\.
-
-##### Các bước thực hiện và Kết quả mong đợi:
 
 | Các bước thực hiện | Kết quả mong đợi |
 | :---- | :---- |
 | **1\.** Tại BorrowingStatFrm, nhập: \- Từ ngày \= 01/01/2026 \- Đến ngày \= 10/01/2026 *(BVA-D2: đúng ngày mượn đầu tiên)* \- Top N \= 10 Click "Thống kê". | Bảng kết quả hiển thị các đầu sách được mượn trong ngày 10/01/2026 (borrow\_id \= 1): B001 | Nhà Giả Kim | Paulo Coelho | Tiểu thuyết | 1 |
 
-##### CSDL sau khi test:
-
 * Tất cả các bảng giữ nguyên.
 
 **\+ Test case 13: Từ ngày \= đúng ngày lượt mượn cuối cùng *(BVA-D3)***
 
-##### CSDL trước khi test:
-
 Giống Test case 1\.
-
-##### Các bước thực hiện và Kết quả mong đợi:
 
 | Các bước thực hiện | Kết quả mong đợi |
 | :---- | :---- |
 | **1\.** Tại BorrowingStatFrm, nhập: \- Từ ngày \= 10/05/2026 *(BVA-D3: đúng ngày mượn cuối)* \- Đến ngày \= 31/12/2026 \- Top N \= 10 Click "Thống kê". | Bảng kết quả hiển thị 1 dòng (lượt mượn ngày 10/05/2026): B004 | Sapiens | Yuval Noah Harari | Lịch sử | 1 |
 
-##### CSDL sau khi test:
-
 * Tất cả các bảng giữ nguyên.
 
 **\+ Test case 14: Từ ngày \= 1 ngày sau lượt mượn cuối cùng *(BVA-D4, EP-D2)***
 
-##### CSDL trước khi test:
-
 Giống Test case 1\.
-
-##### Các bước thực hiện và Kết quả mong đợi:
 
 | Các bước thực hiện | Kết quả mong đợi |
 | :---- | :---- |
 | **1\.** Tại BorrowingStatFrm, nhập: \- Từ ngày \= 11/05/2026 *(BVA-D4: 1 ngày sau 10/05)* \- Đến ngày \= 31/12/2026 \- Top N \= 10 Click "Thống kê". | Bảng rỗng. Thông báo: "Không có dữ liệu trong khoảng thời gian đã chọn." |
 | **2\.** Click nút "Xuất Excel". | Thông báo: "Không có dữ liệu để xuất." File Excel không được tạo. |
 
-##### CSDL sau khi test:
-
 * Tất cả các bảng giữ nguyên.
 
 **\+ Test case 15: Từ ngày \= Đến ngày, ngày có dữ liệu *(BVA-D5, EP-D4)***
 
-##### CSDL trước khi test:
-
 Giống Test case 1\.
-
-##### Các bước thực hiện và Kết quả mong đợi:
 
 | Các bước thực hiện | Kết quả mong đợi |
 | :---- | :---- |
 | **1\.** Tại BorrowingStatFrm, nhập: \- Từ ngày \= 15/01/2026 *(BVA-D5)* \- Đến ngày \= 15/01/2026 *(BVA-D5)* \- Top N \= 10 Click "Thống kê". | Bảng kết quả hiển thị các đầu sách được mượn đúng ngày 15/01/2026 (borrow\_id \= 2): B001 | Nhà Giả Kim | … | 1, B002 | Đắc Nhân Tâm | … | 1 |
 
-##### CSDL sau khi test:
-
 * Tất cả các bảng giữ nguyên.
 
 **\+ Test case 16: Từ ngày \= Đến ngày, ngày không có dữ liệu *(BVA-D6, EP-D5)***
 
-##### CSDL trước khi test:
-
 Giống Test case 1\.
-
-##### Các bước thực hiện và Kết quả mong đợi:
 
 | Các bước thực hiện | Kết quả mong đợi |
 | :---- | :---- |
 | **1\.** Tại BorrowingStatFrm, nhập: \- Từ ngày \= 11/01/2026 *(BVA-D6)* \- Đến ngày \= 11/01/2026 *(BVA-D6)* \- Top N \= 10 Click "Thống kê". | Bảng rỗng. Thông báo: "Không có dữ liệu trong khoảng thời gian đã chọn." |
 
-##### CSDL sau khi test:
-
 * Tất cả các bảng giữ nguyên.
 
 **\+ Test case 17: Để trống ô ngày *(EP-D6)***
 
-##### CSDL trước khi test:
-
 Giống Test case 1\.
-
-##### Các bước thực hiện và Kết quả mong đợi:
 
 | Các bước thực hiện | Kết quả mong đợi |
 | :---- | :---- |
 | **1\.** Tại BorrowingStatFrm, để trống "Từ ngày" *(EP-D6)*, nhập Đến ngày \= 31/05/2026, Top N \= 10\. Click "Thống kê". | Thông báo lỗi: "Vui lòng nhập đầy đủ khoảng thời gian." |
 
-##### CSDL sau khi test:
-
 * Tất cả các bảng giữ nguyên.
-
-### ***c) Các test case cho chức năng Báo cáo sách hư hỏng / thất lạc***
-
-#### Bảng phân vùng tương đương và giá trị biên
 
 **Biến đầu vào:**
 
@@ -2153,11 +1739,7 @@ Giống Test case 1\.
 | BVA-D5 | Từ ngày \= Đến ngày (ngày có báo cáo) | 10/02/2026 | 10/02/2026 | 1 dòng (BC0003) |
 | BVA-D6 | Từ ngày \= Đến ngày (ngày không có báo cáo) | 11/02/2026 | 11/02/2026 | Bảng rỗng |
 
-#### Các test case
-
 **\+ Test case 1: Lọc "Tất cả", khoảng thời gian bao trùm toàn bộ — xuất PDF *(EP-D1, EP-R1, bỏ qua phần login)***
-
-##### CSDL trước khi test:
 
 **\- books, book\_items, students, borrowings, borrowed\_books:** giống Modul 1 ở mục b) Test case 1\.
 
@@ -2170,8 +1752,6 @@ Giống Test case 1\.
 | 3 | BC0010 | Hư hỏng | 15/03/2026 |
 | 4 | BC0014 | Thất lạc | 08/04/2026 |
 
-##### Các bước thực hiện và Kết quả mong đợi:
-
 | Các bước thực hiện | Kết quả mong đợi |
 | :---- | :---- |
 | **1\.** Nhân viên đã đăng nhập. Click "Báo cáo thống kê" trên ManagerHomeFrm. | Giao diện StatMenuFrm hiện ra. |
@@ -2180,174 +1760,108 @@ Giống Test case 1\.
 | **4\.** Click "In báo cáo PDF". Chọn đường dẫn bao\_cao.pdf. | Hệ thống tạo file bao\_cao.pdf chứa tiêu đề "BAO CAO SACH HU HONG / THAT LAC", ngày xuất, số dòng \= 4 và bảng 4 cột: Tên sách, Mã vạch, Tình trạng, Ngày báo cáo. Thông báo: "Xuất PDF thành công\!". |
 | **5\.** Click OK của thông báo. | Quay lại StockStatFrm. |
 
-##### CSDL sau khi test:
-
 * Tất cả các bảng giữ nguyên (chức năng tra cứu chỉ đọc dữ liệu). Kết quả ngoài CSDL là file bao\_cao.pdf được sinh ra trên hệ thống tệp tin.
 
 **\+ Test case 2: Lọc theo lý do "Hư hỏng" *(EP-R2)***
 
-##### CSDL trước khi test:
-
 Giống Test case 1\.
-
-##### Các bước thực hiện và Kết quả mong đợi:
 
 | Các bước thực hiện | Kết quả mong đợi |
 | :---- | :---- |
 | **1\.** Tại StockStatFrm, nhập: \- Từ ngày \= 01/01/2026 \- Đến ngày \= 31/05/2026 \- Lý do \= "Hư hỏng" *(EP-R2)* Click "Tìm kiếm". | Bảng kết quả chỉ hiển thị 2 dòng có reason \= "Hư hỏng": tên\_sách | mã\_vạch | tình\_trạng | ngày\_báo\_cáo Sapiens | BC0010 | Hư hỏng | 15/03/2026 Nhà Giả Kim | BC0003 | Hư hỏng | 10/02/2026 |
 
-##### CSDL sau khi test:
-
 * Tất cả các bảng giữ nguyên.
 
 **\+ Test case 3: Lọc theo lý do "Thất lạc" *(EP-R3)***
 
-##### CSDL trước khi test:
-
 Giống Test case 1\.
-
-##### Các bước thực hiện và Kết quả mong đợi:
 
 | Các bước thực hiện | Kết quả mong đợi |
 | :---- | :---- |
 | **1\.** Tại StockStatFrm, nhập: \- Từ ngày \= 01/01/2026 \- Đến ngày \= 31/05/2026 \- Lý do \= "Thất lạc" *(EP-R3)* Click "Tìm kiếm". | Bảng kết quả chỉ hiển thị 2 dòng có reason \= "Thất lạc": tên\_sách | mã\_vạch | tình\_trạng | ngày\_báo\_cáo Tôi Tài Giỏi, Bạn Cũng Thế | BC0014 | Thất lạc | 08/04/2026 Đắc Nhân Tâm | BC0006 | Thất lạc | 20/02/2026 |
 
-##### CSDL sau khi test:
-
 * Tất cả các bảng giữ nguyên.
 
 **\+ Test case 4: Đến ngày \= 1 ngày trước báo cáo sớm nhất *(BVA-D1)***
 
-##### CSDL trước khi test:
-
 Giống Test case 1\.
-
-##### Các bước thực hiện và Kết quả mong đợi:
 
 | Các bước thực hiện | Kết quả mong đợi |
 | :---- | :---- |
 | **1\.** Tại StockStatFrm, nhập: \- Từ ngày \= 01/01/2026 \- Đến ngày \= 09/02/2026 *(BVA-D1: 1 ngày trước 10/02)* \- Lý do \= "Tất cả" Click "Tìm kiếm". | Bảng rỗng. Thông báo: "Không có báo cáo trong khoảng thời gian đã chọn." |
 
-##### CSDL sau khi test:
-
 * Tất cả các bảng giữ nguyên.
 
 **\+ Test case 5: Đến ngày \= đúng ngày báo cáo sớm nhất *(BVA-D2)***
 
-##### CSDL trước khi test:
-
 Giống Test case 1\.
-
-##### Các bước thực hiện và Kết quả mong đợi:
 
 | Các bước thực hiện | Kết quả mong đợi |
 | :---- | :---- |
 | **1\.** Tại StockStatFrm, nhập: \- Từ ngày \= 01/01/2026 \- Đến ngày \= 10/02/2026 *(BVA-D2: đúng ngày báo cáo sớm nhất)* \- Lý do \= "Tất cả" Click "Tìm kiếm". | Bảng kết quả hiển thị 1 dòng: Nhà Giả Kim | BC0003 | Hư hỏng | 10/02/2026 |
 
-##### CSDL sau khi test:
-
 * Tất cả các bảng giữ nguyên.
 
 **\+ Test case 6: Từ ngày \= đúng ngày báo cáo muộn nhất *(BVA-D3)***
 
-##### CSDL trước khi test:
-
 Giống Test case 1\.
-
-##### Các bước thực hiện và Kết quả mong đợi:
 
 | Các bước thực hiện | Kết quả mong đợi |
 | :---- | :---- |
 | **1\.** Tại StockStatFrm, nhập: \- Từ ngày \= 08/04/2026 *(BVA-D3: đúng ngày báo cáo muộn nhất)* \- Đến ngày \= 31/12/2026 \- Lý do \= "Tất cả" Click "Tìm kiếm". | Bảng kết quả hiển thị 1 dòng: Tôi Tài Giỏi, Bạn Cũng Thế | BC0014 | Thất lạc | 08/04/2026 |
 
-##### CSDL sau khi test:
-
 * Tất cả các bảng giữ nguyên.
 
 **\+ Test case 7: Từ ngày \= 1 ngày sau báo cáo muộn nhất *(BVA-D4, EP-D2)***
 
-##### CSDL trước khi test:
-
 Giống Test case 1\.
-
-##### Các bước thực hiện và Kết quả mong đợi:
 
 | Các bước thực hiện | Kết quả mong đợi |
 | :---- | :---- |
 | **1\.** Tại StockStatFrm, nhập: \- Từ ngày \= 09/04/2026 *(BVA-D4: 1 ngày sau 08/04)* \- Đến ngày \= 31/12/2026 \- Lý do \= "Tất cả" Click "Tìm kiếm". | Bảng rỗng. Thông báo: "Không có báo cáo trong khoảng thời gian đã chọn." |
 | **2\.** Click "In báo cáo PDF". | Thông báo: "Không có dữ liệu để xuất." File PDF không được tạo. |
 
-##### CSDL sau khi test:
-
 * Tất cả các bảng giữ nguyên.
 
 **\+ Test case 8: Từ ngày \= Đến ngày, ngày có báo cáo *(BVA-D5)***
 
-##### CSDL trước khi test:
-
 Giống Test case 1\.
-
-##### Các bước thực hiện và Kết quả mong đợi:
 
 | Các bước thực hiện | Kết quả mong đợi |
 | :---- | :---- |
 | **1\.** Tại StockStatFrm, nhập: \- Từ ngày \= 10/02/2026 *(BVA-D5)* \- Đến ngày \= 10/02/2026 *(BVA-D5)* \- Lý do \= "Tất cả" Click "Tìm kiếm". | Bảng kết quả hiển thị 1 dòng: Nhà Giả Kim | BC0003 | Hư hỏng | 10/02/2026 |
 
-##### CSDL sau khi test:
-
 * Tất cả các bảng giữ nguyên.
 
 **\+ Test case 9: Từ ngày \= Đến ngày, ngày không có báo cáo *(BVA-D6)***
 
-##### CSDL trước khi test:
-
 Giống Test case 1\.
-
-##### Các bước thực hiện và Kết quả mong đợi:
 
 | Các bước thực hiện | Kết quả mong đợi |
 | :---- | :---- |
 | **1\.** Tại StockStatFrm, nhập: \- Từ ngày \= 11/02/2026 *(BVA-D6)* \- Đến ngày \= 11/02/2026 *(BVA-D6)* \- Lý do \= "Tất cả" Click "Tìm kiếm". | Bảng rỗng. Thông báo: "Không có báo cáo trong khoảng thời gian đã chọn." |
 
-##### CSDL sau khi test:
-
 * Tất cả các bảng giữ nguyên.
 
 **\+ Test case 10: Khoảng thời gian chỉ chứa 1 phần dữ liệu, lọc "Hư hỏng" *(EP-D3, EP-R2)***
 
-##### CSDL trước khi test:
-
 Giống Test case 1\.
-
-##### Các bước thực hiện và Kết quả mong đợi:
 
 | Các bước thực hiện | Kết quả mong đợi |
 | :---- | :---- |
 | **1\.** Tại StockStatFrm, nhập: \- Từ ngày \= 01/03/2026 *(EP-D3: 1 phần dữ liệu)* \- Đến ngày \= 31/05/2026 *(EP-D3)* \- Lý do \= "Hư hỏng" *(EP-R2)* Click "Tìm kiếm". | Bảng kết quả hiển thị 1 dòng: Sapiens | BC0010 | Hư hỏng | 15/03/2026 (không hiển thị BC0003 vì 10/02 nằm ngoài khoảng). |
 
-##### CSDL sau khi test:
-
 * Tất cả các bảng giữ nguyên.
 
 **\+ Test case 11: Ngày bắt đầu \> Ngày kết thúc *(EP-D4)***
 
-##### CSDL trước khi test:
-
 Giống Test case 1\.
-
-##### Các bước thực hiện và Kết quả mong đợi:
 
 | Các bước thực hiện | Kết quả mong đợi |
 | :---- | :---- |
 | **1\.** Tại StockStatFrm, nhập: \- Từ ngày \= 31/05/2026 *(EP-D4)* \- Đến ngày \= 01/01/2026 *(EP-D4)* \- Lý do \= "Tất cả" Click "Tìm kiếm". | Thông báo lỗi: "Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc." Không gọi DAO. |
 
-##### CSDL sau khi test:
-
 * Tất cả các bảng giữ nguyên.
-
-## **2\. Kiểm thử White Box (Unit Test với JUnit)**
-
-### ***a) Lập kế hoạch test***
 
 Áp dụng JUnit 5 để kiểm thử:
 
@@ -2361,8 +1875,6 @@ Giống Test case 1\.
 | **StockStatTest** | Kiểm tra chuỗi StockStat → Book → BookItem (truy cập BookItem qua book.getItems()). |
 | **BorrowingStatDAOTest** | Kiểm thử hàm getTopBorrowedBooks(from, to, topN). Tích hợp các test case: EP-D1, BVA-D2, BVA-D4, BVA-N2, BVA-N6, EP-D3. |
 | **StockStatDAOTest** | Kiểm thử hàm searchDamageLossRecords(from, to, reason). Tích hợp các test case: EP-D1, EP-R1, EP-R2, EP-R3, BVA-D2, BVA-D4, EP-D3. |
-
-### ***b) Các test case unit test***
 
 *(Các test case Model cho BorrowingStatTest, BorrowedBookTest, StockStatTest được giữ nguyên cấu trúc test khởi tạo các đối tượng và dùng assertEquals để verify thuộc tính/mối quan hệ).*
 
@@ -2387,8 +1899,6 @@ Giống Test case 1\.
 | **test\_BVA\_D2**: Đến ngày 2026-02-10 (báo cáo đầu tiên) | Xác nhận size \= 1, sách BC0003. |
 | **test\_BVA\_D4**: Từ ngày 2026-04-09 (sau báo cáo cuối cùng) | Xác nhận list isEmpty(). |
 | **test\_EP\_D3**: Khoảng 2026-03-01 → 2026-05-31 (một phần) | Xác nhận size \= 2\. |
-
-### ***c) Kết quả chạy unit test***
 
 mvn clean test
 

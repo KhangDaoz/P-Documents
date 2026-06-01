@@ -33,10 +33,7 @@ public class BookItemDAO extends DAO {
         return null;
     }
 
-    /**
-     * Thêm một bản sách vật lý mới vào CSDL.
-     * Trạng thái mặc định là "good".
-     */
+    
     public boolean addBookItem(BookItem item) {
         String sql = "INSERT INTO tblBookItem (status, tblBookISBN) VALUES (?, ?)";
         try (PreparedStatement ps = con.prepareStatement(sql)) {
@@ -49,10 +46,7 @@ public class BookItemDAO extends DAO {
         return false;
     }
 
-    /**
-     * Xóa tất cả bản sách vật lý theo ISBN.
-     * Phải gọi trước khi xóa đầu sách (BookDAO.deleteBook) do FK constraint.
-     */
+    
     public boolean deleteBookItem(String isbn) {
         String sql = "DELETE FROM tblBookItem WHERE tblBookISBN = ?";
         try (PreparedStatement ps = con.prepareStatement(sql)) {

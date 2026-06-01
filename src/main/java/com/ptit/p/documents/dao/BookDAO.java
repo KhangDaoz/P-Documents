@@ -13,8 +13,8 @@ public class BookDAO extends DAO {
         super();
     }
 
-    // availableCopies: đếm BookItem status='good' không trong phiếu
-    // pending/borrowed
+    
+    
     private static final String AVAILABLE_COPIES_SUBQUERY = "(SELECT COUNT(*) FROM tblBookItem bi2"
             + " WHERE bi2.tblBookISBN = bk.ISBN"
             + " AND bi2.status = 'good'"
@@ -90,26 +90,21 @@ public class BookDAO extends DAO {
         book.setGenre(rs.getString("genre"));
         book.setPublisher(rs.getString("publisher"));
         book.setPublishYear(rs.getInt("publishYear"));
-        // Try-catch block in case model changed price type from BigDecimal to Double or
-        // vice-versa
+        
+        
         try {
             book.setPrice(rs.getDouble("price"));
         } catch (Exception e) {
-            book.setPrice(rs.getDouble("price")); // Fallback or handle differently if Book takes BigDecimal
+            book.setPrice(rs.getDouble("price")); 
         }
         book.setDescription(rs.getString("description"));
         book.setAvailableCopies(rs.getInt("availableCopies"));
         return book;
     }
 
-    /**
-     * Thêm sách mới vào CSDL.
-     * Kiểm tra ISBN trùng trước khi thêm.
-     * 
-     * @return true nếu thêm thành công, false nếu ISBN đã tồn tại hoặc lỗi
-     */
+    
     public boolean addBook(Book book) {
-        // Kiểm tra ISBN đã tồn tại
+        
         String checkSql = "SELECT 1 FROM tblBook WHERE ISBN = ?";
         try (PreparedStatement checkPs = con.prepareStatement(checkSql)) {
             checkPs.setString(1, book.getISBN());
@@ -141,10 +136,7 @@ public class BookDAO extends DAO {
         return false;
     }
 
-    /**
-     * Tìm sách theo từ khóa (tên sách, tác giả hoặc ISBN).
-     * Sử dụng LIKE để tìm kiếm gần đúng.
-     */
+    
     public List<Book> searchBook(String keyword) {
         List<Book> books = new ArrayList<>();
         String sql = "SELECT b.*, "
@@ -185,10 +177,7 @@ public class BookDAO extends DAO {
         return books;
     }
 
-    /**
-     * Cập nhật thông tin sách theo ISBN.
-     * Không cho phép sửa ISBN và số lượng bản copy.
-     */
+    
     public boolean updateBook(Book book) {
         String sql = "UPDATE tblBook SET title = ?, author = ?, genre = ?, publisher = ?, "
                 + "publishYear = ?, price = ?, description = ? WHERE ISBN = ?";
@@ -208,10 +197,7 @@ public class BookDAO extends DAO {
         return false;
     }
 
-    /**
-     * Xóa đầu sách theo ISBN.
-     * Lưu ý: phải xóa BookItem trước khi gọi hàm này (do FK constraint).
-     */
+    
     public boolean deleteBook(String isbn) {
         String deleteItemsSql = "DELETE FROM tblBookItem WHERE tblBookISBN = ?";
         String deleteBookSql = "DELETE FROM tblBook WHERE ISBN = ?";
@@ -228,10 +214,7 @@ public class BookDAO extends DAO {
         return false;
     }
 
-    /**
-     * Kiểm tra tình trạng mượn của sách.
-     * Nếu includeHistory = true, kiểm tra mọi lịch sử mượn để phục vụ xoá cứng.
-     */
+    
     public boolean checkBookStatus(String isbn, boolean includeHistory) {
         String sql = includeHistory
                 ? "SELECT COUNT(*) AS cnt FROM tblBorrowedBook bb "

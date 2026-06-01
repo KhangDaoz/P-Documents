@@ -42,28 +42,28 @@ public class BorrowedBookDAOTest {
 
     @Test
     void testFindByBorrowingId_ReturnsList() throws SQLException {
-        // Arrange
+        
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
         when(mockStatement.executeQuery()).thenReturn(mockResultSet);
-        when(mockResultSet.next()).thenReturn(true, false); // 1 result, then stop
+        when(mockResultSet.next()).thenReturn(true, false); 
         
-        // Use anyString() to satisfy all ResultSet extractions (Strict stubbing)
+        
         org.mockito.Mockito.lenient().when(mockResultSet.getInt(anyString())).thenReturn(1);
         org.mockito.Mockito.lenient().when(mockResultSet.getString(anyString())).thenReturn("borrowed");
         org.mockito.Mockito.lenient().when(mockResultSet.getDouble(anyString())).thenReturn(0.0);
         org.mockito.Mockito.lenient().when(mockResultSet.getDate(anyString())).thenReturn(new java.sql.Date(System.currentTimeMillis()));
 
-        // Act
+        
         List<BorrowedBook> result = borrowedBookDAO.findByBorrowingId(10);
 
-        // Assert
+        
         assertEquals(1, result.size());
         assertEquals(1, result.get(0).getId());
     }
 
     @Test
     void testSetBorrowedBookFine_Success() throws SQLException {
-        // Arrange
+        
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockStatement);
         when(mockStatement.executeUpdate()).thenReturn(1);
 
@@ -76,10 +76,10 @@ public class BorrowedBookDAOTest {
         BorrowedBook bb = new BorrowedBook();
         bb.setId(10);
 
-        // Act
+        
         boolean result = borrowedBookDAO.setBorrowedBookFine(fine, bb);
 
-        // Assert
+        
         assertTrue(result);
     }
 }

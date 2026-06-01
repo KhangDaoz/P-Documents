@@ -7,10 +7,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-/**
- * Giao diện trang chủ của Manager.
- * Tích hợp chức năng Quản lý thông tin sách (Huy) và Báo cáo thống kê (Sang).
- */
 public class ManagerHomeFrm extends JFrame implements ActionListener {
     private JButton btnBookManage;
     private JButton btnStat;
@@ -29,14 +25,14 @@ public class ManagerHomeFrm extends JFrame implements ActionListener {
         setLocationRelativeTo(null);
         setResizable(false);
 
-        // Main panel
+        
         JPanel mainPanel = new JPanel(new GridBagLayout());
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Title
+        
         JLabel lblTitle = new JLabel("QUẢN LÝ THƯ VIỆN", SwingConstants.CENTER);
         lblTitle.setFont(new Font("Arial", Font.BOLD, 22));
         lblTitle.setForeground(new Color(30, 41, 59));
@@ -45,21 +41,21 @@ public class ManagerHomeFrm extends JFrame implements ActionListener {
         gbc.gridwidth = 2;
         mainPanel.add(lblTitle, gbc);
 
-        // Book Management button
+        
         btnBookManage = new JButton("Quản lý thông tin sách");
         btnBookManage.setFont(new Font("Arial", Font.PLAIN, 14));
         btnBookManage.setPreferredSize(new Dimension(280, 50));
         gbc.gridy = 1;
         mainPanel.add(btnBookManage, gbc);
 
-        // Statistics Report button
+        
         btnStat = new JButton("Báo cáo thống kê");
         btnStat.setFont(new Font("Arial", Font.PLAIN, 14));
         btnStat.setPreferredSize(new Dimension(280, 50));
         gbc.gridy = 2;
         mainPanel.add(btnStat, gbc);
 
-        // Logout button
+        
         btnLogout = new JButton("Đăng xuất");
         btnLogout.setFont(new Font("Arial", Font.PLAIN, 14));
         btnLogout.setPreferredSize(new Dimension(280, 35));

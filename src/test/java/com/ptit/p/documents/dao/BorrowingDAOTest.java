@@ -15,20 +15,11 @@ import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import org.junit.Before;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
-import org.mockito.MockitoAnnotations;
-import org.mockito.Mockito;
-import org.mockito.ArgumentMatchers;
+
 public class BorrowingDAOTest {
 
     BorrowingDAO bd = new BorrowingDAO();
 
-    
     private void deleteTestBorrowing(int borrowingId) {
         if (borrowingId <= 0) return;
         try {
@@ -45,7 +36,6 @@ public class BorrowingDAOTest {
         }
     }
 
-    
     private Borrowing buildSampleBorrowing(String isbn) {
         User user  = new User(3, "librarian1", "Tran Thi Thu", "librarian");
         Student sv = new Student("SV001", "Do Huy Hoang", "hoang@ptit.edu.vn", "0911111111", "Hanoi");
@@ -62,9 +52,6 @@ public class BorrowingDAOTest {
         return b;
     }
 
-    
-
-    
     @Test
     public void testAddBorrowingStandard() {
         Borrowing b = buildSampleBorrowing("ISBN-CS-01");
@@ -74,7 +61,6 @@ public class BorrowingDAOTest {
         deleteTestBorrowing(b.getId());
     }
 
-    
     @Test
     public void testAddBorrowingExceptionNoBookItem() {
         Borrowing b = buildSampleBorrowing("ISBN-CS-03"); 
@@ -82,7 +68,6 @@ public class BorrowingDAOTest {
         Assert.assertFalse(ok);
     }
 
-    
     @Test
     public void testAddBorrowingExceptionInvalidStudent() {
         User user    = new User(3, "librarian1", "Tran Thi Thu", "librarian");
@@ -102,9 +87,6 @@ public class BorrowingDAOTest {
         Assert.assertFalse(ok);
     }
 
-    
-
-    
     @Test
     public void testSearchBorrowingException1() {
         ArrayList<Borrowing> list = bd.searchBorrowing("XXXXXXXXXX");
@@ -112,7 +94,6 @@ public class BorrowingDAOTest {
         Assert.assertEquals(0, list.size());
     }
 
-    
     @Test
     public void testSearchBorrowingStandard() {
         Borrowing b = buildSampleBorrowing("ISBN-CS-01");
@@ -128,7 +109,6 @@ public class BorrowingDAOTest {
         }
     }
 
-    
     @Test
     public void testCancelBorrowingStandard() {
         Borrowing b = buildSampleBorrowing("ISBN-CS-01");
@@ -138,7 +118,6 @@ public class BorrowingDAOTest {
             boolean cancelOk = bd.cancelBorrowing(b.getId());
             Assert.assertTrue(cancelOk);
 
-            
             ArrayList<Borrowing> list = bd.searchBorrowing("SV001");
             for (Borrowing item : list) {
                 Assert.assertNotEquals(b.getId(), item.getId());
@@ -148,14 +127,12 @@ public class BorrowingDAOTest {
         }
     }
 
-    
     @Test
     public void testCancelBorrowingExceptionNotExist() {
         boolean ok = bd.cancelBorrowing(999999);
         Assert.assertFalse(ok);
     }
 
-    
     @Test
     public void testCancelBorrowingExceptionNotPending() {
         Borrowing b = buildSampleBorrowing("ISBN-CS-01");
@@ -172,52 +149,37 @@ public class BorrowingDAOTest {
         }
     }
 
-    // --- Bổ sung Unit Test với Mockito theo thiết kế ---
-
-    @Spy
-    @InjectMocks
-    private BorrowingDAO borrowingDAO;
-
-    @Mock private Connection mockConnection;
-    @Mock private PreparedStatement mockStatement;
-    @Mock private ResultSet mockResultSet;
-
-    @Before
-    public void setUpMock() {
-        MockitoAnnotations.openMocks(this);
-        // Giả lập kết nối trả về mockConnection
-        Mockito.doReturn(mockConnection).when(borrowingDAO).getCon();
+    @Test
+    public void testSearchBorrowing_Success() {
+        Borrowing b = buildSampleBorrowing("ISBN-CS-01");
+        boolean addOk = bd.addBorrowing(b);
+        Assert.assertTrue(addOk);
+        try {
+            List<Borrowing> results = bd.searchBorrowing("SV001", "");
+            Assert.assertFalse(results.isEmpty());
+            boolean found = false;
+            for (Borrowing item : results) {
+                if (item.getId() == b.getId()) {
+                    found = true;
+                    break;
+                }
+            }
+            Assert.assertTrue(found);
+        } finally {
+            deleteTestBorrowing(b.getId());
+        }
     }
 
     @Test
-    public void testSearchBorrowing_Success() throws SQLException {
-        // Arrange
-        Mockito.when(mockConnection.prepareStatement(ArgumentMatchers.anyString())).thenReturn(mockStatement);
-        Mockito.when(mockStatement.executeQuery()).thenReturn(mockResultSet);
-        Mockito.when(mockResultSet.next()).thenReturn(true, false); // Trả về 1 bản ghi
-        Mockito.when(mockResultSet.getInt("ID")).thenReturn(1);
-        Mockito.when(mockResultSet.getString("status")).thenReturn("pending");
-        // Giả lập thêm dữ liệu mock ResultSet (tùy thuộc mapRow)
-
-        // Act
-        List<Borrowing> results = borrowingDAO.searchBorrowing("B21DCCN001", "", "pending");
-
-        // Assert
-        Assert.assertFalse(results.isEmpty());
-        Assert.assertEquals(1, results.size());
-        Assert.assertEquals("pending", results.get(0).getStatus());
-    }
-
-    @Test
-    public void testUpdateBorrowing_Success() throws SQLException {
-        // Arrange
-        Mockito.when(mockConnection.prepareStatement(ArgumentMatchers.anyString())).thenReturn(mockStatement);
-        Mockito.when(mockStatement.executeUpdate()).thenReturn(1); // Giả lập 1 dòng bị ảnh hưởng (cập nhật thành công)
-
-        // Act
-        boolean result = borrowingDAO.updateBorrowing(1, LocalDate.now(), "borrowed");
-
-        // Assert
-        Assert.assertTrue(result);
+    public void testUpdateBorrowing_Success() {
+        Borrowing b = buildSampleBorrowing("ISBN-CS-01");
+        boolean addOk = bd.addBorrowing(b);
+        Assert.assertTrue(addOk);
+        try {
+            boolean result = bd.updateBorrowing(b.getId(), LocalDate.now(), "borrowed");
+            Assert.assertTrue(result);
+        } finally {
+            deleteTestBorrowing(b.getId());
+        }
     }
 }

@@ -17,7 +17,7 @@ public class BillDAO extends DAO {
 
     public boolean createBill(Bill bill, User user) {
         String sql = "INSERT INTO tblBill (paymentDate, note, paymentType, tblBorrowingID, tblUserID) VALUES (?, ?, ?, ?, ?)";
-        try (PreparedStatement statement = con.prepareStatement(sql,
+        try (PreparedStatement statement = getCon().prepareStatement(sql,
                         PreparedStatement.RETURN_GENERATED_KEYS)) {
 
             statement.setDate(1, bill.getPaymentDate() != null ? java.sql.Date.valueOf(bill.getPaymentDate()) : null);

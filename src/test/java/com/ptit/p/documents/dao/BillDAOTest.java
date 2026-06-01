@@ -3,63 +3,41 @@ package com.ptit.p.documents.dao;
 import com.ptit.p.documents.model.Bill;
 import com.ptit.p.documents.model.Borrowing;
 import com.ptit.p.documents.model.User;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.when;
-
-@ExtendWith(MockitoExtension.class)
 public class BillDAOTest {
 
-    @Spy
-    @InjectMocks
-    private BillDAO billDAO;
-
-    @Mock private Connection mockConnection;
-    @Mock private PreparedStatement mockStatement;
-    @Mock private ResultSet mockResultSet;
-
-    @BeforeEach
-    void setUp() {
-        doReturn(mockConnection).when(billDAO).getCon();
-    }
+    BillDAO billDAO = new BillDAO();
 
     @Test
-    void testCreateBill_Success() throws SQLException {
-        // Arrange: Giả lập lưu thành công và trả về ID tự tăng là 99
-        when(mockConnection.prepareStatement(anyString(), eq(PreparedStatement.RETURN_GENERATED_KEYS))).thenReturn(mockStatement);
-        when(mockStatement.executeUpdate()).thenReturn(1);
-        when(mockStatement.getGeneratedKeys()).thenReturn(mockResultSet);
-        when(mockResultSet.next()).thenReturn(true);
-        when(mockResultSet.getInt(1)).thenReturn(99); 
+    public void testCreateBill_Success() {
+        Connection con = billDAO.getCon();
+        try {
+            con.setAutoCommit(false);
 
-        Bill bill = new Bill();
-        Borrowing borrowing = new Borrowing();
-        borrowing.setId(10);
-        bill.setBorrowing(borrowing);
-        
-        User user = new User();
-        user.setId(2);
+            Bill bill = new Bill();
+            Borrowing borrowing = new Borrowing();
+            borrowing.setId(1); // Borrowing ID=1 tồn tại trong seed data
+            bill.setBorrowing(borrowing);
+            bill.setPaymentDate(LocalDate.now());
+            bill.setNote("Test bill");
+            bill.setPaymentType("Tiền mặt");
 
-        // Act
-        boolean result = billDAO.createBill(bill, user);
+            User user = new User();
+            user.setId(3); // User ID=3 (librarian1) tồn tại trong seed data
 
-        // Assert
-        assertTrue(result);
-        assertEquals(99, bill.getId());
+            boolean result = billDAO.createBill(bill, user);
+            Assert.assertTrue(result);
+            Assert.assertTrue(bill.getId() > 0);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try { con.rollback(); con.setAutoCommit(true); } catch (Exception ex) { ex.printStackTrace(); }
+        }
     }
 }

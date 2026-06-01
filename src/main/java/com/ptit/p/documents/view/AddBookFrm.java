@@ -149,7 +149,7 @@ public class AddBookFrm extends JFrame implements ActionListener {
         row++;
         gbc.gridy = row;
         gbc.gridx = 0;
-        mainPanel.add(new JLabel("Số lượng bản copy:"), gbc);
+        mainPanel.add(new JLabel("Số lượng:"), gbc);
         txtCopies = new JTextField(25);
         txtCopies.setText("0");
         gbc.gridx = 1;

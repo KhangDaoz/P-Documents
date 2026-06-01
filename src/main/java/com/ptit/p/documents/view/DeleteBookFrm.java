@@ -54,7 +54,7 @@ public class DeleteBookFrm extends JFrame implements ActionListener {
 
         // Separator
         gbc.gridy = 2;
-        mainPanel.add(new JSeparator(), gbc);
+        // mainPanel.add(new JSeparator(), gbc);
 
         gbc.gridwidth = 1;
         int row = 3;
@@ -154,7 +154,7 @@ public class DeleteBookFrm extends JFrame implements ActionListener {
         gbc.gridy = row;
         gbc.gridx = 0;
         gbc.gridwidth = 1;
-        JLabel lblCopiesLabel = new JLabel("Số lượng bản copy:");
+        JLabel lblCopiesLabel = new JLabel("Số lượng:");
         lblCopiesLabel.setFont(new Font("Arial", Font.BOLD, 12));
         mainPanel.add(lblCopiesLabel, gbc);
 
@@ -167,7 +167,7 @@ public class DeleteBookFrm extends JFrame implements ActionListener {
         // Separator
         gbc.gridy = row;
         gbc.gridwidth = 2;
-        mainPanel.add(new JSeparator(), gbc);
+        // mainPanel.add(new JSeparator(), gbc);
 
         // Buttons
         row++;

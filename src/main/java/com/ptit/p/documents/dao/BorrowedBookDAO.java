@@ -5,8 +5,6 @@ import com.ptit.p.documents.model.BorrowedBook;
 import com.ptit.p.documents.model.Borrowing;
 import com.ptit.p.documents.model.Student;
 import com.ptit.p.documents.model.BorrowedBookFine;
-import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;

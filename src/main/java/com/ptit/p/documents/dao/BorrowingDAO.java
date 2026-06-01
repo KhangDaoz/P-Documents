@@ -7,7 +7,6 @@ import com.ptit.p.documents.model.Borrowing;
 import com.ptit.p.documents.model.Student;
 import com.ptit.p.documents.model.User;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;

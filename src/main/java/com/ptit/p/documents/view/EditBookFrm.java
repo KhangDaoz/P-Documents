@@ -144,7 +144,7 @@ public class EditBookFrm extends JFrame implements ActionListener {
         row++;
         gbc.gridy = row;
         gbc.gridx = 0;
-        mainPanel.add(new JLabel("Số lượng bản copy:"), gbc);
+        mainPanel.add(new JLabel("Số lượng:"), gbc);
         lblCopies = new JLabel();
         lblCopies.setFont(new Font("Arial", Font.BOLD, 13));
         lblCopies.setForeground(Color.BLACK);

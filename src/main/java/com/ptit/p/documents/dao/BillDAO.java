@@ -6,15 +6,12 @@ import com.ptit.p.documents.model.BorrowedBookFine;
 import com.ptit.p.documents.model.Borrowing;
 import com.ptit.p.documents.model.Fine;
 import java.text.Normalizer;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import com.ptit.p.documents.model.User;
-import com.ptit.p.documents.model.Borrowing;
 
 public class BillDAO extends DAO {
 

@@ -15,7 +15,7 @@ public class StatMenuFrm extends JFrame {
     public StatMenuFrm(ManagerHomeFrm parent) {
         this.parent = parent;
 
-        setTitle("StatMenuFrm - Menu báo cáo thống kê");
+        setTitle("Menu báo cáo thống kê");
         setSize(520, 340);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -32,7 +32,7 @@ public class StatMenuFrm extends JFrame {
         g.fill = GridBagConstraints.HORIZONTAL;
         g.gridx = 0;
 
-        JButton btnBorrowing = new JButton("Thống kê sách mượn nhiều");
+        JButton btnBorrowing = new JButton("Thống kê sách được mượn nhiều");
         btnBorrowing.setPreferredSize(new Dimension(280, 44));
         g.gridy = 0; center.add(btnBorrowing, g);
 
@@ -54,5 +54,6 @@ public class StatMenuFrm extends JFrame {
             dispose();
             if (parent != null) parent.setVisible(true);
         });
+
     }
 }

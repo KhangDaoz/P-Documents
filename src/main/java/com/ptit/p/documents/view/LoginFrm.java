@@ -33,13 +33,13 @@ public class LoginFrm extends JFrame implements ActionListener {
         pnl.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240), 1));
         pnlMain.add(pnl);
 
-        JLabel lblLogin = new JLabel("Login", JLabel.CENTER);
+        JLabel lblLogin = new JLabel("Đăng nhập", JLabel.CENTER);
         lblLogin.setFont(new Font("Segoe UI", Font.BOLD, 22));
         lblLogin.setForeground(new Color(30, 41, 59));
         lblLogin.setBounds(150, 50, 200, 40);
         pnl.add(lblLogin);
 
-        JLabel lblUser = new JLabel("Username:", JLabel.RIGHT);
+        JLabel lblUser = new JLabel("Tên đăng nhập:", JLabel.RIGHT);
         lblUser.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         lblUser.setForeground(new Color(71, 85, 105));
         lblUser.setBounds(60, 130, 90, 30);
@@ -52,7 +52,7 @@ public class LoginFrm extends JFrame implements ActionListener {
         txtUsername.setBounds(160, 130, 280, 30);
         pnl.add(txtUsername);
 
-        JLabel lblPass = new JLabel("Password:", JLabel.RIGHT);
+        JLabel lblPass = new JLabel("Mật khẩu:", JLabel.RIGHT);
         lblPass.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         lblPass.setForeground(new Color(71, 85, 105));
         lblPass.setBounds(60, 200, 90, 30);
@@ -66,27 +66,28 @@ public class LoginFrm extends JFrame implements ActionListener {
         txtPassword.setBounds(160, 200, 280, 30);
         pnl.add(txtPassword);
 
-        btnLogin = new JButton("Login");
-        btnLogin.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btnLogin.setBackground(new Color(96, 165, 250));
-        btnLogin.setForeground(Color.WHITE);
+        btnLogin = new JButton("Đăng nhập");
+        btnLogin.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        btnLogin.setBackground(Color.WHITE);
+        btnLogin.setForeground(Color.BLACK);
         btnLogin.setFocusPainted(false);
-        btnLogin.setBorder(BorderFactory.createEmptyBorder());
+        btnLogin.setBorder(BorderFactory.createLineBorder(new Color(160, 170, 185)));
         btnLogin.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnLogin.setBounds(195, 290, 110, 35);
         btnLogin.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                btnLogin.setBackground(new Color(59, 130, 246));
+                btnLogin.setBackground(new Color(230, 235, 240));
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
-                btnLogin.setBackground(new Color(96, 165, 250));
+                btnLogin.setBackground(Color.WHITE);
             }
         });
         btnLogin.addActionListener(this);
         pnl.add(btnLogin);
+
     }
 
     @Override

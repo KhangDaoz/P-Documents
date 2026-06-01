@@ -111,8 +111,9 @@ public class LibrarianHomeFrm extends JFrame {
         });
 
         btnLogout.addActionListener(e -> {
-            // this.dispose();
+            this.dispose();
             new LoginFrm().setVisible(true);
         });
+
     }
 }

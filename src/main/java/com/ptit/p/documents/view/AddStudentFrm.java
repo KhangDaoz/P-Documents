@@ -28,7 +28,7 @@ public class AddStudentFrm extends JFrame implements ActionListener {
     }
 
     private void initComponents() {
-        setTitle("Them sinh vien moi");
+        setTitle("Thêm sinh viên mới");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(400, 280);
         setLocationRelativeTo(null);
@@ -39,11 +39,11 @@ public class AddStudentFrm extends JFrame implements ActionListener {
         JPanel form = new JPanel(new GridLayout(5, 2, 6, 6));
         form.setBorder(BorderFactory.createEmptyBorder(12, 12, 6, 12));
 
-        form.add(new JLabel("Ma sinh vien *:"));
+        form.add(new JLabel("Mã sinh viên *:"));
         txtStudentId = new JTextField();
         form.add(txtStudentId);
 
-        form.add(new JLabel("Ho ten *:"));
+        form.add(new JLabel("Họ tên *:"));
         txtFullName = new JTextField();
         form.add(txtFullName);
 
@@ -51,11 +51,11 @@ public class AddStudentFrm extends JFrame implements ActionListener {
         txtEmail = new JTextField();
         form.add(txtEmail);
 
-        form.add(new JLabel("So dien thoai:"));
+        form.add(new JLabel("Số điện thoại:"));
         txtPhone = new JTextField();
         form.add(txtPhone);
 
-        form.add(new JLabel("Dia chi:"));
+        form.add(new JLabel("Địa chỉ:"));
         txtAddress = new JTextField();
         form.add(txtAddress);
 
@@ -63,13 +63,14 @@ public class AddStudentFrm extends JFrame implements ActionListener {
 
         // ---- Nút ----
         JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 8));
-        btnAdd = new JButton("Them");
-        btnCancel = new JButton("Huy");
+        btnAdd = new JButton("Thêm");
+        btnCancel = new JButton("Hủy");
         btnAdd.addActionListener(this);
         btnCancel.addActionListener(this);
         btnPanel.add(btnCancel);
         btnPanel.add(btnAdd);
         add(btnPanel, BorderLayout.SOUTH);
+
     }
 
     @Override
@@ -77,8 +78,8 @@ public class AddStudentFrm extends JFrame implements ActionListener {
         if (e.getSource() == btnAdd) {
             if (txtStudentId.getText().trim().isEmpty() || txtFullName.getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this,
-                        "Ma sinh vien va Ho ten khong duoc de trong.",
-                        "Loi nhap lieu", JOptionPane.WARNING_MESSAGE);
+                        "Mã sinh viên và Họ tên không được để trống.",
+                        "Lỗi nhập liệu", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
@@ -94,15 +95,15 @@ public class AddStudentFrm extends JFrame implements ActionListener {
 
             if (ok) {
                 JOptionPane.showMessageDialog(this,
-                        "Them sinh vien thanh cong!",
-                        "Thanh cong", JOptionPane.INFORMATION_MESSAGE);
+                        "Thêm sinh viên thành công!",
+                        "Thành công", JOptionPane.INFORMATION_MESSAGE);
                 b.setStudent(s);
                 new ConfirmBorrowingFrm(b).setVisible(true);
                 this.dispose();
             } else {
                 JOptionPane.showMessageDialog(this,
-                        "Them that bai! Ma sinh vien \"" + s.getStudentId() + "\" co the da ton tai.",
-                        "Loi", JOptionPane.ERROR_MESSAGE);
+                        "Thêm thất bại! Mã sinh viên \"" + s.getStudentId() + "\" có thể đã tồn tại.",
+                        "Lỗi", JOptionPane.ERROR_MESSAGE);
             }
         } else if (e.getSource() == btnCancel) {
             this.dispose();

@@ -47,21 +47,21 @@ public class ManagerHomeFrm extends JFrame implements ActionListener {
 
         // Book Management button
         btnBookManage = new JButton("Quản lý thông tin sách");
-        btnBookManage.setFont(new Font("Arial", Font.BOLD, 14));
+        btnBookManage.setFont(new Font("Arial", Font.PLAIN, 14));
         btnBookManage.setPreferredSize(new Dimension(280, 50));
         gbc.gridy = 1;
         mainPanel.add(btnBookManage, gbc);
 
         // Statistics Report button
         btnStat = new JButton("Báo cáo thống kê");
-        btnStat.setFont(new Font("Arial", Font.BOLD, 14));
+        btnStat.setFont(new Font("Arial", Font.PLAIN, 14));
         btnStat.setPreferredSize(new Dimension(280, 50));
         gbc.gridy = 2;
         mainPanel.add(btnStat, gbc);
 
         // Logout button
         btnLogout = new JButton("Đăng xuất");
-        btnLogout.setFont(new Font("Arial", Font.PLAIN, 12));
+        btnLogout.setFont(new Font("Arial", Font.PLAIN, 14));
         btnLogout.setPreferredSize(new Dimension(280, 35));
         gbc.gridy = 3;
         mainPanel.add(btnLogout, gbc);
@@ -71,6 +71,7 @@ public class ManagerHomeFrm extends JFrame implements ActionListener {
         btnLogout.addActionListener(this);
 
         add(mainPanel);
+
     }
 
     @Override

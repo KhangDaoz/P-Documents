@@ -176,6 +176,7 @@ public class EditBookFrm extends JFrame implements ActionListener {
         btnBack.addActionListener(this);
 
         add(mainPanel);
+
     }
 
     

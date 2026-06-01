@@ -25,10 +25,12 @@ public class BookManageFrm extends JFrame implements ActionListener {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
+        getContentPane().setBackground(Color.WHITE);
 
         // Main panel
         JPanel mainPanel = new JPanel(new GridBagLayout());
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
+        mainPanel.setBackground(Color.WHITE);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -47,9 +49,9 @@ public class BookManageFrm extends JFrame implements ActionListener {
 
         // Add Book button
         btnAdd = new JButton("Thêm thông tin sách");
-        btnAdd.setFont(new Font("Arial", Font.BOLD, 14));
+        btnAdd.setFont(new Font("Arial", Font.PLAIN, 14));
         btnAdd.setPreferredSize(new Dimension(250, 45));
-        btnAdd.setBackground(UIManager.getColor("Button.background"));
+        btnAdd.setBackground(Color.WHITE);
         btnAdd.setForeground(Color.BLACK);
         btnAdd.setCursor(new Cursor(Cursor.HAND_CURSOR));
         gbc.gridy = 2;
@@ -57,9 +59,9 @@ public class BookManageFrm extends JFrame implements ActionListener {
 
         // Edit Book button
         btnEdit = new JButton("Sửa thông tin sách");
-        btnEdit.setFont(new Font("Arial", Font.BOLD, 14));
+        btnEdit.setFont(new Font("Arial", Font.PLAIN, 14));
         btnEdit.setPreferredSize(new Dimension(250, 45));
-        btnEdit.setBackground(UIManager.getColor("Button.background"));
+        btnEdit.setBackground(Color.WHITE);
         btnEdit.setForeground(Color.BLACK);
         btnEdit.setCursor(new Cursor(Cursor.HAND_CURSOR));
         gbc.gridy = 3;
@@ -67,9 +69,9 @@ public class BookManageFrm extends JFrame implements ActionListener {
 
         // Delete Book button
         btnDelete = new JButton("Xóa thông tin sách");
-        btnDelete.setFont(new Font("Arial", Font.BOLD, 14));
+        btnDelete.setFont(new Font("Arial", Font.PLAIN, 14));
         btnDelete.setPreferredSize(new Dimension(250, 45));
-        btnDelete.setBackground(UIManager.getColor("Button.background"));
+        btnDelete.setBackground(Color.WHITE);
         btnDelete.setForeground(Color.BLACK);
         btnDelete.setCursor(new Cursor(Cursor.HAND_CURSOR));
         gbc.gridy = 4;
@@ -77,9 +79,9 @@ public class BookManageFrm extends JFrame implements ActionListener {
 
         // Back button
         btnBack = new JButton("Quay lại trang chủ");
-        btnBack.setFont(new Font("Arial", Font.PLAIN, 12));
+        btnBack.setFont(new Font("Arial", Font.PLAIN, 14));
         btnBack.setPreferredSize(new Dimension(250, 35));
-        btnBack.setBackground(UIManager.getColor("Button.background"));
+        btnBack.setBackground(Color.WHITE);
         btnBack.setForeground(Color.BLACK);
         gbc.gridy = 5;
         mainPanel.add(btnBack, gbc);

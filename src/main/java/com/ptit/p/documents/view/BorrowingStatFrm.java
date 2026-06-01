@@ -41,7 +41,7 @@ public class BorrowingStatFrm extends JFrame {
     public BorrowingStatFrm(StatMenuFrm parent) {
         this.parent = parent;
 
-        setTitle("BorrowingStatFrm - Thống kê sách mượn nhiều");
+        setTitle("Thống kê sách mượn nhiều");
         setSize(880, 560);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -91,6 +91,7 @@ public class BorrowingStatFrm extends JFrame {
                 table.clearSelection();
             }
         });
+
     }
 
     private void doSearch() {

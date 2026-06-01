@@ -33,7 +33,7 @@ public class ConfirmCancelFrm extends JFrame implements ActionListener {
     }
 
     private void initComponents() {
-        setTitle("Huy dat sach — Xac nhan huy phieu");
+        setTitle("Hủy đặt sách - Xác nhận hủy phiếu");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(460, 320);
         setLocationRelativeTo(null);
@@ -49,7 +49,7 @@ public class ConfirmCancelFrm extends JFrame implements ActionListener {
         infoPanel.setBorder(BorderFactory.createEmptyBorder(8, 8, 4, 8));
         infoPanel.add(new JScrollPane(outInfo), BorderLayout.CENTER);
 
-        JLabel lblWarn = new JLabel("Sau khi huy, thao tac nay khong the hoan tac.");
+        JLabel lblWarn = new JLabel("Sau khi hủy, thao tác này không thể hoàn tác.");
         lblWarn.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
         infoPanel.add(lblWarn, BorderLayout.SOUTH);
 
@@ -57,38 +57,39 @@ public class ConfirmCancelFrm extends JFrame implements ActionListener {
 
         // ---- Nút ----
         JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 8));
-        btnBack    = new JButton("Quay lai");
-        btnConfirm = new JButton("Xac nhan huy");
+        btnBack    = new JButton("Quay lại");
+        btnConfirm = new JButton("Xác nhận hủy");
         btnBack.addActionListener(this);
         btnConfirm.addActionListener(this);
         btnPanel.add(btnBack);
         btnPanel.add(btnConfirm);
         add(btnPanel, BorderLayout.SOUTH);
+
     }
 
     private String buildInfoText() {
         DateTimeFormatter sdf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         StringBuilder sb = new StringBuilder();
-        sb.append("THONG TIN HUY DAT SACH\n");
+        sb.append("THÔNG TIN HỦY ĐẶT SÁCH\n");
         sb.append("-------------------------------------\n\n");
 
         if (b.getStudent() != null) {
-            sb.append("Sinh vien       :  ").append(b.getStudent().getStudentId())
-              .append("  -  ").append(b.getStudent().getFullName()).append("\n");
+                        sb.append("Sinh viên       :  ").append(b.getStudent().getStudentId())
+                            .append("  -  ").append(b.getStudent().getFullName()).append("\n");
         }
-        sb.append("Ma phieu muon   :  ").append(b.getId()).append("\n");
+        sb.append("Mã phiếu mượn   :  ").append(b.getId()).append("\n");
 
         for (BorrowedBook bb : b.getBooks()) {
             if (bb.getBook() != null) {
-                sb.append("Sach            :  ").append(bb.getBook().getIsbn())
-                  .append("  -  ").append(bb.getBook().getTitle()).append("\n");
+                                sb.append("Sách            :  ").append(bb.getBook().getIsbn())
+                                    .append("  -  ").append(bb.getBook().getTitle()).append("\n");
             }
         }
 
         if (b.getCreatedAt() != null)
-            sb.append("Ngay dat muon   :  ").append(b.getCreatedAt().format(sdf)).append("\n");
+            sb.append("Ngày đặt mượn   :  ").append(b.getCreatedAt().format(sdf)).append("\n");
 
-        sb.append("Trang thai hien :  ").append(b.getStatus()).append("\n");
+        sb.append("Trạng thái hiện :  ").append(b.getStatus()).append("\n");
         return sb.toString();
     }
 
@@ -96,9 +97,9 @@ public class ConfirmCancelFrm extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnConfirm) {
             int confirm = JOptionPane.showConfirmDialog(this,
-                    "Ban co chac chan muon huy phieu muon " + b.getId() + " khong?\n"
-                    + "Thao tac nay khong the hoan tac.",
-                    "Xac nhan huy", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                    "Bạn có chắc chắn muốn hủy phiếu mượn " + b.getId() + " không?\n"
+                    + "Thao tác này không thể hoàn tác.",
+                    "Xác nhận hủy", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
             if (confirm == JOptionPane.YES_OPTION) {
                 btnConfirm.setEnabled(false);
@@ -107,15 +108,15 @@ public class ConfirmCancelFrm extends JFrame implements ActionListener {
 
                 if (ok) {
                     JOptionPane.showMessageDialog(this,
-                            "Huy dat sach thanh cong!\nPhieu " + b.getId() + " da chuyen sang trang thai 'cancelled'.",
-                            "Thanh cong", JOptionPane.INFORMATION_MESSAGE);
+                            "Hủy đặt sách thành công!\nPhiếu " + b.getId() + " đã chuyển sang trạng thái 'cancelled'.",
+                            "Thành công", JOptionPane.INFORMATION_MESSAGE);
                     if (u != null)
                         new LibrarianHomeFrm(u).setVisible(true);
                     this.dispose();
                 } else {
                     JOptionPane.showMessageDialog(this,
-                            "Huy that bai!\nPhieu muon co the da thay doi trang thai hoac xay ra loi he thong.",
-                            "Loi", JOptionPane.ERROR_MESSAGE);
+                            "Hủy thất bại!\nPhiếu mượn có thể đã thay đổi trạng thái hoặc xảy ra lỗi hệ thống.",
+                            "Lỗi", JOptionPane.ERROR_MESSAGE);
                     btnConfirm.setEnabled(true);
                 }
             }

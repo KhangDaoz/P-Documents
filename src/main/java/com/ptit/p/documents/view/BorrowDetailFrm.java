@@ -23,7 +23,7 @@ public class BorrowDetailFrm extends JFrame {
     public BorrowDetailFrm(BorrowingStatFrm parent, String isbn, String bookTitle) {
         this.parent = parent;
 
-        setTitle("BorrowDetailFrm - Chi tiết mượn trả: " + bookTitle);
+        setTitle("Chi tiết mượn trả - " + bookTitle);
         setSize(820, 480);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -63,5 +63,6 @@ public class BorrowDetailFrm extends JFrame {
 
         // Spec §1.b bước 35-37: Trở về -> BorrowingStatFrm vẫn đang mở
         btnBack.addActionListener(e -> dispose());
+
     }
 }

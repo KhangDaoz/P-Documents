@@ -25,7 +25,7 @@ public class ConfirmBorrowingFrm extends JFrame implements ActionListener {
     }
 
     private void initComponents() {
-        setTitle("Dat sach — Buoc 3: Xac nhan thong tin");
+        setTitle("Đặt sách - Bước 3: Xác nhận thông tin");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(480, 360);
         setLocationRelativeTo(null);
@@ -44,46 +44,47 @@ public class ConfirmBorrowingFrm extends JFrame implements ActionListener {
 
         // ---- Nút ----
         JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 8));
-        btnBack = new JButton("Quay lai");
-        btnConfirm = new JButton("Luu dat sach");
+        btnBack = new JButton("Quay lại");
+        btnConfirm = new JButton("Lưu đặt sách");
         btnBack.addActionListener(this);
         btnConfirm.addActionListener(this);
         btnPanel.add(btnBack);
         btnPanel.add(btnConfirm);
         add(btnPanel, BorderLayout.SOUTH);
+
     }
 
     private String buildInfoText() {
         DateTimeFormatter sdf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         StringBuilder sb = new StringBuilder();
-        sb.append("THONG TIN DAT SACH\n");
+        sb.append("THÔNG TIN ĐẶT SÁCH\n");
         sb.append("-------------------------------------\n\n");
 
         if (b.getStudent() != null) {
-            sb.append("Sinh vien    :  ").append(b.getStudent().getStudentId())
+                sb.append("Sinh viên    :  ").append(b.getStudent().getStudentId())
                     .append("  -  ").append(b.getStudent().getFullName()).append("\n");
             if (b.getStudent().getPhone() != null && !b.getStudent().getPhone().isEmpty())
-                sb.append("Dien thoai   :  ").append(b.getStudent().getPhone()).append("\n");
+                sb.append("Điện thoại   :  ").append(b.getStudent().getPhone()).append("\n");
         }
         sb.append("\n");
 
         for (BorrowedBook bb : b.getBooks()) {
             if (bb.getBook() != null) {
-                sb.append("Sach         :  ").append(bb.getBook().getIsbn())
-                        .append("  -  ").append(bb.getBook().getTitle()).append("\n");
-                sb.append("Tac gia      :  ").append(bb.getBook().getAuthor()).append("\n");
+                sb.append("Sách         :  ").append(bb.getBook().getIsbn())
+                    .append("  -  ").append(bb.getBook().getTitle()).append("\n");
+                sb.append("Tác giả      :  ").append(bb.getBook().getAuthor()).append("\n");
             }
         }
         sb.append("\n");
 
         if (b.getCreatedAt() != null)
-            sb.append("Ngay dat     :  ").append(b.getCreatedAt().format(sdf)).append("\n");
+            sb.append("Ngày đặt     :  ").append(b.getCreatedAt().format(sdf)).append("\n");
         if (b.getExpectedReceiveDate() != null)
-            sb.append("Nhan du kien :  ").append(b.getExpectedReceiveDate().format(sdf)).append("\n");
+            sb.append("Nhận dự kiến :  ").append(b.getExpectedReceiveDate().format(sdf)).append("\n");
 
-        sb.append("Trang thai   :  ").append(b.getStatus()).append("\n");
+        sb.append("Trạng thái   :  ").append(b.getStatus()).append("\n");
         if (b.getUser() != null)
-            sb.append("Thu thu      :  ").append(b.getUser().getFullName()).append("\n");
+            sb.append("Thủ thư      :  ").append(b.getUser().getFullName()).append("\n");
 
         return sb.toString();
     }
@@ -97,15 +98,15 @@ public class ConfirmBorrowingFrm extends JFrame implements ActionListener {
 
             if (ok) {
                 JOptionPane.showMessageDialog(this,
-                        "Dat sach thanh cong!\nMa phieu muon: " + b.getId(),
-                        "Thanh cong", JOptionPane.INFORMATION_MESSAGE);
+                        "Đặt sách thành công!\nMã phiếu mượn: " + b.getId(),
+                        "Thành công", JOptionPane.INFORMATION_MESSAGE);
                 if (b.getUser() != null)
                     new LibrarianHomeFrm(b.getUser()).setVisible(true);
                 this.dispose();
             } else {
                 JOptionPane.showMessageDialog(this,
-                        "Dat sach that bai!\nKhong con ban sao kha dung hoac xay ra loi he thong.",
-                        "Loi", JOptionPane.ERROR_MESSAGE);
+                        "Đặt sách thất bại!\nKhông còn bản sao khả dụng hoặc xảy ra lỗi hệ thống.",
+                        "Lỗi", JOptionPane.ERROR_MESSAGE);
                 btnConfirm.setEnabled(true);
             }
         } else if (e.getSource() == btnBack) {

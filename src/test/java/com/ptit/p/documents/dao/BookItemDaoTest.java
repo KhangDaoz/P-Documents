@@ -36,7 +36,7 @@ public class BookItemDAOTest {
     @BeforeEach
     void setUp() throws SQLException {
         // Isolate from actual database
-        bookItemDAO.con = mockConnection;
+        doReturn(mockConnection).when(bookItemDAO).getConnection();
     }
 
     @Test

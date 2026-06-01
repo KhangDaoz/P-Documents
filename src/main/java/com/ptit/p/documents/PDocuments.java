@@ -9,6 +9,7 @@ import com.ptit.p.documents.dao.DAO;
 import com.ptit.p.documents.view.LoginFrm;
 
 import javax.swing.*;
+import java.awt.Color;
 
 /**
  * Lớp khởi chạy ứng dụng Quản lý Thư viện.
@@ -20,6 +21,20 @@ public class PDocuments {
         try {
             boolean success = com.formdev.flatlaf.FlatIntelliJLaf.setup();
             System.out.println("DEBUG: FlatLaf setup success? " + success);
+            UIManager.put("Panel.background", Color.WHITE);
+            UIManager.put("Viewport.background", Color.WHITE);
+            UIManager.put("ScrollPane.background", Color.WHITE);
+            UIManager.put("Table.background", Color.WHITE);
+            UIManager.put("TableHeader.background", Color.WHITE);
+            UIManager.put("TextField.background", Color.WHITE);
+            UIManager.put("FormattedTextField.background", Color.WHITE);
+            UIManager.put("PasswordField.background", Color.WHITE);
+            UIManager.put("TextArea.background", Color.WHITE);
+            UIManager.put("ComboBox.background", Color.WHITE);
+            UIManager.put("Button.background", Color.WHITE);
+            UIManager.put("Button.foreground", Color.BLACK);
+            UIManager.put("MenuBar.background", Color.WHITE);
+            UIManager.put("ToolBar.background", Color.WHITE);
             UIManager.put("PasswordField.showRevealButton", true);
             UIManager.put("JPasswordField.showRevealButton", true);
             System.out.println("DEBUG: Active LookAndFeel is -> " + UIManager.getLookAndFeel().getName());

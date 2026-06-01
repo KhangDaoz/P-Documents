@@ -110,6 +110,7 @@ public class AddFineDlg extends JDialog {
         cmbFineType.addActionListener(e -> updateFineRate());
         btnAdd.addActionListener(e -> addFineAction());
         btnCancel.addActionListener(e -> dispose());
+
     }
 
     private String resolveBookTitle() {

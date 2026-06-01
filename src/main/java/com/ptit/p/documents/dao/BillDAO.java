@@ -17,7 +17,7 @@ public class BillDAO extends DAO {
 
     public boolean createBill(Bill bill, User user) {
         String sql = "INSERT INTO tblBill (paymentDate, note, paymentType, tblBorrowingID, tblUserID) VALUES (?, ?, ?, ?, ?)";
-        try (PreparedStatement statement = getConnection().prepareStatement(sql,
+        try (PreparedStatement statement = con.prepareStatement(sql,
                         PreparedStatement.RETURN_GENERATED_KEYS)) {
 
             statement.setDate(1, bill.getPaymentDate() != null ? java.sql.Date.valueOf(bill.getPaymentDate()) : null);
@@ -114,7 +114,7 @@ public class BillDAO extends DAO {
     }
     // public Bill findById(int id, Borrowing borrowing) {
     // String sql = "SELECT * FROM tblBill WHERE id = ?";
-    // try (Connection connection = getConnection();
+    // try (Connection connection = con;
     // PreparedStatement statement = connection.prepareStatement(sql)) {
 
     // statement.setInt(1, id);

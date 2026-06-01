@@ -1,18 +1,27 @@
 package com.ptit.p.documents.view;
 
-import com.ptit.p.documents.dao.UserDAO;
-import com.ptit.p.documents.model.User;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class LoginFrm extends JFrame implements ActionListener {
-    public static final String ROLE_LIBRARIAN = "librarian";
-    public static final String ROLE_ADMIN = "admin";
-    public static final String ROLE_MANAGER = "manager";
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 
+
+import com.ptit.p.documents.dao.UserDAO;
+import com.ptit.p.documents.model.User;
+
+public class LoginFrm extends JFrame implements ActionListener {
     private final JTextField txtUsername;
     private final JPasswordField txtPassword;
     private final JButton btnLogin;
@@ -113,26 +122,17 @@ public class LoginFrm extends JFrame implements ActionListener {
         }
 
         String role = loggedUser.getRole() == null ? "" : loggedUser.getRole().trim().toLowerCase();
-        if (ROLE_ADMIN.equals(role)) {
+        if (role.equals("admin")) {
             new AdminHomeFrm(loggedUser).setVisible(true);
             dispose();
-        } else if (ROLE_MANAGER.equals(role)) {
+        } else if (role.equals("manager")) {
             new ManagerHomeFrm(loggedUser).setVisible(true);
             dispose();
-        } else if (ROLE_LIBRARIAN.equals(role)) {
+        } else if (role.equals("librarian")) {
             new LibrarianHomeFrm(loggedUser).setVisible(true);
             dispose();
         } else {
             JOptionPane.showMessageDialog(this, "Tài khoản không có quyền truy cập phù hợp.", "Lỗi phân quyền", JOptionPane.ERROR_MESSAGE);
         }
-    }
-
-    public static void main(String[] args) {
-        try {
-            com.formdev.flatlaf.FlatIntelliJLaf.setup();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        SwingUtilities.invokeLater(() -> new LoginFrm().setVisible(true));
     }
 }

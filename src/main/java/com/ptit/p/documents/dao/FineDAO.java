@@ -14,7 +14,7 @@ public class FineDAO extends DAO {
         List<Fine> fines = new ArrayList<>();
         String sql = "SELECT ID, name, fineRate, description FROM tblFine";
 
-        try (PreparedStatement statement = getConnection().prepareStatement(sql);
+        try (PreparedStatement statement = con.prepareStatement(sql);
                 ResultSet resultSet = statement.executeQuery()) {
 
             while (resultSet.next()) {

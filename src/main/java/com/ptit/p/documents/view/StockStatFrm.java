@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
+
 public class StockStatFrm extends JFrame {
 
     private static final DateTimeFormatter DF = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -24,8 +25,10 @@ public class StockStatFrm extends JFrame {
     private final JComboBox<String> cbReason = new JComboBox<>(
         new String[]{"Tất cả", "Hư hỏng", "Thất lạc"});
 
+    private static final DateTimeFormatter DISPLAY_DF = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
     private final DefaultTableModel tableModel = new DefaultTableModel(
-        new String[]{"Tên sách", "Mã bản sách", "Tình trạng"}, 0) {
+        new String[]{"Tên sách", "Mã bản sách", "Tình trạng", "Ngày báo cáo"}, 0) {
         @Override public boolean isCellEditable(int r, int c) { return false; }
     };
     private final JTable table = new JTable(tableModel);
@@ -84,13 +87,15 @@ public class StockStatFrm extends JFrame {
             currentRows = dao.searchDamageLossRecords(from, to, reason);
             tableModel.setRowCount(0);
             for (StockStat s : currentRows) {
-                
                 String itemId = s.getBook().getItems().isEmpty()
                         ? "" : String.valueOf(s.getBook().getItems().get(0).getId());
+                String reportedDate = s.getReportedDate() != null
+                        ? s.getReportedDate().format(DISPLAY_DF) : "";
                 tableModel.addRow(new Object[]{
                     s.getBook().getTitle(),
                     itemId,
-                    s.getReason()
+                    s.getReason(),
+                    reportedDate
                 });
             }
             if (currentRows.isEmpty()) {

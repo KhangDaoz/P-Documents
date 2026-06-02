@@ -1,10 +1,5 @@
 package com.ptit.p.documents.model;
 
-/**
- * Sinh viên - Tầng thực thể.
- * Ánh xạ bảng tblStudent.
- * ID/studentId là dạng VARCHAR (ví dụ: SV220001).
- */
 public class Student {
     private String studentId;
     private String fullName;
@@ -14,13 +9,13 @@ public class Student {
 
     public Student() {}
 
-    /** Constructor rút gọn - tương thích với thống kê lịch sử */
+    
     public Student(String studentId, String fullName) {
         this.studentId = studentId;
         this.fullName  = fullName;
     }
 
-    /** Constructor đầy đủ */
+    
     public Student(String studentId, String fullName, String email,
                    String phone, String address) {
         this.studentId = studentId;
@@ -30,7 +25,7 @@ public class Student {
         this.address   = address;
     }
 
-    // -------- Getters & Setters --------
+    
 
     public String getStudentId() {
         return studentId;
@@ -40,7 +35,7 @@ public class Student {
         this.studentId = studentId;
     }
 
-    /** Alias của getStudentId() để tương thích với các view cũ */
+    
     public String getId() {
         return studentId;
     }

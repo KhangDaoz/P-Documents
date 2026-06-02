@@ -9,9 +9,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.time.format.DateTimeFormatter;
 
-/**
- * Giao dien xac nhan thong tin dat sach — Buoc cuoi cua module Dat Sach.
- */
 public class ConfirmBorrowingFrm extends JFrame implements ActionListener {
 
     private Borrowing b;
@@ -32,7 +29,7 @@ public class ConfirmBorrowingFrm extends JFrame implements ActionListener {
         setResizable(false);
         setLayout(new BorderLayout(6, 6));
 
-        // ---- Thông tin xác nhận ----
+        
         outBorrowingInfo = new JTextArea(buildInfoText());
         outBorrowingInfo.setEditable(false);
         outBorrowingInfo.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13));
@@ -42,7 +39,7 @@ public class ConfirmBorrowingFrm extends JFrame implements ActionListener {
         infoPanel.add(new JScrollPane(outBorrowingInfo), BorderLayout.CENTER);
         add(infoPanel, BorderLayout.CENTER);
 
-        // ---- Nút ----
+        
         JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 8));
         btnBack = new JButton("Quay lại");
         btnConfirm = new JButton("Lưu đặt sách");
@@ -57,34 +54,37 @@ public class ConfirmBorrowingFrm extends JFrame implements ActionListener {
     private String buildInfoText() {
         DateTimeFormatter sdf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         StringBuilder sb = new StringBuilder();
-        sb.append("THÔNG TIN ĐẶT SÁCH\n");
-        sb.append("-------------------------------------\n\n");
 
         if (b.getStudent() != null) {
-                sb.append("Sinh viên    :  ").append(b.getStudent().getStudentId())
-                    .append("  -  ").append(b.getStudent().getFullName()).append("\n");
-            if (b.getStudent().getPhone() != null && !b.getStudent().getPhone().isEmpty())
-                sb.append("Điện thoại   :  ").append(b.getStudent().getPhone()).append("\n");
+            sb.append("Sinh viên: ").append(b.getStudent().getStudentId())
+              .append(" - ").append(b.getStudent().getFullName()).append("\n");
         }
-        sb.append("\n");
 
+        sb.append("Sách:\n");
         for (BorrowedBook bb : b.getBooks()) {
             if (bb.getBook() != null) {
-                sb.append("Sách         :  ").append(bb.getBook().getIsbn())
-                    .append("  -  ").append(bb.getBook().getTitle()).append("\n");
-                sb.append("Tác giả      :  ").append(bb.getBook().getAuthor()).append("\n");
+                sb.append(bb.getBook().getIsbn())
+                  .append(" - ").append(bb.getBook().getTitle());
+                if (bb.getExpectedReturnDate() != null) {
+                    sb.append(" (Ngày trả: ").append(bb.getExpectedReturnDate().format(sdf)).append(")");
+                }
+                sb.append("\n");
             }
         }
-        sb.append("\n");
 
-        if (b.getCreatedAt() != null)
-            sb.append("Ngày đặt     :  ").append(b.getCreatedAt().format(sdf)).append("\n");
-        if (b.getExpectedReceiveDate() != null)
-            sb.append("Nhận dự kiến :  ").append(b.getExpectedReceiveDate().format(sdf)).append("\n");
+        if (b.getCreatedAt() != null) {
+            sb.append("Ngày đặt: ").append(b.getCreatedAt().format(sdf)).append("\n");
+        }
+        
+        if (b.getExpectedReceiveDate() != null) {
+            sb.append("Ngày nhận dự kiến: ").append(b.getExpectedReceiveDate().format(sdf)).append("\n");
+        }
 
-        sb.append("Trạng thái   :  ").append(b.getStatus()).append("\n");
-        if (b.getUser() != null)
-            sb.append("Thủ thư      :  ").append(b.getUser().getFullName()).append("\n");
+        String statusDisplay = b.getStatus();
+        if ("pending".equalsIgnoreCase(statusDisplay) || "Chờ nhận sách".equalsIgnoreCase(statusDisplay)) {
+            statusDisplay = "Chờ nhận sách";
+        }
+        sb.append("Trạng thái phiếu: ").append(statusDisplay).append("\n");
 
         return sb.toString();
     }

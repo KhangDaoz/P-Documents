@@ -39,35 +39,35 @@
     </build>
 
     <dependencies>
-        <!-- FlatLaf for modern Swing Look and Feel -->
+        
         <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
             <version>3.5.1</version>
         </dependency>
 
-        <!-- MySQL connector -->
+        
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
             <version>9.0.0</version>
         </dependency>
 
-        <!-- Apache POI for .xlsx export (BorrowingStatDAO.exportToExcel) -->
+        
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
             <version>5.2.5</version>
         </dependency>
 
-        <!-- OpenPDF for .pdf export (StockStatDAO.exportToPDF) -->
+        
         <dependency>
             <groupId>com.github.librepdf</groupId>
             <artifactId>openpdf</artifactId>
             <version>1.3.39</version>
         </dependency>
 
-        <!-- JUnit 5 -->
+        
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -75,7 +75,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Mockito for isolated DAO tests -->
+        
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
@@ -89,7 +89,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Allow JUnit 4 tests to run on the JUnit Platform (Legacy tests) -->
+        
         <dependency>
             <groupId>org.junit.vintage</groupId>
             <artifactId>junit-vintage-engine</artifactId>

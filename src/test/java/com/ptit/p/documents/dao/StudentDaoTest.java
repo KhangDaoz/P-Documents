@@ -12,7 +12,7 @@ public class StudentDaoTest {
 
     StudentDAO sd = new StudentDAO();
 
-    // TT7: Tim sinh vien ton tai theo ma SV
+    
     @Test
     public void testSearchStudentStandard1() {
         String key = "SV001";
@@ -22,7 +22,7 @@ public class StudentDaoTest {
         Assert.assertEquals("SV001", list.get(0).getStudentId());
     }
 
-    // TT8: Tim sinh vien khong ton tai
+    
     @Test
     public void testSearchStudentException1() {
         String key = "XXXXXXXXXX";
@@ -31,7 +31,7 @@ public class StudentDaoTest {
         Assert.assertEquals(0, list.size());
     }
 
-    // TT9: Them sinh vien moi hop le (rollback sau test)
+    
     @Test
     public void testAddStudentStandard() {
         Connection con = sd.getCon();
@@ -42,7 +42,7 @@ public class StudentDaoTest {
             boolean ok = sd.addStudent(s);
             Assert.assertTrue(ok);
 
-            // Kiem tra da them vao CSDL chua
+            
             ArrayList<Student> list = sd.searchStudent("SV999999");
             Assert.assertEquals(1, list.size());
             Assert.assertEquals("SV999999", list.get(0).getStudentId());
@@ -54,14 +54,14 @@ public class StudentDaoTest {
         }
     }
 
-    // TT10: Them sinh vien trung ma — phai that bai (rollback sau test)
+    
     @Test
     public void testAddStudentException() {
         Connection con = sd.getCon();
         try {
             con.setAutoCommit(false);
 
-            // SV001 da co san trong seed data
+            
             Student s = new Student("SV001", "Trung Ma SV", "trung@ptit.edu.vn", "0911111111", "Ha Noi");
             boolean ok = sd.addStudent(s);
             Assert.assertFalse(ok);
@@ -71,5 +71,13 @@ public class StudentDaoTest {
         } finally {
             try { con.rollback(); con.setAutoCommit(true); } catch (Exception ex) { ex.printStackTrace(); }
         }
+    }
+
+    @Test
+    public void testSearchStudentEmptyKey() {
+        String key = "";
+        ArrayList<Student> list = sd.searchStudent(key);
+        Assert.assertNotNull(list);
+        Assert.assertTrue(list.size() > 0);
     }
 }

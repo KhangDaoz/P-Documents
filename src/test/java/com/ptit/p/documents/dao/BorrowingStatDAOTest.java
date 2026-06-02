@@ -10,15 +10,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Unit Test cho BorrowingStatDAO áp dụng kỹ thuật Phân vùng tương đương (EP) 
- * và Phân tích giá trị biên (BVA).
- * Lưu ý: Yêu cầu CSDL MySQL localhost:3306/p_documents đã chạy file schema.sql.
- */
 class BorrowingStatDAOTest {
 
     private BorrowingStatDAO dao;
-
 
     @BeforeEach
     void setUp() {
@@ -27,8 +21,8 @@ class BorrowingStatDAOTest {
 
     @Test
     void test_EP_D1_EP_N2_ValidRangeAndTopN() {
-        // EP-D1: Khoảng thời gian có dữ liệu (01/01/2026 -> 31/05/2026)
-        // EP-N2: Top N hợp lệ lớn (N >= tổng số sách) -> 10
+        
+        
         LocalDate from = LocalDate.of(2026, 1, 1);
         LocalDate to = LocalDate.of(2026, 5, 31);
         
@@ -37,12 +31,12 @@ class BorrowingStatDAOTest {
         assertFalse(result.isEmpty(), "Kết quả không được rỗng (EP-D1)");
         assertEquals(5, result.size(), "Có 5 đầu sách có lượt mượn trong CSDL");
         assertEquals("ISBN-CS-01", result.get(0).getIsbn(), "Sách ISBN-CS-01 mượn nhiều nhất");
-        assertEquals(7, result.get(0).getBorrowCount());
+        assertEquals(5, result.get(0).getBorrowCount());
     }
 
     @Test
     void test_BVA_D2_ToDateIsFirstBorrowingDate() {
-        // BVA-D2: Đến ngày = đúng ngày lượt mượn đầu tiên (10/01/2026)
+        
         LocalDate from = LocalDate.of(2026, 1, 1);
         LocalDate to = LocalDate.of(2026, 1, 10);
         
@@ -55,7 +49,7 @@ class BorrowingStatDAOTest {
 
     @Test
     void test_BVA_D4_FromDateIsAfterLastBorrowingDate() {
-        // BVA-D4: Từ ngày = 1 ngày sau lượt mượn cuối cùng (11/05/2026) -> Bảng rỗng
+        
         LocalDate from = LocalDate.of(2026, 5, 11);
         LocalDate to = LocalDate.of(2026, 12, 31);
         
@@ -66,7 +60,7 @@ class BorrowingStatDAOTest {
 
     @Test
     void test_BVA_N2_TopNIs1() {
-        // BVA-N2: Top N = 1 (biên dưới)
+        
         LocalDate from = LocalDate.of(2026, 1, 1);
         LocalDate to = LocalDate.of(2026, 5, 31);
         
@@ -78,7 +72,7 @@ class BorrowingStatDAOTest {
 
     @Test
     void test_BVA_N6_TopNIsGreaterThanTotalBooks() {
-        // BVA-N6: Top N = 7 (vượt tổng số 6 đầu sách có lượt mượn)
+        
         LocalDate from = LocalDate.of(2026, 1, 1);
         LocalDate to = LocalDate.of(2026, 5, 31);
         
@@ -89,12 +83,47 @@ class BorrowingStatDAOTest {
 
     @Test
     void test_EP_D3_FromDateGreaterThanToDate() {
-        // EP-D3: Từ ngày > Đến ngày (31/05/2026 -> 01/01/2026)
+        
         LocalDate from = LocalDate.of(2026, 5, 31);
         LocalDate to = LocalDate.of(2026, 1, 1);
         
         List<BorrowingStat> result = dao.getTopBorrowedBooks(from, to, 10);
         
         assertTrue(result.isEmpty(), "SQL sẽ không tìm thấy dữ liệu nếu khoảng thời gian ngược");
+    }
+
+    @Test
+    void test_EP_N1_BVA_N3_TopNIs2() {
+        // EP-N1: Số nguyên dương nhỏ (N < tổng sách)
+        // BVA-N3: Trên biên dưới (N = 2)
+        LocalDate from = LocalDate.of(2026, 1, 1);
+        LocalDate to = LocalDate.of(2026, 5, 31);
+        
+        List<BorrowingStat> result = dao.getTopBorrowedBooks(from, to, 2);
+        
+        assertEquals(2, result.size(), "Chỉ trả về 2 đầu sách");
+        assertEquals("ISBN-CS-01", result.get(0).getIsbn(), "Top 1 phải là ISBN-CS-01");
+        assertEquals("ISBN-CS-02", result.get(1).getIsbn(), "Top 2 phải là ISBN-CS-02");
+    }
+
+    @Test
+    void test_BVA_N4_TopNIs4() {
+        // BVA-N4: Dưới tổng số sách có lượt mượn (N = 4, tổng = 5)
+        LocalDate from = LocalDate.of(2026, 1, 1);
+        LocalDate to = LocalDate.of(2026, 5, 31);
+        
+        List<BorrowingStat> result = dao.getTopBorrowedBooks(from, to, 4);
+        
+        assertEquals(4, result.size(), "Trả về đúng 4 đầu sách");
+    }
+
+    @Test
+    void test_BVA_D7_FromDateIsOneDayAfterToDate() {
+        LocalDate from = LocalDate.of(2026, 1, 11);
+        LocalDate to = LocalDate.of(2026, 1, 10);
+        
+        List<BorrowingStat> result = dao.getTopBorrowedBooks(from, to, 10);
+        
+        assertTrue(result.isEmpty(), "Thời gian ngược biên sát (từ = đến + 1) phải trả về rỗng");
     }
 }

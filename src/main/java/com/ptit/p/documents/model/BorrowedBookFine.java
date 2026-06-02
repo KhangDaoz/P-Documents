@@ -6,15 +6,7 @@ public class BorrowedBookFine {
     private double totalFine;
     private Fine fine;
 
-
     public BorrowedBookFine() {
-    }
-
-    public BorrowedBookFine(int id, double fineRate, double totalFine, Fine fine) {
-        this.id = id;
-        this.fineRate = fineRate;
-        this.totalFine = totalFine;
-        this.fine = fine;
     }
 
     public int getId() {

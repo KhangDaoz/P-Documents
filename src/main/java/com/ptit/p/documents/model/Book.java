@@ -3,10 +3,6 @@ package com.ptit.p.documents.model;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Đại diện cho một đầu sách (book title) trong danh mục thư viện.
- * Tương ứng với bảng tblBook trong CSDL.
- */
 public class Book {
     private String isbn;
     private String title;
@@ -16,70 +12,18 @@ public class Book {
     private int publishYear;
     private double price;
     private String description;
-    private int availableCopies; // Thuộc tính dẫn xuất — tính động, không lưu trong DB
+    private int availableCopies; 
     private int totalCopies;
-    private List<BookItem> items = new ArrayList<>(); // Các bản sao vật lý mà đầu sách sở hữu (Book OWNS a List<BookItem>)
+    private List<BookItem> items = new ArrayList<>(); 
 
     public Book() {}
 
-    /** Constructor rút gọn 2 tham số (từ sang branch) */
     public Book(String isbn, String title, String author, String genre) {
         this.isbn = isbn;
         this.title = title;
         this.author = author;
         this.genre = genre;
     }
-
-    /** Constructor rút gọn 3 tham số (từ huy branch) */
-    public Book(String isbn, String title, String author) {
-        this.isbn = isbn;
-        this.title = title;
-        this.author = author;
-    }
-
-    /** Constructor đầy đủ các trường chính (không có totalCopies) */
-    public Book(String isbn, String title, String author, String genre,
-                String publisher, int publishYear, double price, String description) {
-        this.isbn = isbn;
-        this.title = title;
-        this.author = author;
-        this.genre = genre;
-        this.publisher = publisher;
-        this.publishYear = publishYear;
-        this.price = price;
-        this.description = description;
-    }
-
-    /** Constructor đầy đủ từ huy branch */
-    public Book(String isbn, String title, String author, String genre,
-                String publisher, int publishYear, double price,
-                String description, int availableCopies) {
-        this.isbn = isbn;
-        this.title = title;
-        this.author = author;
-        this.genre = genre;
-        this.publisher = publisher;
-        this.publishYear = publishYear;
-        this.price = price;
-        this.description = description;
-        this.availableCopies = availableCopies;
-    }
-
-    public Book(String isbn, String title, String author, String genre,
-                String publisher, int publishYear, double price,
-                String description, int availableCopies, int totalCopies) {
-        this(isbn, title, author, genre, publisher, publishYear, price, description, availableCopies);
-        this.totalCopies = totalCopies;
-    }
-
-    public Book(String isbn, String title, String author, String genre,
-                String publisher, int publishYear, double price,
-                String description, int availableCopies, int totalCopies, List<BookItem> items) {
-        this(isbn, title, author, genre, publisher, publishYear, price, description, availableCopies, totalCopies);
-        this.setItems(items);
-    }
-
-    // -------- Getters & Setters --------
 
     public String getISBN() {
         return isbn;

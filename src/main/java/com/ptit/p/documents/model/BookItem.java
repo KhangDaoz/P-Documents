@@ -1,14 +1,9 @@
 package com.ptit.p.documents.model;
 
-/**
- * Bản sách - Tầng thực thể.
- * Ánh xạ bảng tblBookItem (schema p_documents).
- * ID là INT auto_increment, status là ENUM('good','damaged','lost').
- */
 public class BookItem {
     private int id;
-    private String status; // 'good' | 'damaged' | 'lost'
-    private String bookISBN; // ISBN của đầu sách (tham chiếu tiện ích)
+    private String status; 
+    private String bookISBN; 
 
     public BookItem() {}
 
@@ -22,8 +17,6 @@ public class BookItem {
         this.status = status;
         this.bookISBN = bookISBN;
     }
-
-    // -------- Getters & Setters --------
 
     public int getId() {
         return id;

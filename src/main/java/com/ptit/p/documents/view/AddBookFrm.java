@@ -62,7 +62,7 @@ public class AddBookFrm extends JFrame implements ActionListener {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.WEST;
 
-        // Title
+        
         JLabel lblTitle = new JLabel("THÊM SÁCH MỚI", SwingConstants.CENTER);
         lblTitle.setFont(new Font("Arial", Font.BOLD, 18));
         lblTitle.setForeground(Color.BLACK);
@@ -74,7 +74,7 @@ public class AddBookFrm extends JFrame implements ActionListener {
         gbc.gridwidth = 1;
         int row = 1;
 
-        // ISBN
+        
         gbc.gridy = row;
         gbc.gridx = 0;
         mainPanel.add(new JLabel("ISBN (*):"), gbc);
@@ -82,7 +82,7 @@ public class AddBookFrm extends JFrame implements ActionListener {
         gbc.gridx = 1;
         mainPanel.add(txtISBN, gbc);
 
-        // Tên sách
+        
         row++;
         gbc.gridy = row;
         gbc.gridx = 0;
@@ -91,7 +91,7 @@ public class AddBookFrm extends JFrame implements ActionListener {
         gbc.gridx = 1;
         mainPanel.add(txtTitle, gbc);
 
-        // Tác giả
+        
         row++;
         gbc.gridy = row;
         gbc.gridx = 0;
@@ -100,7 +100,7 @@ public class AddBookFrm extends JFrame implements ActionListener {
         gbc.gridx = 1;
         mainPanel.add(txtAuthor, gbc);
 
-        // Thể loại
+        
         row++;
         gbc.gridy = row;
         gbc.gridx = 0;
@@ -109,7 +109,7 @@ public class AddBookFrm extends JFrame implements ActionListener {
         gbc.gridx = 1;
         mainPanel.add(txtGenre, gbc);
 
-        // Nhà xuất bản
+        
         row++;
         gbc.gridy = row;
         gbc.gridx = 0;
@@ -118,7 +118,7 @@ public class AddBookFrm extends JFrame implements ActionListener {
         gbc.gridx = 1;
         mainPanel.add(txtPublisher, gbc);
 
-        // Năm xuất bản
+        
         row++;
         gbc.gridy = row;
         gbc.gridx = 0;
@@ -127,7 +127,7 @@ public class AddBookFrm extends JFrame implements ActionListener {
         gbc.gridx = 1;
         mainPanel.add(txtPublishYear, gbc);
 
-        // Giá bìa
+        
         row++;
         gbc.gridy = row;
         gbc.gridx = 0;
@@ -136,7 +136,7 @@ public class AddBookFrm extends JFrame implements ActionListener {
         gbc.gridx = 1;
         mainPanel.add(txtPrice, gbc);
 
-        // Mô tả
+        
         row++;
         gbc.gridy = row;
         gbc.gridx = 0;
@@ -145,7 +145,7 @@ public class AddBookFrm extends JFrame implements ActionListener {
         gbc.gridx = 1;
         mainPanel.add(txtDescription, gbc);
 
-        // Số lượng bản copy
+        
         row++;
         gbc.gridy = row;
         gbc.gridx = 0;
@@ -155,7 +155,7 @@ public class AddBookFrm extends JFrame implements ActionListener {
         gbc.gridx = 1;
         mainPanel.add(txtCopies, gbc);
 
-        // Buttons
+        
         row++;
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         btnSave = new JButton("Lưu");
@@ -185,7 +185,7 @@ public class AddBookFrm extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnSave) {
-            // Validate bắt buộc
+            
             String isbn = txtISBN.getText().trim();
             String title = txtTitle.getText().trim();
             String author = txtAuthor.getText().trim();
@@ -205,7 +205,7 @@ public class AddBookFrm extends JFrame implements ActionListener {
                 return;
             }
 
-            // Validate giá bìa
+            
             double price;
             try {
                 price = Double.parseDouble(priceStr);
@@ -222,7 +222,7 @@ public class AddBookFrm extends JFrame implements ActionListener {
                 return;
             }
 
-            // Validate số lượng bản copy
+            
             int copies;
             try {
                 copies = Integer.parseInt(copiesStr);
@@ -239,7 +239,7 @@ public class AddBookFrm extends JFrame implements ActionListener {
                 return;
             }
 
-            // Validate năm xuất bản (nếu có nhập)
+            
             int publishYear;
             try {
                 publishYear = Integer.parseInt(publishYearStr);
@@ -250,7 +250,7 @@ public class AddBookFrm extends JFrame implements ActionListener {
                 return;
             }
 
-            // Tạo đối tượng Book
+            
             Book book = new Book();
             book.setISBN(isbn);
             book.setTitle(title);
@@ -263,7 +263,7 @@ public class AddBookFrm extends JFrame implements ActionListener {
             book.setAvailableCopies(copies);
             book.setTotalCopies(copies);
 
-            // Gọi BookDAO để thêm sách
+            
             BookDAO bookDAO = new BookDAO();
             boolean success = bookDAO.addBook(book);
 
@@ -274,7 +274,7 @@ public class AddBookFrm extends JFrame implements ActionListener {
                 return;
             }
 
-            // Nếu số lượng bản copy > 0, tạo BookItem
+            
             if (copies > 0) {
                 BookItemDAO bookItemDAO = new BookItemDAO();
                 for (int i = 0; i < copies; i++) {
@@ -289,7 +289,7 @@ public class AddBookFrm extends JFrame implements ActionListener {
                     "Thêm sách thành công!",
                     "Thông báo", JOptionPane.INFORMATION_MESSAGE);
 
-            // Quay về trang chủ quản lý
+            
             new ManagerHomeFrm(currentUser).setVisible(true);
             this.dispose();
 

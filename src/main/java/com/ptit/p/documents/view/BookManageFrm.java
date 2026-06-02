@@ -27,7 +27,7 @@ public class BookManageFrm extends JFrame implements ActionListener {
         setResizable(false);
         getContentPane().setBackground(Color.WHITE);
 
-        // Main panel
+        
         JPanel mainPanel = new JPanel(new GridBagLayout());
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
         mainPanel.setBackground(Color.WHITE);
@@ -35,7 +35,7 @@ public class BookManageFrm extends JFrame implements ActionListener {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Title
+        
         JLabel lblTitle = new JLabel("QUẢN LÝ THÔNG TIN SÁCH", SwingConstants.CENTER);
         lblTitle.setFont(new Font("Arial", Font.BOLD, 18));
         lblTitle.setForeground(Color.BLACK);
@@ -43,11 +43,11 @@ public class BookManageFrm extends JFrame implements ActionListener {
         gbc.gridy = 0;
         mainPanel.add(lblTitle, gbc);
 
-        // Separator
+        
         gbc.gridy = 1;
         mainPanel.add(new JSeparator(), gbc);
 
-        // Add Book button
+        
         btnAdd = new JButton("Thêm thông tin sách");
         btnAdd.setFont(new Font("Arial", Font.PLAIN, 14));
         btnAdd.setPreferredSize(new Dimension(250, 45));
@@ -57,7 +57,7 @@ public class BookManageFrm extends JFrame implements ActionListener {
         gbc.gridy = 2;
         mainPanel.add(btnAdd, gbc);
 
-        // Edit Book button
+        
         btnEdit = new JButton("Sửa thông tin sách");
         btnEdit.setFont(new Font("Arial", Font.PLAIN, 14));
         btnEdit.setPreferredSize(new Dimension(250, 45));
@@ -67,7 +67,7 @@ public class BookManageFrm extends JFrame implements ActionListener {
         gbc.gridy = 3;
         mainPanel.add(btnEdit, gbc);
 
-        // Delete Book button
+        
         btnDelete = new JButton("Xóa thông tin sách");
         btnDelete.setFont(new Font("Arial", Font.PLAIN, 14));
         btnDelete.setPreferredSize(new Dimension(250, 45));
@@ -77,7 +77,7 @@ public class BookManageFrm extends JFrame implements ActionListener {
         gbc.gridy = 4;
         mainPanel.add(btnDelete, gbc);
 
-        // Back button
+        
         btnBack = new JButton("Quay lại trang chủ");
         btnBack.setFont(new Font("Arial", Font.PLAIN, 14));
         btnBack.setPreferredSize(new Dimension(250, 35));

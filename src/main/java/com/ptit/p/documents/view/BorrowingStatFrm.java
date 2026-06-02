@@ -12,13 +12,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
-/**
- * Giao diện tùy chọn thống kê sách mượn nhiều (spec §1.a, §1.b bước 9-20, 38-42).
- * - Nhập khoảng thời gian (yyyy-MM-dd) và top N
- * - Bấm "Thống kê" -> gọi BorrowingStatDAO.getTopBorrowedBooks()
- * - Click dòng kết quả -> mở BorrowDetailFrm
- * - "Xuất Excel" -> gọi BorrowingStatDAO.exportToExcel()
- */
 public class BorrowingStatFrm extends JFrame {
 
     private static final DateTimeFormatter DF = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -47,7 +40,7 @@ public class BorrowingStatFrm extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // ----- TOP: filter panel -----
+        
         JPanel filter = new JPanel(new FlowLayout(FlowLayout.LEFT));
         filter.setBorder(BorderFactory.createTitledBorder("Tùy chọn thống kê"));
         filter.add(new JLabel("Từ ngày (yyyy-MM-dd):"));
@@ -66,12 +59,12 @@ public class BorrowingStatFrm extends JFrame {
 
         add(filter, BorderLayout.NORTH);
 
-        // ----- CENTER: result table -----
+        
         table.setRowHeight(24);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         add(new JScrollPane(table), BorderLayout.CENTER);
 
-        // ----- Action handlers (spec §1.b bước 12, 22, 35-39) -----
+        
         btnSearch.addActionListener(e -> doSearch());
         btnExport.addActionListener(e -> doExport());
         btnBack.addActionListener(e -> {
@@ -79,13 +72,13 @@ public class BorrowingStatFrm extends JFrame {
             if (parent != null) parent.setVisible(true);
         });
 
-        // Click dòng để xem chi tiết (spec §1.b bước 21-23)
+        
         table.getSelectionModel().addListSelectionListener(e -> {
             if (e.getValueIsAdjusting()) return;
             int row = table.getSelectedRow();
             if (row >= 0 && row < currentRows.size()) {
                 BorrowingStat s = currentRows.get(row);
-                // Mở chi tiết khi user click — dùng getIsbn() thay cho getBookId()
+                
                 SwingUtilities.invokeLater(() ->
                     new BorrowDetailFrm(this, s.getIsbn(), s.getTitle()).setVisible(true));
                 table.clearSelection();
@@ -98,6 +91,11 @@ public class BorrowingStatFrm extends JFrame {
         try {
             LocalDate from = LocalDate.parse(txtFrom.getText().trim(), DF);
             LocalDate to   = LocalDate.parse(txtTo.getText().trim(), DF);
+            if (from.isAfter(to)) {
+                JOptionPane.showMessageDialog(this,
+                    "Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             int topN = (Integer) spnTopN.getValue();
 
             currentRows = dao.getTopBorrowedBooks(from, to, topN);

@@ -8,9 +8,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-/**
- * Giao dien them sinh vien moi.
- */
 public class AddStudentFrm extends JFrame implements ActionListener {
 
     private Borrowing b;
@@ -35,7 +32,7 @@ public class AddStudentFrm extends JFrame implements ActionListener {
         setResizable(false);
         setLayout(new BorderLayout(6, 6));
 
-        // ---- Form nhập liệu ----
+        
         JPanel form = new JPanel(new GridLayout(5, 2, 6, 6));
         form.setBorder(BorderFactory.createEmptyBorder(12, 12, 6, 12));
 
@@ -61,7 +58,7 @@ public class AddStudentFrm extends JFrame implements ActionListener {
 
         add(form, BorderLayout.CENTER);
 
-        // ---- Nút ----
+        
         JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 8));
         btnAdd = new JButton("Thêm");
         btnCancel = new JButton("Hủy");

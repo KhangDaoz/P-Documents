@@ -1,11 +1,10 @@
 package com.ptit.p.documents.dao;
 
-import com.ptit.p.documents.model.Book;
+import java.util.ArrayList;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.util.ArrayList;
+import com.ptit.p.documents.model.Book;
 
 public class BookDaoTest {
 
@@ -15,7 +14,32 @@ public class BookDaoTest {
 
     BookDAO bd = new BookDAO();
 
-    // TT1: Tim sach khong ton tai
+    @Test
+    public void testAddBook_NewISBN_Success() {
+        Book book = createTestBook("ISBN-TEST-01", "Test Book", "Test Author", "Test Genre",
+                "Test Publisher", 2024, 9.99, "This is a test book.", 5);
+        boolean result = bd.addBook(book);
+        Assert.assertTrue(result);
+
+        bd.deleteBook("ISBN-TEST-01");
+    }
+
+    @Test
+    public void testAddBook_DuplicateISBN_Failure() {
+        Book book1 = createTestBook("ISBN-TEST-02", "Test Book 1", "Test Author", "Test Genre",
+                "Test Publisher", 2024, 9.99, "This is a test book.", 5);
+        Book book2 = createTestBook("ISBN-TEST-02", "Test Book 2", "Test Author", "Test Genre",
+                "Test Publisher", 2024, 9.99, "This is another test book.", 5);
+
+        boolean result1 = bd.addBook(book1);
+        boolean result2 = bd.addBook(book2);
+
+        Assert.assertTrue(result1);
+        Assert.assertFalse(result2);
+
+        bd.deleteBook("ISBN-TEST-02");
+    }
+    
     @Test
     public void testSearchBookException1() {
         ArrayList<Book> list = bd.searchBook("xxxxxxxxxx", "", "", "");
@@ -23,7 +47,7 @@ public class BookDaoTest {
         Assert.assertEquals(0, list.size());
     }
 
-    // TT2: Tim sach ton tai theo the loai (genre ASCII, tranh loi dau tieng Viet)
+    
     @Test
     public void testSearchBookStandard1() {
         String key = "Computer Science";
@@ -37,7 +61,7 @@ public class BookDaoTest {
         }
     }
 
-    // TT3: Tim sach theo ISBN cu the — dung 1 ket qua, ISBN khop
+    
     @Test
     public void testSearchBookStandard2() {
         String isbn = "ISBN-CS-01";
@@ -47,7 +71,7 @@ public class BookDaoTest {
         Assert.assertEquals(isbn, list.get(0).getIsbn());
     }
 
-    // TT4: Tat ca tham so rong — tra ve toan bo sach (seed: 6 sach)
+    
     @Test
     public void testSearchBookAllEmpty() {
         ArrayList<Book> list = bd.searchBook("", "", "", "");
@@ -55,26 +79,100 @@ public class BookDaoTest {
         Assert.assertEquals(6, list.size());
     }
 
-    // TT5: Sach co ban sao kha dung — availableCopies la thuoc tinh dan xuat >= 0
+    
     @Test
     public void testSearchBookAvailableCopies() {
-        String isbn = "ISBN-CS-01"; // 3 BookItem status='good' trong seed
+        String isbn = "ISBN-CS-01"; 
         ArrayList<Book> list = bd.searchBook("", "", "", isbn);
         Assert.assertNotNull(list);
         Assert.assertEquals(1, list.size());
-        // Thuoc tinh dan xuat: >= 0 va <= tong so ban sao (3)
+        
         int avail = list.get(0).getAvailableCopies();
         Assert.assertTrue(avail >= 0);
         Assert.assertTrue(avail <= 3);
     }
 
-    // TT6: Sach khong co ban sao nao (ISBN co sach nhung khong co BookItem)
+    
     @Test
     public void testSearchBookNoCopies() {
-        String isbn = "ISBN-CS-03"; // 0 BookItem trong seed
+        String isbn = "ISBN-CS-03"; 
         ArrayList<Book> list = bd.searchBook("", "", "", isbn);
         Assert.assertNotNull(list);
         Assert.assertEquals(1, list.size());
         Assert.assertEquals(0, list.get(0).getAvailableCopies());
+    }
+
+    @Test
+    public void testUpdateBook_Success() {
+        Book book = createTestBook("ISBN-TEST-05", "Test Book Update", "Test Author", "Test Genre",
+                "Test Publisher", 2024, 9.99, "This is a test book for update.", 5);
+        bd.addBook(book);
+
+        book.setTitle("Updated Test Book");
+        boolean result = bd.updateBook(book);
+        Assert.assertTrue(result);
+
+        Book updatedBook = bd.findByID("ISBN-TEST-05");
+        Assert.assertNotNull(updatedBook);
+        Assert.assertEquals("Updated Test Book", updatedBook.getTitle());
+
+        bd.deleteBook("ISBN-TEST-05");
+    }
+
+    @Test
+    public void testUpdateBook_NotExistingISBN_Failure() {
+        Book book = createTestBook("ISBN-TEST-06", "Non-Existing Book", "Test Author", "Test Genre",
+                "Test Publisher", 2024, 9.99, "This book does not exist.", 5);
+        boolean result = bd.updateBook(book);
+        Assert.assertFalse(result);
+    }
+
+    @Test
+    public void testCheckBookStatus_Success() {
+        String isbn = "ISBN-CS-01"; 
+        boolean result = bd.checkBookStatus(isbn, false);
+        Assert.assertTrue(result);
+    }
+
+    @Test
+    public void testCheckBookStatus_NoAvailableCopies() {
+        String isbn = "ISBN-CS-03"; 
+        boolean result = bd.checkBookStatus(isbn, false);
+        Assert.assertFalse(result);
+    }
+
+    @Test
+    public void testDeleteBook_Success() {
+        Book book = createTestBook("ISBN-TEST-07", "Test Book Delete", "Test Author", "Test Genre",
+                "Test Publisher", 2024, 9.99, "This is a test book for delete.", 5);
+        bd.addBook(book);
+
+        boolean result = bd.deleteBook("ISBN-TEST-07");
+        Assert.assertTrue(result);
+
+        Book deletedBook = bd.findByID("ISBN-TEST-07");
+        Assert.assertNull(deletedBook);
+    }
+
+    @Test
+    public void testDeleteBook_NotExistingISBN_Failure() {
+        boolean result = bd.deleteBook("ISBN-TEST-08");
+        Assert.assertFalse(result);
+    }
+
+    private Book createTestBook(String isbn, String title, String author, String genre,
+                               String publisher, int publishYear, double price, String description, int availableCopies) {
+        Book book = new Book();
+        book.setIsbn(isbn);
+        book.setTitle(title);
+        book.setAuthor(author);
+        book.setGenre(genre);
+        book.setPublisher(publisher);
+        book.setPublishYear(publishYear);
+        book.setPrice(price);
+        book.setDescription(description);
+        book.setAvailableCopies(availableCopies);
+        book.setTotalCopies(availableCopies);
+        return book;
     }
 }

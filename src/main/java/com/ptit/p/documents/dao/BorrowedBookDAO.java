@@ -11,17 +11,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * DAO quản lý dữ liệu mượn trả của sách (tblBorrowedBook).
- * Kết hợp chức năng mượn trả của Huy/Hieu và báo cáo thống kê của Sang.
- */
 public class BorrowedBookDAO extends DAO {
 
     public BorrowedBookDAO() {
         super();
     }
 
-    /** Lấy chi tiết sách mượn theo Borrowing ID (phục vụ trả sách) */
+    
     public List<BorrowedBook> findByBorrowingId(int borrowingId) {
         List<BorrowedBook> results = new ArrayList<>();
         String sql = "SELECT bb.ID, bb.expectedReturnDate, bb.actualReturnDate, bb.status, bb.note, bb.price, "
@@ -30,7 +26,7 @@ public class BorrowedBookDAO extends DAO {
                 + "JOIN tblBookItem bi ON bb.tblBookItemID = bi.ID "
                 + "WHERE bb.tblBorrowingID = ?";
 
-        try (PreparedStatement statement = con.prepareStatement(sql)) {
+        try (PreparedStatement statement = getCon().prepareStatement(sql)) {
             statement.setInt(1, borrowingId);
 
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -40,19 +36,19 @@ public class BorrowedBookDAO extends DAO {
                     bookItem.setStatus(resultSet.getString("bookItemStatus"));
                     bookItem.setBookISBN(resultSet.getString("bookISBN"));
 
-                    BorrowedBook borrowedBook = new BorrowedBook(
-                            resultSet.getInt("ID"),
-                            resultSet.getTimestamp("expectedReturnDate") != null
+                    BorrowedBook borrowedBook = new BorrowedBook();
+                    borrowedBook.setId(resultSet.getInt("ID"));
+                    borrowedBook.setExpectedReturnDate(resultSet.getTimestamp("expectedReturnDate") != null
                                     ? resultSet.getTimestamp("expectedReturnDate").toLocalDateTime().toLocalDate()
-                                    : null,
-                            resultSet.getTimestamp("actualReturnDate") != null
+                                    : null);
+                    borrowedBook.setActualReturnDate(resultSet.getTimestamp("actualReturnDate") != null
                                     ? resultSet.getTimestamp("actualReturnDate").toLocalDateTime().toLocalDate()
-                                    : null,
-                            resultSet.getString("status"),
-                            resultSet.getString("note"),
-                            resultSet.getDouble("price"),
-                            bookItem,
-                            new ArrayList<>());
+                                    : null);
+                    borrowedBook.setStatus(resultSet.getString("status"));
+                    borrowedBook.setNote(resultSet.getString("note"));
+                    borrowedBook.setPrice(resultSet.getDouble("price"));
+                    borrowedBook.setBookItem(bookItem);
+                    borrowedBook.setBorrowedBookFines(new ArrayList<>());
                     results.add(borrowedBook);
                 }
             }
@@ -63,10 +59,10 @@ public class BorrowedBookDAO extends DAO {
         return results;
     }
 
-    /** Cập nhật trạng thái trả của từng cuốn sách */
+    
     public boolean updateReturnStatus(BorrowedBook bb) {
         String sql = "UPDATE tblBorrowedBook SET actualReturnDate = ?, status = ?, note = ?, price = ? WHERE ID = ?";
-        try (PreparedStatement statement = con.prepareStatement(sql)) {
+        try (PreparedStatement statement = getCon().prepareStatement(sql)) {
             statement.setDate(1,
                     bb.getActualReturnDate() != null ? java.sql.Date.valueOf(bb.getActualReturnDate()) : null);
             statement.setString(2, bb.getStatus() != null ? bb.getStatus() : "good");
@@ -81,10 +77,10 @@ public class BorrowedBookDAO extends DAO {
         }
     }
 
-    /** Thiết lập phạt áp dụng cho lượt mượn sách hỏng/mất */
+    
     public boolean setBorrowedBookFine(BorrowedBookFine fine, BorrowedBook bb) {
         String sql = "INSERT INTO tblBorrowedBookFine (fineRate, tblBorrowedBookID, tblFineID) VALUES (?, ?, ?)";
-        try (PreparedStatement statement = con.prepareStatement(sql)) {
+        try (PreparedStatement statement = getCon().prepareStatement(sql)) {
             statement.setDouble(1, fine.getFineRate());
             statement.setInt(2, bb.getId());
             statement.setInt(3, fine.getFine().getId());
@@ -96,11 +92,7 @@ public class BorrowedBookDAO extends DAO {
         }
     }
 
-    /**
-     * Lấy toàn bộ lịch sử mượn trả của một đầu sách theo ISBN (phục vụ Thống kê báo
-     * cáo).
-     * Kết quả chứa: BorrowedBook -> Borrowing -> Student.
-     */
+    
     public List<BorrowedBook> getBorrowHistoryByBook(String isbn) {
         List<BorrowedBook> result = new ArrayList<>();
         String sql = "SELECT bb.ID, bb.expectedReturnDate, bb.actualReturnDate, bb.status, " +
@@ -114,7 +106,7 @@ public class BorrowedBookDAO extends DAO {
                 "WHERE bi.tblBookISBN = ? " +
                 "ORDER BY br.createdAt DESC";
 
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+        try (PreparedStatement ps = getCon().prepareStatement(sql)) {
             ps.setString(1, isbn);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {

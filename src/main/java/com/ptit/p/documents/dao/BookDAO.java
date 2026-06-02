@@ -13,8 +13,8 @@ public class BookDAO extends DAO {
         super();
     }
 
-    // availableCopies: đếm BookItem status='good' không trong phiếu
-    // pending/borrowed
+    
+    
     private static final String AVAILABLE_COPIES_SUBQUERY = "(SELECT COUNT(*) FROM tblBookItem bi2"
             + " WHERE bi2.tblBookISBN = bk.ISBN"
             + " AND bi2.status = 'good'"
@@ -29,7 +29,7 @@ public class BookDAO extends DAO {
                 + " bk.publisher, bk.publishYear, bk.price, bk.description, "
                 + AVAILABLE_COPIES_SUBQUERY
                 + " FROM tblBook bk WHERE bk.ISBN = ?";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+        try (PreparedStatement ps = getCon().prepareStatement(sql)) {
             ps.setString(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -50,7 +50,7 @@ public class BookDAO extends DAO {
                 + " FROM tblBook bk"
                 + " WHERE bk.title LIKE ? AND bk.author LIKE ?"
                 + " AND bk.genre LIKE ? AND bk.ISBN LIKE ?";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+        try (PreparedStatement ps = getCon().prepareStatement(sql)) {
             ps.setString(1, "%" + (name != null ? name : "") + "%");
             ps.setString(2, "%" + (author != null ? author : "") + "%");
             ps.setString(3, "%" + (genre != null ? genre : "") + "%");
@@ -72,7 +72,7 @@ public class BookDAO extends DAO {
                 + " bk.publisher, bk.publishYear, bk.price, bk.description, "
                 + AVAILABLE_COPIES_SUBQUERY
                 + " FROM tblBook bk";
-        try (PreparedStatement ps = con.prepareStatement(sql);
+        try (PreparedStatement ps = getCon().prepareStatement(sql);
                 ResultSet rs = ps.executeQuery()) {
             while (rs.next())
                 result.add(mapRow(rs));
@@ -90,28 +90,23 @@ public class BookDAO extends DAO {
         book.setGenre(rs.getString("genre"));
         book.setPublisher(rs.getString("publisher"));
         book.setPublishYear(rs.getInt("publishYear"));
-        // Try-catch block in case model changed price type from BigDecimal to Double or
-        // vice-versa
+        
+        
         try {
             book.setPrice(rs.getDouble("price"));
         } catch (Exception e) {
-            book.setPrice(rs.getDouble("price")); // Fallback or handle differently if Book takes BigDecimal
+            book.setPrice(rs.getDouble("price")); 
         }
         book.setDescription(rs.getString("description"));
         book.setAvailableCopies(rs.getInt("availableCopies"));
         return book;
     }
 
-    /**
-     * Thêm sách mới vào CSDL.
-     * Kiểm tra ISBN trùng trước khi thêm.
-     * 
-     * @return true nếu thêm thành công, false nếu ISBN đã tồn tại hoặc lỗi
-     */
+    
     public boolean addBook(Book book) {
-        // Kiểm tra ISBN đã tồn tại
+        
         String checkSql = "SELECT 1 FROM tblBook WHERE ISBN = ?";
-        try (PreparedStatement checkPs = con.prepareStatement(checkSql)) {
+        try (PreparedStatement checkPs = getCon().prepareStatement(checkSql)) {
             checkPs.setString(1, book.getISBN());
             try (ResultSet crs = checkPs.executeQuery()) {
                 if (crs.next()) {
@@ -125,7 +120,7 @@ public class BookDAO extends DAO {
 
         String sql = "INSERT INTO tblBook (ISBN, title, author, genre, publisher, publishYear, price, description) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+        try (PreparedStatement ps = getCon().prepareStatement(sql)) {
             ps.setString(1, book.getISBN());
             ps.setString(2, book.getTitle());
             ps.setString(3, book.getAuthor());
@@ -141,10 +136,7 @@ public class BookDAO extends DAO {
         return false;
     }
 
-    /**
-     * Tìm sách theo từ khóa (tên sách, tác giả hoặc ISBN).
-     * Sử dụng LIKE để tìm kiếm gần đúng.
-     */
+    
     public List<Book> searchBook(String keyword) {
         List<Book> books = new ArrayList<>();
         String sql = "SELECT b.*, "
@@ -158,7 +150,7 @@ public class BookDAO extends DAO {
                 + "    GROUP BY tblBookISBN "
                 + ") bi ON b.ISBN = bi.tblBookISBN "
                 + "WHERE b.title LIKE ? OR b.author LIKE ? OR b.ISBN LIKE ?";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+        try (PreparedStatement ps = getCon().prepareStatement(sql)) {
             String searchPattern = "%" + keyword + "%";
             ps.setString(1, searchPattern);
             ps.setString(2, searchPattern);
@@ -185,14 +177,11 @@ public class BookDAO extends DAO {
         return books;
     }
 
-    /**
-     * Cập nhật thông tin sách theo ISBN.
-     * Không cho phép sửa ISBN và số lượng bản copy.
-     */
+    
     public boolean updateBook(Book book) {
         String sql = "UPDATE tblBook SET title = ?, author = ?, genre = ?, publisher = ?, "
                 + "publishYear = ?, price = ?, description = ? WHERE ISBN = ?";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+        try (PreparedStatement ps = getCon().prepareStatement(sql)) {
             ps.setString(1, book.getTitle());
             ps.setString(2, book.getAuthor());
             ps.setString(3, book.getGenre());
@@ -208,15 +197,12 @@ public class BookDAO extends DAO {
         return false;
     }
 
-    /**
-     * Xóa đầu sách theo ISBN.
-     * Lưu ý: phải xóa BookItem trước khi gọi hàm này (do FK constraint).
-     */
+    
     public boolean deleteBook(String isbn) {
         String deleteItemsSql = "DELETE FROM tblBookItem WHERE tblBookISBN = ?";
         String deleteBookSql = "DELETE FROM tblBook WHERE ISBN = ?";
-        try (PreparedStatement itemPs = con.prepareStatement(deleteItemsSql);
-                PreparedStatement bookPs = con.prepareStatement(deleteBookSql)) {
+        try (PreparedStatement itemPs = getCon().prepareStatement(deleteItemsSql);
+                PreparedStatement bookPs = getCon().prepareStatement(deleteBookSql)) {
             itemPs.setString(1, isbn);
             itemPs.executeUpdate();
 
@@ -228,10 +214,7 @@ public class BookDAO extends DAO {
         return false;
     }
 
-    /**
-     * Kiểm tra tình trạng mượn của sách.
-     * Nếu includeHistory = true, kiểm tra mọi lịch sử mượn để phục vụ xoá cứng.
-     */
+    
     public boolean checkBookStatus(String isbn, boolean includeHistory) {
         String sql = includeHistory
                 ? "SELECT COUNT(*) AS cnt FROM tblBorrowedBook bb "
@@ -241,7 +224,7 @@ public class BookDAO extends DAO {
                         + "JOIN tblBorrowedBook bb ON br.ID = bb.tblBorrowingID "
                         + "JOIN tblBookItem bi ON bb.tblBookItemID = bi.ID "
                         + "WHERE bi.tblBookISBN = ? AND br.status IN ('pending', 'borrowed', 'overdue')";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+        try (PreparedStatement ps = getCon().prepareStatement(sql)) {
             ps.setString(1, isbn);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {

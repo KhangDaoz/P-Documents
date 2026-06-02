@@ -17,7 +17,6 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-
 import com.ptit.p.documents.dao.UserDAO;
 import com.ptit.p.documents.model.User;
 

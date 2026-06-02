@@ -87,8 +87,8 @@ public class StockStatFrm extends JFrame {
             currentRows = dao.searchDamageLossRecords(from, to, reason);
             tableModel.setRowCount(0);
             for (StockStat s : currentRows) {
-                String itemId = s.getBook().getItems().isEmpty()
-                        ? "" : String.valueOf(s.getBook().getItems().get(0).getId());
+                String itemId = s.getBook().getBookItems().isEmpty()
+                        ? "" : String.valueOf(s.getBook().getBookItems().get(0).getId());
                 String reportedDate = s.getReportedDate() != null
                         ? s.getReportedDate().format(DISPLAY_DF) : "";
                 tableModel.addRow(new Object[]{

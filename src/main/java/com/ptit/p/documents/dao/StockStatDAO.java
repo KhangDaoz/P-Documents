@@ -71,7 +71,7 @@ public class StockStatDAO extends DAO {
                     rs.getString("author"),
                     rs.getString("genre")
                 );
-                book.addItem(new BookItem(
+                book.addBookItem(new BookItem(
                     rs.getInt("itemId"),
                     rs.getString("item_status")
                 ));
@@ -143,8 +143,8 @@ public class StockStatDAO extends DAO {
             for (StockStat s : rows) {
                 Book b = s.getBook();
                 String titleText = b != null ? b.getTitle() : "";
-                String itemId = b != null && !b.getItems().isEmpty()
-                        ? String.valueOf(b.getItems().get(0).getId()) : "";
+                String itemId = b != null && !b.getBookItems().isEmpty()
+                        ? String.valueOf(b.getBookItems().get(0).getId()) : "";
                 table.addCell(new PdfPCell(new Phrase(titleText, cellFont)));
                 table.addCell(new PdfPCell(new Phrase(itemId, cellFont)));
                 table.addCell(new PdfPCell(new Phrase(s.getReason(), cellFont)));

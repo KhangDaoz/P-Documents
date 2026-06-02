@@ -14,7 +14,7 @@ public class Book {
     private String description;
     private int availableCopies; 
     private int totalCopies;
-    private List<BookItem> items = new ArrayList<>(); 
+    private List<BookItem> bookItems = new ArrayList<>(); 
 
     public Book() {}
 
@@ -113,19 +113,19 @@ public class Book {
         this.totalCopies = totalCopies;
     }
 
-    public List<BookItem> getItems() {
-        return items;
+    public List<BookItem> getBookItems() {
+        return bookItems;
     }
 
-    public void setItems(List<BookItem> items) {
-        this.items = items != null ? items : new ArrayList<>();
+    public void setBookItems(List<BookItem> bookItems) {
+        this.bookItems = bookItems != null ? bookItems : new ArrayList<>();
     }
 
-    public void addItem(BookItem item) {
-        if (this.items == null) {
-            this.items = new ArrayList<>();
+    public void addBookItem(BookItem item) {
+        if (this.bookItems == null) {
+            this.bookItems = new ArrayList<>();
         }
-        this.items.add(item);
+        this.bookItems.add(item);
     }
 
     @Override

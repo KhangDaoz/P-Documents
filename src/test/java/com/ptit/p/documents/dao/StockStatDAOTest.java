@@ -65,7 +65,7 @@ class StockStatDAOTest {
         List<StockStat> result = dao.searchDamageLossRecords(from, to, "Tất cả");
 
         assertEquals(1, result.size(), "Chỉ trả về 1 dòng của ngày 10/02");
-        assertEquals(3, result.get(0).getBook().getItems().get(0).getId());
+        assertEquals(3, result.get(0).getBook().getBookItems().get(0).getId());
     }
 
     @Test

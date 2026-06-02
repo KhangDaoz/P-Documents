@@ -19,35 +19,6 @@ public class Borrowing {
         this.books = new ArrayList<>();
     }
 
-    
-    public Borrowing(int id, Student student, LocalDate createdAt) {
-        this.id = id;
-        this.student = student;
-        this.createdAt = createdAt;
-        this.books = new ArrayList<>();
-    }
-
-    
-    public Borrowing(int id, LocalDate expectedReceiveDate, LocalDate actualReceiveDate, 
-                     String status, List<BorrowedBook> books, Student student, User user) {
-        this.id = id;
-        this.expectedReceiveDate = expectedReceiveDate;
-        this.actualReceiveDate = actualReceiveDate;
-        this.status = status;
-        this.books = books != null ? books : new ArrayList<>();
-        this.student = student;
-        this.user = user;
-    }
-
-    public Borrowing(Student student, User user, LocalDate expectedReceiveDate, String note) {
-        this.student = student;
-        this.user = user;
-        this.expectedReceiveDate = expectedReceiveDate;
-        this.note = note;
-        this.status = "pending";
-        this.books = new ArrayList<>();
-    }
-
     public Borrowing(Student student, User user, LocalDate borrowDate, LocalDate expectedReceiveDate) {
         this.student = student;
         this.user = user;

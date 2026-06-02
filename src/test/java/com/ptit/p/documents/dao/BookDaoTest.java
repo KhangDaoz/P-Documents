@@ -16,7 +16,7 @@ public class BookDaoTest {
 
     @Test
     public void testAddBook_NewISBN_Success() {
-        Book book = new Book("ISBN-TEST-01", "Test Book", "Test Author", "Test Genre",
+        Book book = createTestBook("ISBN-TEST-01", "Test Book", "Test Author", "Test Genre",
                 "Test Publisher", 2024, 9.99, "This is a test book.", 5);
         boolean result = bd.addBook(book);
         Assert.assertTrue(result);
@@ -26,9 +26,9 @@ public class BookDaoTest {
 
     @Test
     public void testAddBook_DuplicateISBN_Failure() {
-        Book book1 = new Book("ISBN-TEST-02", "Test Book 1", "Test Author", "Test Genre",
+        Book book1 = createTestBook("ISBN-TEST-02", "Test Book 1", "Test Author", "Test Genre",
                 "Test Publisher", 2024, 9.99, "This is a test book.", 5);
-        Book book2 = new Book("ISBN-TEST-02", "Test Book 2", "Test Author", "Test Genre",
+        Book book2 = createTestBook("ISBN-TEST-02", "Test Book 2", "Test Author", "Test Genre",
                 "Test Publisher", 2024, 9.99, "This is another test book.", 5);
 
         boolean result1 = bd.addBook(book1);
@@ -104,7 +104,7 @@ public class BookDaoTest {
 
     @Test
     public void testUpdateBook_Success() {
-        Book book = new Book("ISBN-TEST-05", "Test Book Update", "Test Author", "Test Genre",
+        Book book = createTestBook("ISBN-TEST-05", "Test Book Update", "Test Author", "Test Genre",
                 "Test Publisher", 2024, 9.99, "This is a test book for update.", 5);
         bd.addBook(book);
 
@@ -121,7 +121,7 @@ public class BookDaoTest {
 
     @Test
     public void testUpdateBook_NotExistingISBN_Failure() {
-        Book book = new Book("ISBN-TEST-06", "Non-Existing Book", "Test Author", "Test Genre",
+        Book book = createTestBook("ISBN-TEST-06", "Non-Existing Book", "Test Author", "Test Genre",
                 "Test Publisher", 2024, 9.99, "This book does not exist.", 5);
         boolean result = bd.updateBook(book);
         Assert.assertFalse(result);
@@ -143,7 +143,7 @@ public class BookDaoTest {
 
     @Test
     public void testDeleteBook_Success() {
-        Book book = new Book("ISBN-TEST-07", "Test Book Delete", "Test Author", "Test Genre",
+        Book book = createTestBook("ISBN-TEST-07", "Test Book Delete", "Test Author", "Test Genre",
                 "Test Publisher", 2024, 9.99, "This is a test book for delete.", 5);
         bd.addBook(book);
 
@@ -158,5 +158,21 @@ public class BookDaoTest {
     public void testDeleteBook_NotExistingISBN_Failure() {
         boolean result = bd.deleteBook("ISBN-TEST-08");
         Assert.assertFalse(result);
+    }
+
+    private Book createTestBook(String isbn, String title, String author, String genre,
+                               String publisher, int publishYear, double price, String description, int availableCopies) {
+        Book book = new Book();
+        book.setIsbn(isbn);
+        book.setTitle(title);
+        book.setAuthor(author);
+        book.setGenre(genre);
+        book.setPublisher(publisher);
+        book.setPublishYear(publishYear);
+        book.setPrice(price);
+        book.setDescription(description);
+        book.setAvailableCopies(availableCopies);
+        book.setTotalCopies(availableCopies);
+        return book;
     }
 }

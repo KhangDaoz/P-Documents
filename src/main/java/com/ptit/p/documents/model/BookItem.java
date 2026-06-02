@@ -18,8 +18,6 @@ public class BookItem {
         this.bookISBN = bookISBN;
     }
 
-    
-
     public int getId() {
         return id;
     }

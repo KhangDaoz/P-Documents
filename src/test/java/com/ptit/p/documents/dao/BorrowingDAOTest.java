@@ -45,7 +45,7 @@ public class BorrowingDAOTest {
 
         Book book = new Book();
         book.setIsbn(isbn);
-        BorrowedBook bb = new BorrowedBook(book, returnDt, BigDecimal.valueOf(150000));
+        BorrowedBook bb = new BorrowedBook(book, returnDt, 150000.0);
 
         Borrowing b = new Borrowing(sv, user, LocalDate.now(), receive);
         b.getBooks().add(bb);
@@ -78,7 +78,7 @@ public class BorrowingDAOTest {
 
         Book book = new Book();
         book.setIsbn("ISBN-CS-01");
-        BorrowedBook bb = new BorrowedBook(book, returnDt, BigDecimal.valueOf(150000));
+        BorrowedBook bb = new BorrowedBook(book, returnDt, 150000.0);
 
         Borrowing b = new Borrowing(svKo, user, LocalDate.now(), receive);
         b.getBooks().add(bb);

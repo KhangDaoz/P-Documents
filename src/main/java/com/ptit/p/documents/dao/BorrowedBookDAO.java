@@ -36,19 +36,19 @@ public class BorrowedBookDAO extends DAO {
                     bookItem.setStatus(resultSet.getString("bookItemStatus"));
                     bookItem.setBookISBN(resultSet.getString("bookISBN"));
 
-                    BorrowedBook borrowedBook = new BorrowedBook(
-                            resultSet.getInt("ID"),
-                            resultSet.getTimestamp("expectedReturnDate") != null
+                    BorrowedBook borrowedBook = new BorrowedBook();
+                    borrowedBook.setId(resultSet.getInt("ID"));
+                    borrowedBook.setExpectedReturnDate(resultSet.getTimestamp("expectedReturnDate") != null
                                     ? resultSet.getTimestamp("expectedReturnDate").toLocalDateTime().toLocalDate()
-                                    : null,
-                            resultSet.getTimestamp("actualReturnDate") != null
+                                    : null);
+                    borrowedBook.setActualReturnDate(resultSet.getTimestamp("actualReturnDate") != null
                                     ? resultSet.getTimestamp("actualReturnDate").toLocalDateTime().toLocalDate()
-                                    : null,
-                            resultSet.getString("status"),
-                            resultSet.getString("note"),
-                            resultSet.getDouble("price"),
-                            bookItem,
-                            new ArrayList<>());
+                                    : null);
+                    borrowedBook.setStatus(resultSet.getString("status"));
+                    borrowedBook.setNote(resultSet.getString("note"));
+                    borrowedBook.setPrice(resultSet.getDouble("price"));
+                    borrowedBook.setBookItem(bookItem);
+                    borrowedBook.setBorrowedBookFines(new ArrayList<>());
                     results.add(borrowedBook);
                 }
             }

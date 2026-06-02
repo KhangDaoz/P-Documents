@@ -18,64 +18,12 @@ public class Book {
 
     public Book() {}
 
-    
     public Book(String isbn, String title, String author, String genre) {
         this.isbn = isbn;
         this.title = title;
         this.author = author;
         this.genre = genre;
     }
-
-    
-    public Book(String isbn, String title, String author) {
-        this.isbn = isbn;
-        this.title = title;
-        this.author = author;
-    }
-
-    
-    public Book(String isbn, String title, String author, String genre,
-                String publisher, int publishYear, double price, String description) {
-        this.isbn = isbn;
-        this.title = title;
-        this.author = author;
-        this.genre = genre;
-        this.publisher = publisher;
-        this.publishYear = publishYear;
-        this.price = price;
-        this.description = description;
-    }
-
-    
-    public Book(String isbn, String title, String author, String genre,
-                String publisher, int publishYear, double price,
-                String description, int availableCopies) {
-        this.isbn = isbn;
-        this.title = title;
-        this.author = author;
-        this.genre = genre;
-        this.publisher = publisher;
-        this.publishYear = publishYear;
-        this.price = price;
-        this.description = description;
-        this.availableCopies = availableCopies;
-    }
-
-    public Book(String isbn, String title, String author, String genre,
-                String publisher, int publishYear, double price,
-                String description, int availableCopies, int totalCopies) {
-        this(isbn, title, author, genre, publisher, publishYear, price, description, availableCopies);
-        this.totalCopies = totalCopies;
-    }
-
-    public Book(String isbn, String title, String author, String genre,
-                String publisher, int publishYear, double price,
-                String description, int availableCopies, int totalCopies, List<BookItem> items) {
-        this(isbn, title, author, genre, publisher, publishYear, price, description, availableCopies, totalCopies);
-        this.setItems(items);
-    }
-
-    
 
     public String getISBN() {
         return isbn;

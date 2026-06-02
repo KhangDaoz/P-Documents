@@ -24,14 +24,7 @@ public class BorrowingDAO extends DAO {
         super();
     }
 
-    
-    private static final String SQL_FIND_BOOK_ITEM = "SELECT ID FROM tblBookItem"
-            + " WHERE tblBookISBN = ? AND status = 'good'"
-            + " AND ID NOT IN ("
-            + "   SELECT bb.tblBookItemID FROM tblBorrowedBook bb"
-            + "   JOIN tblBorrowing br ON bb.tblBorrowingID = br.ID"
-            + "   WHERE br.status IN ('pending','borrowed')"
-            + " ) LIMIT 1";
+
 
     public boolean addBorrowing(Borrowing b) {
         if (b.getBooks() == null || b.getBooks().isEmpty()) {
@@ -74,7 +67,13 @@ public class BorrowingDAO extends DAO {
                 if (bb.getBookItem() != null && bb.getBookItem().getId() > 0) {
                     bookItemId = bb.getBookItem().getId();
                 } else if (isbn != null) {
-                    ps = getCon().prepareStatement(SQL_FIND_BOOK_ITEM);
+                    ps = getCon().prepareStatement("SELECT ID FROM tblBookItem"
+                            + " WHERE tblBookISBN = ? AND status = 'good'"
+                            + " AND ID NOT IN ("
+                            + "   SELECT bb.tblBookItemID FROM tblBorrowedBook bb"
+                            + "   JOIN tblBorrowing br ON bb.tblBorrowingID = br.ID"
+                            + "   WHERE br.status IN ('pending','borrowed')"
+                            + " ) LIMIT 1");
                     ps.setString(1, isbn);
                     ResultSet rs = ps.executeQuery();
                     if (rs.next()) {

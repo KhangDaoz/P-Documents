@@ -17,7 +17,6 @@ public class BorrowedBookDAO extends DAO {
         super();
     }
 
-    
     public List<BorrowedBook> findByBorrowingId(int borrowingId) {
         List<BorrowedBook> results = new ArrayList<>();
         String sql = "SELECT bb.ID, bb.expectedReturnDate, bb.actualReturnDate, bb.status, bb.note, bb.price, "
@@ -39,11 +38,11 @@ public class BorrowedBookDAO extends DAO {
                     BorrowedBook borrowedBook = new BorrowedBook();
                     borrowedBook.setId(resultSet.getInt("ID"));
                     borrowedBook.setExpectedReturnDate(resultSet.getTimestamp("expectedReturnDate") != null
-                                    ? resultSet.getTimestamp("expectedReturnDate").toLocalDateTime().toLocalDate()
-                                    : null);
+                            ? resultSet.getTimestamp("expectedReturnDate").toLocalDateTime().toLocalDate()
+                            : null);
                     borrowedBook.setActualReturnDate(resultSet.getTimestamp("actualReturnDate") != null
-                                    ? resultSet.getTimestamp("actualReturnDate").toLocalDateTime().toLocalDate()
-                                    : null);
+                            ? resultSet.getTimestamp("actualReturnDate").toLocalDateTime().toLocalDate()
+                            : null);
                     borrowedBook.setStatus(resultSet.getString("status"));
                     borrowedBook.setNote(resultSet.getString("note"));
                     borrowedBook.setPrice(resultSet.getDouble("price"));
@@ -59,7 +58,6 @@ public class BorrowedBookDAO extends DAO {
         return results;
     }
 
-    
     public boolean updateReturnStatus(BorrowedBook bb) {
         String sql = "UPDATE tblBorrowedBook SET actualReturnDate = ?, status = ?, note = ?, price = ? WHERE ID = ?";
         try (PreparedStatement statement = getCon().prepareStatement(sql)) {
@@ -77,7 +75,6 @@ public class BorrowedBookDAO extends DAO {
         }
     }
 
-    
     public boolean setBorrowedBookFine(BorrowedBookFine fine, BorrowedBook bb) {
         String sql = "INSERT INTO tblBorrowedBookFine (fineRate, tblBorrowedBookID, tblFineID) VALUES (?, ?, ?)";
         try (PreparedStatement statement = getCon().prepareStatement(sql)) {
@@ -92,7 +89,6 @@ public class BorrowedBookDAO extends DAO {
         }
     }
 
-    
     public List<BorrowedBook> getBorrowHistoryByBook(String isbn) {
         List<BorrowedBook> result = new ArrayList<>();
         String sql = "SELECT bb.ID, bb.expectedReturnDate, bb.actualReturnDate, bb.status, " +

@@ -10,7 +10,8 @@ public class User implements Serializable {
     private String phone;
     private String role;
 
-    public User() {}
+    public User() {
+    }
 
     public User(int id, String username, String fullName, String role) {
         this.id = id;
@@ -27,8 +28,6 @@ public class User implements Serializable {
         this.phone = phone;
         this.role = role;
     }
-
-    
 
     public int getId() {
         return id;

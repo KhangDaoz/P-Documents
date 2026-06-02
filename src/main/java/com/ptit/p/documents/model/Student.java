@@ -7,25 +7,22 @@ public class Student {
     private String phone;
     private String address;
 
-    public Student() {}
+    public Student() {
+    }
 
-    
     public Student(String studentId, String fullName) {
         this.studentId = studentId;
-        this.fullName  = fullName;
+        this.fullName = fullName;
     }
 
-    
     public Student(String studentId, String fullName, String email,
-                   String phone, String address) {
+            String phone, String address) {
         this.studentId = studentId;
-        this.fullName  = fullName;
-        this.email     = email;
-        this.phone     = phone;
-        this.address   = address;
+        this.fullName = fullName;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
     }
-
-    
 
     public String getStudentId() {
         return studentId;
@@ -35,7 +32,6 @@ public class Student {
         this.studentId = studentId;
     }
 
-    
     public String getId() {
         return studentId;
     }

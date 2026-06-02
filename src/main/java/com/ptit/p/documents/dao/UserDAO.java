@@ -17,15 +17,21 @@ public class UserDAO extends DAO {
         if (u == null || u.getUsername() == null || u.getPassword() == null || u.getPhone() == null) {
             return false;
         }
+        if (u.getUsername().trim().isEmpty() || u.getPassword().trim().isEmpty() || u.getPhone().trim().isEmpty()) {
+            return false;
+        }
         // Validate Username: 5 - 20 chars
-        if (u.getUsername().length() < 5 || u.getUsername().length() > 20) return false;
-        
+        if (u.getUsername().length() < 5 || u.getUsername().length() > 20) {
+            return false;
+        }
         // Validate Password: 6 - 32 chars
-        if (u.getPassword().length() < 6 || u.getPassword().length() > 32) return false;
-        
+        if (u.getPassword().length() < 6 || u.getPassword().length() > 32) {
+            return false;
+        }
         // Validate Phone: exactly 10 digits
-        if (!u.getPhone().matches("\\d{10}")) return false;
-        
+        if (!u.getPhone().matches("\\d{10}")) {
+            return false;
+        }
         return true;
     }
 

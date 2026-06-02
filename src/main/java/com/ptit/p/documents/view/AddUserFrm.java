@@ -15,9 +15,11 @@ public class AddUserFrm extends JFrame implements ActionListener {
     private final JTextField txtRole;
     private final JButton btnAddnew;
     private final JButton btnCancel;
+    private final User admin;
 
-    public AddUserFrm() {
+    public AddUserFrm(User admin) {
         super("Thêm tài khoản");
+        this.admin = admin;
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(660, 460);
         setLocationRelativeTo(null);
@@ -37,7 +39,7 @@ public class AddUserFrm extends JFrame implements ActionListener {
         lblHeader.setBounds(100, 30, 400, 35);
         pnl.add(lblHeader);
 
-        // Grid panel cho bảng thông tin
+
         JPanel pnlGrid = new JPanel(new GridLayout(5, 2, 0, 0));
         pnlGrid.setBounds(100, 75, 400, 175);
         pnlGrid.setBorder(BorderFactory.createLineBorder(new Color(226, 232, 240), 1));
@@ -122,14 +124,14 @@ public class AddUserFrm extends JFrame implements ActionListener {
     }
 
     // Constructor nhận dữ liệu cũ để điền lại khi người dùng nhấn Back từ màn hình Confirm
-    public AddUserFrm(User user) {
-        this();
-        if (user != null) {
-            txtFullName.setText(user.getFullName());
-            txtUsername.setText(user.getUsername());
-            txtPassword.setText(user.getPassword());
-            txtPhone.setText(user.getPhone());
-            txtRole.setText(user.getRole());
+    public AddUserFrm(User admin, User targetUser) {
+        this(admin);
+        if (targetUser != null) {
+            txtFullName.setText(targetUser.getFullName());
+            txtUsername.setText(targetUser.getUsername());
+            txtPassword.setText(targetUser.getPassword());
+            txtPhone.setText(targetUser.getPhone());
+            txtRole.setText(targetUser.getRole());
         }
     }
 
@@ -171,16 +173,15 @@ public class AddUserFrm extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(this, "Tên đăng nhập phải từ 5 đến 20 ký tự!", "Lỗi nhập liệu", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-
             if (password.length() < 6 || password.length() > 32) {
                 JOptionPane.showMessageDialog(this, "Mật khẩu phải từ 6 đến 32 ký tự!", "Lỗi nhập liệu", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-
             if (!phone.matches("\\d{10}")) {
-                JOptionPane.showMessageDialog(this, "Số điện thoại phải bao gồm đúng 10 chữ số!", "Lỗi nhập liệu", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Số điện thoại phải gồm đúng 10 chữ số!", "Lỗi nhập liệu", JOptionPane.WARNING_MESSAGE);
                 return;
             }
+
 
             String roleLower = role.toLowerCase();
             if (!roleLower.equals("admin") && !roleLower.equals("manager") && !roleLower.equals("librarian")) {
@@ -198,11 +199,11 @@ public class AddUserFrm extends JFrame implements ActionListener {
 
             // Phương thức actionPerformed() gọi lớp ConfirmAddUserFrm
             this.dispose();
-            ConfirmAddUserFrm confirmFrm = new ConfirmAddUserFrm(user);
+            ConfirmAddUserFrm confirmFrm = new ConfirmAddUserFrm(this.admin, user);
             confirmFrm.setVisible(true);
         } else if (e.getSource() == btnCancel) {
             this.dispose();
-            UserManageFrm manageFrm = new UserManageFrm();
+            UserManageFrm manageFrm = new UserManageFrm(this.admin);
             manageFrm.setVisible(true);
         }
     }

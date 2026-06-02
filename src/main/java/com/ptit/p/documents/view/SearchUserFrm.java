@@ -13,14 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchUserFrm extends JFrame implements ActionListener {
-    public enum Mode {
-        EDIT, DELETE
-    }
-
-    private final Mode mode;
     private final JTextField txtKey;
     private final JButton btnSearch;
-    private final JButton btnAction;
     private final JButton btnBack;
     private final JTable tblUser;
     private final DefaultTableModel tableModel;
@@ -28,10 +22,11 @@ public class SearchUserFrm extends JFrame implements ActionListener {
     private List<User> searchResults;
     private static final Icon EDIT_ICON = new EditIcon();
     private static final Icon DELETE_ICON = new DeleteIcon();
+    private final User admin;
 
-    public SearchUserFrm(Mode mode) {
+    public SearchUserFrm(User admin) {
         super("Tìm kiếm tài khoản");
-        this.mode = mode;
+        this.admin = admin;
         this.userDAO = new UserDAO();
         this.searchResults = new ArrayList<>();
 
@@ -162,11 +157,11 @@ public class SearchUserFrm extends JFrame implements ActionListener {
                     User selectedUser = searchResults.get(row);
                     if (col == 6) { // Cột sửa (✎)
                         dispose();
-                        EditUserFrm editFrm = new EditUserFrm(selectedUser);
+                        EditUserFrm editFrm = new EditUserFrm(SearchUserFrm.this.admin, selectedUser);
                         editFrm.setVisible(true);
                     } else if (col == 7) { // Cột xoá (🗑)
                         dispose();
-                        ConfirmDeleteUserFrm confirmDeleteFrm = new ConfirmDeleteUserFrm(selectedUser);
+                        ConfirmDeleteUserFrm confirmDeleteFrm = new ConfirmDeleteUserFrm(SearchUserFrm.this.admin, selectedUser);
                         confirmDeleteFrm.setVisible(true);
                     }
                 }
@@ -218,8 +213,6 @@ public class SearchUserFrm extends JFrame implements ActionListener {
 
         pnlMain.add(pnlBottom, BorderLayout.SOUTH);
 
-        btnAction = new JButton();
-
         // Load danh sách người dùng ban đầu
         performSearch();
 
@@ -268,7 +261,7 @@ public class SearchUserFrm extends JFrame implements ActionListener {
             performSearch();
         } else if (e.getSource() == btnBack) {
             this.dispose();
-            UserManageFrm manageFrm = new UserManageFrm();
+            UserManageFrm manageFrm = new UserManageFrm(this.admin);
             manageFrm.setVisible(true);
         }
     }

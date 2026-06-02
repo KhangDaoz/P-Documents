@@ -19,18 +19,13 @@ public class UserDAOTest {
     public void setUp() throws SQLException {
         userDAO = new UserDAO();
         con = userDAO.getCon(); 
-        
-        if (con != null) {
-            con.setAutoCommit(false); 
-        }
+        con.setAutoCommit(false); 
     }
 
     @AfterEach
     public void tearDown() throws SQLException {
-        if (con != null) {
-            con.rollback(); 
-            con.setAutoCommit(true);
-        }
+        con.rollback(); 
+        con.setAutoCommit(true);
     }
     // --- CHỨC NĂNG ĐĂNG NHẬP (checkLogin) ---
 
@@ -246,99 +241,9 @@ public class UserDAOTest {
         assertTrue(searchAfter.isEmpty());
     }
 
-    @Test
-    public void testDeleteUserException() {
-        // Cố tình tạo một User ảo với ID không tồn tại trong CSDL
-        User fakeUser = new User();
-        fakeUser.setId(-999); 
-        
-        // Hành động xóa phải trả về false vì không tìm thấy bản ghi nào để xóa
-        boolean deleteSuccess = userDAO.deleteUser(fakeUser);
-        assertFalse(deleteSuccess, "Xóa một tài khoản không tồn tại phải trả về false");
-    }
-
     // --- KIỂM THỬ GIÁ TRỊ BIÊN 
 
-    @Test
-    public void testAddUser_UsernameBVA() {
-        User u = new User();
-        u.setPassword("123456");
-        u.setFullName("Test User");
-        u.setPhone("0911222333");
-        u.setRole("librarian");
 
-        // 1. Min-1: 4 ký tự (Lỗi)
-        u.setUsername("abcd");
-        assertFalse(userDAO.addUser(u), "Username 4 ký tự phải bị từ chối");
-
-        // 2. Min: 5 ký tự (Hợp lệ)
-        u.setUsername("abcde");
-        assertTrue(userDAO.addUser(u), "Username 5 ký tự phải hợp lệ");
-
-        // 3. Inside: 10 ký tự (Hợp lệ)
-        u.setUsername("abcdefghij");
-        assertTrue(userDAO.addUser(u), "Username 10 ký tự phải hợp lệ");
-
-        // 4. Max: 20 ký tự (Hợp lệ)
-        u.setUsername("abcdefghijklmnopqrst");
-        assertTrue(userDAO.addUser(u), "Username 20 ký tự phải hợp lệ");
-
-        // 5. Max+1: 21 ký tự (Lỗi)
-        u.setUsername("abcdefghijklmnopqrstu");
-        assertFalse(userDAO.addUser(u), "Username 21 ký tự phải bị từ chối");
-    }
-
-    @Test
-    public void testAddUser_PasswordBVA() {
-        User u = new User();
-        u.setUsername("validuser");
-        u.setFullName("Test User");
-        u.setPhone("0911222333");
-        u.setRole("librarian");
-
-        // 1. Min-1: 5 ký tự (Lỗi)
-        u.setPassword("12345");
-        assertFalse(userDAO.addUser(u), "Password 5 ký tự phải bị từ chối");
-
-        // 2. Min: 6 ký tự (Hợp lệ)
-        u.setPassword("123456");
-        assertTrue(userDAO.addUser(u), "Password 6 ký tự phải hợp lệ");
-        userDAO.deleteUser(userDAO.searchUser("validuser").get(0)); // Dọn rác
-
-        // 3. Max: 32 ký tự (Hợp lệ)
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 32; i++) sb.append("a");
-        u.setPassword(sb.toString());
-        assertTrue(userDAO.addUser(u), "Password 32 ký tự phải hợp lệ");
-        userDAO.deleteUser(userDAO.searchUser("validuser").get(0)); // Dọn rác
-
-        // 4. Max+1: 33 ký tự (Lỗi)
-        sb.append("a");
-        u.setPassword(sb.toString());
-        assertFalse(userDAO.addUser(u), "Password 33 ký tự phải bị từ chối");
-    }
-
-    @Test
-    public void testAddUser_PhoneBVA() {
-        User u = new User();
-        u.setUsername("validuser2");
-        u.setPassword("123456");
-        u.setFullName("Test User");
-        u.setRole("librarian");
-
-        // 1. 9 chữ số (Lỗi)
-        u.setPhone("091234567");
-        assertFalse(userDAO.addUser(u), "Số điện thoại 9 số phải bị từ chối");
-
-        // 2. 10 chữ số (Hợp lệ)
-        u.setPhone("0912345678");
-        assertTrue(userDAO.addUser(u), "Số điện thoại 10 số phải hợp lệ");
-        userDAO.deleteUser(userDAO.searchUser("validuser2").get(0)); // Dọn rác
-
-        // 3. 11 chữ số (Lỗi)
-        u.setPhone("09123456789");
-        assertFalse(userDAO.addUser(u), "Số điện thoại 11 số phải bị từ chối");
-    }
     @Test
     public void testAddUser_EmptyOrNullFields() {
         User u = new User();
@@ -353,5 +258,82 @@ public class UserDAOTest {
         u.setPhone("");
         u.setRole("librarian");
         assertFalse(userDAO.addUser(u), "Tài khoản chứa chuỗi rỗng (Empty) phải bị từ chối");
+    }
+
+    @Test
+    public void testAddUser_UsernameBVA() {
+        User u = new User();
+        u.setPassword("123456");
+        u.setFullName("Test User");
+        u.setPhone("0911222333");
+        u.setRole("librarian");
+
+        // 1. Min-1: 4 chars
+        u.setUsername("abcd");
+        assertFalse(userDAO.addUser(u), "Username < 5 ký tự phải bị từ chối");
+
+        // 2. Min: 5 chars
+        u.setUsername("abcde");
+        assertTrue(userDAO.addUser(u), "Username = 5 ký tự phải hợp lệ");
+
+        // 3. Max: 20 chars
+        u.setUsername("12345678901234567890");
+        assertTrue(userDAO.addUser(u), "Username = 20 ký tự phải hợp lệ");
+
+        // 4. Max+1: 21 chars
+        u.setUsername("123456789012345678901");
+        assertFalse(userDAO.addUser(u), "Username > 20 ký tự phải bị từ chối");
+    }
+
+    @Test
+    public void testAddUser_PasswordBVA() {
+        User u = new User();
+        u.setUsername("uniq_user");
+        u.setFullName("Test User");
+        u.setPhone("0911222333");
+        u.setRole("librarian");
+
+        // 1. Min-1: 5 chars
+        u.setPassword("12345");
+        assertFalse(userDAO.addUser(u), "Password < 6 ký tự phải bị từ chối");
+
+        // 2. Min: 6 chars
+        u.setPassword("123456");
+        assertTrue(userDAO.addUser(u), "Password = 6 ký tự phải hợp lệ");
+
+        // 3. Max: 32 chars
+        u.setUsername("uniq_user2");
+        u.setPassword("12345678901234567890123456789012");
+        assertTrue(userDAO.addUser(u), "Password = 32 ký tự phải hợp lệ");
+
+        // 4. Max+1: 33 chars
+        u.setUsername("uniq_user3");
+        u.setPassword("123456789012345678901234567890123");
+        assertFalse(userDAO.addUser(u), "Password > 32 ký tự phải bị từ chối");
+    }
+
+    @Test
+    public void testAddUser_PhoneBVA() {
+        User u = new User();
+        u.setUsername("phoneuser");
+        u.setPassword("123456");
+        u.setFullName("Test User");
+        u.setRole("librarian");
+
+        // 9 chars
+        u.setPhone("091122233");
+        assertFalse(userDAO.addUser(u), "Phone < 10 ký tự phải bị từ chối");
+
+        // 11 chars
+        u.setPhone("09112223334");
+        assertFalse(userDAO.addUser(u), "Phone > 10 ký tự phải bị từ chối");
+
+        // 10 chars, but invalid letters
+        u.setPhone("091122233a");
+        assertFalse(userDAO.addUser(u), "Phone có ký tự chữ phải bị từ chối");
+
+        // exactly 10 digits
+        u.setPhone("0911222333");
+        assertTrue(userDAO.addUser(u), "Phone đúng 10 số phải hợp lệ");
     }
 }

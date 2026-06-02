@@ -14,9 +14,11 @@ public class ConfirmDeleteUserFrm extends JFrame implements ActionListener {
     private final JTable tblDeleteUserConfirm;
     private final JButton btnConfirm;
     private final JButton btnCancel;
+    private final User admin;
 
-    public ConfirmDeleteUserFrm(User user) {
+    public ConfirmDeleteUserFrm(User admin, User user) {
         super("Xác nhận xóa tài khoản");
+        this.admin = admin;
         this.user = user;
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -143,20 +145,19 @@ public class ConfirmDeleteUserFrm extends JFrame implements ActionListener {
             boolean success = userDAO.deleteUser(user);
 
             if (success) {
-                // Hệ thống hiển thị thông báo "Xoá tài khoản thành công"
                 JOptionPane.showMessageDialog(this, "Account deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
-                UserManageFrm manageFrm = new UserManageFrm();
+                UserManageFrm manageFrm = new UserManageFrm(this.admin);
                 manageFrm.setVisible(true);
             } else {
                 JOptionPane.showMessageDialog(this, "Xóa tài khoản thất bại hoặc không tìm thấy tài khoản!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 this.dispose();
-                UserManageFrm manageFrm = new UserManageFrm();
+                UserManageFrm manageFrm = new UserManageFrm(this.admin);
                 manageFrm.setVisible(true);
             }
         } else if (e.getSource() == btnCancel) {
             this.dispose();
-            UserManageFrm manageFrm = new UserManageFrm();
+            UserManageFrm manageFrm = new UserManageFrm(this.admin);
             manageFrm.setVisible(true);
         }
     }

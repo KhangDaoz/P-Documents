@@ -14,9 +14,11 @@ public class ConfirmAddUserFrm extends JFrame implements ActionListener {
     private final JTable tblAddUserConfirm;
     private final JButton btnConfirm;
     private final JButton btnCancel;
+    private final User admin;
 
-    public ConfirmAddUserFrm(User user) {
+    public ConfirmAddUserFrm(User admin, User user) {
         super("Xác nhận tài khoản mới");
+        this.admin = admin;
         this.user = user;
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -135,27 +137,25 @@ public class ConfirmAddUserFrm extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnConfirm) {
-            // Gọi lớp UserDAO để xử lý lưu trữ
             UserDAO userDAO = new UserDAO();
             boolean success = userDAO.addUser(user);
 
             if (success) {
-                // Hệ thống hiển thị thông báo thành công
                 JOptionPane.showMessageDialog(this, "Account created successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
                 // Admin click nút OK trên thông báo -> gọi lại lớp UserManageFrm
                 this.dispose();
-                UserManageFrm manageFrm = new UserManageFrm();
+                UserManageFrm manageFrm = new UserManageFrm(this.admin);
                 manageFrm.setVisible(true);
             } else {
                 JOptionPane.showMessageDialog(this, "Tạo tài khoản thất bại! Tên đăng nhập có thể đã tồn tại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 // Quay lại màn hình nhập liệu để Admin sửa
                 this.dispose();
-                AddUserFrm addFrm = new AddUserFrm();
+                AddUserFrm addFrm = new AddUserFrm(this.admin, user);
                 addFrm.setVisible(true);
             }
         } else if (e.getSource() == btnCancel) {
             this.dispose();
-            AddUserFrm addFrm = new AddUserFrm(user);
+            AddUserFrm addFrm = new AddUserFrm(this.admin, user);
             addFrm.setVisible(true);
         }
     }

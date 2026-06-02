@@ -2,7 +2,6 @@ package com.ptit.p.documents.view;
 
 import com.ptit.p.documents.dao.BookDAO;
 import com.ptit.p.documents.dao.FineDAO;
-import com.ptit.p.documents.dao.BorrowedBookDAO;
 import com.ptit.p.documents.dao.BookItemDAO;
 import com.ptit.p.documents.model.Book;
 import com.ptit.p.documents.model.BorrowedBook;
@@ -11,13 +10,13 @@ import com.ptit.p.documents.model.Fine;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.ArrayList;
 
-public class AddFineDlg extends JDialog {
+public class AddFineDlg extends JDialog implements ActionListener {
     private final BorrowedBook borrowedBook;
     private final FineDAO fineDAO;
-    private final BorrowedBookDAO borrowedBookDAO;
 
     private JComboBox<Fine> cmbFineType;
     private JTextField txtFineRate;
@@ -27,16 +26,33 @@ public class AddFineDlg extends JDialog {
         super(parent, "Thêm lỗi phạt", true);
         this.borrowedBook = borrowedBook;
         this.fineDAO = new FineDAO();
-        this.borrowedBookDAO = new BorrowedBookDAO();
 
         initComponents();
-        loadFineTypes();
+        // loadFineTypes();
+        List<Fine> fines = fineDAO.findAll();
+        DefaultComboBoxModel<Fine> model = new DefaultComboBoxModel<>();
+        for (Fine fine : fines) {
+            model.addElement(fine);
+        }
+        cmbFineType.setModel(model);
+        if (model.getSize() > 0) {
+            cmbFineType.setSelectedIndex(0);
+            Fine fine = (Fine) cmbFineType.getSelectedItem();
+            txtFineRate.setText(fine != null ? String.valueOf(fine.getFineRate()) : ""); 
+        }
     }
 
     private void initComponents() {
         System.out.println("AddFine intialized");
         int bookItemId = borrowedBook.getBookItem() != null ? borrowedBook.getBookItem().getId() : -1;
-        String bookTitle = resolveBookTitle();
+        String bookTitle;
+        if (borrowedBook.getBookItem() == null) {
+            bookTitle = "Không xác định";
+        } else {
+            BookDAO bookDAO = new BookDAO();
+            Book book = bookDAO.findByID(new BookItemDAO().getBookISBN(borrowedBook.getBookItem().getId()));
+            bookTitle = book != null ? book.getTitle() : "Không xác định";
+        }
 
         setTitle("Thêm lỗi phạt - Sách #" + bookItemId);
         setSize(500, 350);
@@ -107,67 +123,62 @@ public class AddFineDlg extends JDialog {
         pnlActions.add(btnCancel);
         add(pnlActions, BorderLayout.SOUTH);
 
-        cmbFineType.addActionListener(e -> updateFineRate());
-        btnAdd.addActionListener(e -> addFineAction());
-        btnCancel.addActionListener(e -> dispose());
+
+        cmbFineType.setActionCommand("fineType");
+        cmbFineType.addActionListener(this);
+
+        // Xử lý sự kiện khi nhấn nút "Thêm"
+        btnAdd.setActionCommand("add");
+        btnAdd.addActionListener(this);
+        btnCancel.setActionCommand("cancel");
+        btnCancel.addActionListener(this);
 
     }
 
-    private String resolveBookTitle() {
-        if (borrowedBook.getBookItem() == null) {
-            return "Không xác định";
-        }
-        BookDAO bookDAO = new BookDAO();
-        Book book = bookDAO.findByID(new BookItemDAO().getBookISBN(borrowedBook.getBookItem().getId()));
-        return book != null ? book.getTitle() : "Không xác định";
-    }
-
-    private void loadFineTypes() {
-        List<Fine> fines = fineDAO.findAll();
-        DefaultComboBoxModel<Fine> model = new DefaultComboBoxModel<>();
-        for (Fine fine : fines) {
-            model.addElement(fine);
-        }
-        cmbFineType.setModel(model);
-        if (model.getSize() > 0) {
-            cmbFineType.setSelectedIndex(0);
-            updateFineRate();
-        }
-    }
-
-    private void updateFineRate() {
-        Fine fine = (Fine) cmbFineType.getSelectedItem();
-        txtFineRate.setText(fine != null ? String.valueOf(fine.getFineRate()) : "");
-    }
-
-    private void addFineAction() {
-        Fine fine = (Fine) cmbFineType.getSelectedItem();
-        if (fine == null) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn loại lỗi phạt", "Thông báo", JOptionPane.WARNING_MESSAGE);
+    @Override
+    public void actionPerformed(java.awt.event.ActionEvent evt){
+        String command = evt.getActionCommand();
+        if (command == null) {
             return;
         }
 
-        BorrowedBookFine borrowedBookFine = new BorrowedBookFine();
-        borrowedBookFine.setFine(fine);
-        borrowedBookFine.setFineRate(fine.getFineRate());
-        borrowedBookFine.setTotalFine(fine.getFineRate());
+        switch (command) {
+            case "fineType": {
+                Fine fine = (Fine) cmbFineType.getSelectedItem();
+                txtFineRate.setText(fine != null ? String.valueOf(fine.getFineRate()) : "");
+                break;
+            }
+            case "add": {
+                Fine fine = (Fine) cmbFineType.getSelectedItem();
+                if (fine == null) {
+                    JOptionPane.showMessageDialog(this, "Vui lòng chọn loại lỗi phạt", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
 
-        
-        borrowedBook.addBorrowedBookFine(borrowedBookFine);
+                BorrowedBookFine borrowedBookFine = new BorrowedBookFine();
+                borrowedBookFine.setFine(fine);
+                borrowedBookFine.setFineRate(fine.getFineRate());
+                borrowedBookFine.setTotalFine(fine.getFineRate());
 
-        String note = txtNote.getText().trim();
-        if (!note.isEmpty()) {
-            borrowedBook.setNote(note);
-        }
-        
-        System.out.println("Đã thêm lỗi phạt: " + borrowedBookFine.getFine().getName() + " into " + borrowedBook.getBookItem().getId());
-        JOptionPane.showMessageDialog(this, "Đã thêm lỗi phạt", "Thành công", JOptionPane.INFORMATION_MESSAGE);
-        
-        if (borrowedBookDAO.setBorrowedBookFine(borrowedBookFine, borrowedBook)) {
-            JOptionPane.showMessageDialog(this, "Đã thêm lỗi phạt", "Thành công", JOptionPane.INFORMATION_MESSAGE);
-            dispose();
-        } else {
-            JOptionPane.showMessageDialog(this, "Không thể lưu lỗi phạt", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                borrowedBook.addBorrowedBookFine(borrowedBookFine);
+
+                String note = txtNote.getText().trim();
+                if (!note.isEmpty()) {
+                    borrowedBook.setNote(note);
+                }
+                
+                System.out.println("Đã thêm lỗi phạt: " + borrowedBookFine.getFine().getName() + " into " + borrowedBook.getBookItem().getId());
+                JOptionPane.showMessageDialog(this, "Đã thêm lỗi phạt", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+
+                break;
+            }
+            case "cancel": {
+                dispose();
+                break;
+            }
+            default:
+                break;
         }
     }
 }
+

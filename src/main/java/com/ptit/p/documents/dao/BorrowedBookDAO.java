@@ -74,21 +74,7 @@ public class BorrowedBookDAO extends DAO {
             return false;
         }
     }
-
-    public boolean setBorrowedBookFine(BorrowedBookFine fine, BorrowedBook bb) {
-        String sql = "INSERT INTO tblBorrowedBookFine (fineRate, tblBorrowedBookID, tblFineID) VALUES (?, ?, ?)";
-        try (PreparedStatement statement = getCon().prepareStatement(sql)) {
-            statement.setDouble(1, fine.getFineRate());
-            statement.setInt(2, bb.getId());
-            statement.setInt(3, fine.getFine().getId());
-
-            return statement.executeUpdate() > 0;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            return false;
-        }
-    }
-
+    
     public List<BorrowedBook> getBorrowHistoryByBook(String isbn) {
         List<BorrowedBook> result = new ArrayList<>();
         String sql = "SELECT bb.ID, bb.expectedReturnDate, bb.actualReturnDate, bb.status, " +

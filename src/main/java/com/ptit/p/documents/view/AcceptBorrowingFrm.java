@@ -1,7 +1,7 @@
 package com.ptit.p.documents.view;
 
 import com.ptit.p.documents.dao.BorrowingDAO;
-import com.ptit.p.documents.dao.BorrowedBookDAO;
+
 import com.ptit.p.documents.dao.BookDAO;
 import com.ptit.p.documents.dao.BookItemDAO;
 import com.ptit.p.documents.model.Book;
@@ -12,16 +12,16 @@ import com.ptit.p.documents.model.User;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.time.format.DateTimeFormatter;
 
 import java.util.List;
 
-public class AcceptBorrowingFrm extends JFrame {
+public class AcceptBorrowingFrm extends JFrame implements ActionListener {
     private User currentUser;
     private Borrowing borrowing;
     private BorrowingDAO borrowingDAO;
     private BookDAO bookDAO;
-    private BorrowedBookDAO borrowedBookDAO;
     private BookItemDAO bookItemDAO;
 
     private JLabel lblStudentName;
@@ -38,7 +38,7 @@ public class AcceptBorrowingFrm extends JFrame {
         this.borrowing = borrowing;
         this.borrowingDAO = new BorrowingDAO();
         this.bookDAO = new BookDAO();
-        this.borrowedBookDAO = new BorrowedBookDAO();
+
         this.bookItemDAO = new BookItemDAO();
 
         setTitle("Xác nhận phiếu mượn");
@@ -120,14 +120,7 @@ public class AcceptBorrowingFrm extends JFrame {
         add(pnlLower, BorderLayout.SOUTH);
 
         
-        loadBookData();
-
-        
-        btnConfirm.addActionListener(e -> confirmAction());
-        btnCancel.addActionListener(e -> dispose());
-    }
-
-    private void loadBookData() {
+        // Load dữ liệu sách vào bảng
         List<BorrowedBook> borrowedBooks = borrowing.getBooks();
 
         
@@ -157,31 +150,56 @@ public class AcceptBorrowingFrm extends JFrame {
                 System.out.println("Added book: " + book.getTitle() + " to table");
             }
         }
+
+        
+        btnConfirm.setActionCommand("confirm");
+        btnConfirm.addActionListener(this);
+        btnCancel.setActionCommand("cancel");
+        btnCancel.addActionListener(this);
+
     }
 
-    private void confirmAction() {
-        
-        if (borrowing.getBooks() == null || borrowing.getBooks().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Phiếu mượn không có sách!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        if (!borrowing.getStatus().equals("pending")) {
-            JOptionPane.showMessageDialog(this, "Phiếu mượn không ở trạng thái chờ xác nhận!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+
+    @Override
+    public void actionPerformed(java.awt.event.ActionEvent evt) {
+        String command = evt.getActionCommand();
+        if (command == null) {
             return;
         }
 
-        if (borrowingDAO.confirmBorrowing(borrowing.getId(), java.time.LocalDate.now())) {
-            
-            for (BorrowedBook bb : borrowing.getBooks()) {
-                if (bb.getBookItem() != null) {
-                    bookItemDAO.updateStatus(bb.getBookItem().getId(), "borrowed");
+        switch (command) {
+            case "confirm": {
+                if (borrowing.getBooks() == null || borrowing.getBooks().isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Phiếu mượn không có sách!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
-            }
+                if (!borrowing.getStatus().equals("pending")) {
+                    JOptionPane.showMessageDialog(this, "Phiếu mượn không ở trạng thái chờ xác nhận!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
 
-            JOptionPane.showMessageDialog(this, "Xác nhận phiếu mượn thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
-            this.dispose();
-        } else {
-            JOptionPane.showMessageDialog(this, "Lỗi khi xác nhận phiếu mượn!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                if (borrowingDAO.confirmBorrowing(borrowing.getId(), java.time.LocalDate.now())) {
+                    
+                    for (BorrowedBook bb : borrowing.getBooks()) {
+                        if (bb.getBookItem() != null) {
+                            bookItemDAO.updateStatus(bb.getBookItem().getId(), "borrowed");
+                        }
+                    }
+
+                    JOptionPane.showMessageDialog(this, "Xác nhận phiếu mượn thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+                    this.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Lỗi khi xác nhận phiếu mượn!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                }
+                break;
+            }
+            case "cancel": {
+                dispose();
+                break;
+            }
+            default:
+                break;
         }
     }
 }
+

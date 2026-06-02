@@ -4,18 +4,21 @@ import com.ptit.p.documents.dao.BorrowingDAO;
 import com.ptit.p.documents.model.Borrowing;
 import com.ptit.p.documents.model.BorrowedBook;
 import com.ptit.p.documents.model.User;
+import com.ptit.p.documents.view.AcceptBorrowingFrm;
+import com.ptit.p.documents.view.SearchMode;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.time.LocalDate;
 
-public class SearchBorrowingFrm extends JFrame {
+public class SearchBorrowingFrm extends JFrame implements ActionListener {
     private User currentUser;
     private SearchMode mode;
     private BorrowingDAO borrowingDAO;
@@ -26,7 +29,7 @@ public class SearchBorrowingFrm extends JFrame {
     private JButton btnClear;
     private JTable tblResult;
     private DefaultTableModel tbmResult;
-    private JButton btnSelect;
+    // private JButton btnSelect;
     private JButton btnBack;
 
     private List<Borrowing> searchResults;
@@ -107,10 +110,10 @@ public class SearchBorrowingFrm extends JFrame {
         String btnSelectText = "Chọn phiếu";
         if (mode == SearchMode.RETURN_BOOK) btnSelectText = "Chọn phiếu trả";
         if (mode == SearchMode.CANCEL_BORROW) btnSelectText = "Chọn phiếu hủy";
-        btnSelect = new JButton(btnSelectText);
+        // btnSelect = new JButton(btnSelectText);
         
         btnBack = new JButton("Quay lại");
-        pnlActions.add(btnSelect);
+        // pnlActions.add(btnSelect);
         pnlActions.add(btnBack);
 
         
@@ -154,135 +157,208 @@ public class SearchBorrowingFrm extends JFrame {
         mainSplitPane.setResizeWeight(0.6);
         add(mainSplitPane, BorderLayout.CENTER);
 
+        // Xử lý sự kiện tìm kiếm
+        btnSearch.setActionCommand("search");
+        btnSearch.addActionListener(this);
+
+        // Xử lý sự kiện xóa
+        btnClear.setActionCommand("clear");
+        btnClear.addActionListener(this);
+
+        btnBack.setActionCommand("back");
+        btnBack.addActionListener(this);
         
-        btnSearch.addActionListener(e -> searchAction());
-        btnClear.addActionListener(e -> clearAction());
-        btnBack.addActionListener(e -> dispose());
-        btnSelect.addActionListener(e -> selectAction());
+        // btnSelect.addActionListener(e -> selectAction());
         tblResult.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
                 if (me.getClickCount() == 2) {
-                    selectAction();
+                    
+                    
+                    int selectedRow = tblResult.getSelectedRow();
+                    if (selectedRow < 0) {
+                        JOptionPane.showMessageDialog(SearchBorrowingFrm.this,
+                                "Vui lòng chọn một phiếu mượn", "Thông báo",
+                                JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+
+                    selectedBorrowing = searchResults.get(selectedRow);
+
+                    if (mode == SearchMode.CONFIRM_BORROW) {
+                        new AcceptBorrowingFrm(currentUser, selectedBorrowing).setVisible(true);
+                    } else if (mode == SearchMode.CANCEL_BORROW) {
+                        new ConfirmCancelFrm(selectedBorrowing, currentUser).setVisible(true);
+                        SearchBorrowingFrm.this.dispose();
+                    } else {
+                        lblDetailName.setText("Họ tên: " + selectedBorrowing.getStudent().getFullName());
+                        lblDetailId.setText("Mã SV: " + selectedBorrowing.getStudent().getStudentId());
+
+                        ((TitledBorder) pnlBorrowingDetail.getBorder())
+                                .setTitle("Chi tiết phiếu mượn #" + selectedBorrowing.getId());
+
+                        tbmBorrowedBooks.setRowCount(0);
+                        DateTimeFormatter sdf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+                        int idx = 1;
+                        for (BorrowedBook bb : selectedBorrowing.getBooks()) {
+                            String expDate = bb.getExpectedReturnDate() != null ?
+                                    bb.getExpectedReturnDate().format(sdf) : "";
+                            String bookName = "Sách ID: " + (bb.getBookItem() != null ?
+                                    bb.getBookItem().getId() : "N/A");
+                            int bookItemId = bb.getBookItem() != null ? bb.getBookItem().getId() : -1;
+
+                            long fineCount = 0;
+                            if (bb.getBorrowedBookFines() != null) {
+                                fineCount = bb.getBorrowedBookFines().size();
+                            }
+                            String finesSum = fineCount > 0 ? fineCount + " lỗi" : "Không có";
+                            tbmBorrowedBooks.addRow(new Object[]{
+                                    idx++,
+                                    bookItemId,
+                                    bookName,
+                                    expDate,
+                                    bb.getStatus(),
+                                    finesSum
+                            });
+                        }
+
+                        pnlBorrowingDetail.setVisible(true);
+                        mainSplitPane.setDividerLocation(300);
+                    }
                 }
             }
         });
 
-        btnAddFine.addActionListener(e -> addFineAction());
-        btnDetailBack.addActionListener(e -> {
-            pnlBorrowingDetail.setVisible(false);
-            mainSplitPane.setDividerLocation(1.0); 
-        });
-        btnContinue.addActionListener(e -> {
-            if (selectedBorrowing == null) {
-                JOptionPane.showMessageDialog(this, "Vui lòng chọn một phiếu mượn", "Thông báo", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            new ReturnConfirmFrm(currentUser, selectedBorrowing).setVisible(true);
-            this.dispose();
-        });
+        btnAddFine.setActionCommand("addFine");
+        btnAddFine.addActionListener(this);
+
+        btnDetailBack.setActionCommand("detailBack");
+        btnDetailBack.addActionListener(this);
+
+        btnContinue.setActionCommand("continue");
+        btnContinue.addActionListener(this);
     }
 
-    private void searchAction() {
-        String studentId = txtStudentId.getText().trim();
-        String studentName = txtStudentName.getText().trim();
-
-        if (mode == SearchMode.CONFIRM_BORROW || mode == SearchMode.CANCEL_BORROW) {
-            searchResults = borrowingDAO.searchBorrowing(studentId, studentName, "pending");
-        } else {
-            searchResults = borrowingDAO.searchBorrowing(studentId, studentName, "borrowed", "overdue");
-        }
-
-        tbmResult.setRowCount(0);
-        DateTimeFormatter sdf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        int idx = 1;
-        for (Borrowing b : searchResults) {
-            String bDate = b.getCreatedAt() != null ? b.getCreatedAt().format(sdf) : "";
-            String eDate = b.getExpectedReceiveDate() != null ? b.getExpectedReceiveDate().format(sdf) : "";
-            tbmResult.addRow(new Object[]{
-                idx++,
-                b.getId(),
-                b.getStudent() != null ? b.getStudent().getFullName() : "",
-                bDate,
-                eDate,
-                b.getStatus()
-            });
-        }
-    }
-
-    private void clearAction() {
-        txtStudentId.setText("");
-        txtStudentName.setText("");
-        tbmResult.setRowCount(0);
-    }
-
-    private void selectAction() {
-        int selectedRow = tblResult.getSelectedRow();
-        if (selectedRow < 0) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn một phiếu mượn", "Thông báo", JOptionPane.WARNING_MESSAGE);
+    @Override
+    public void actionPerformed(java.awt.event.ActionEvent evt) {
+        String command = evt.getActionCommand();
+        if (command == null) {
             return;
         }
 
-        selectedBorrowing = searchResults.get(selectedRow);
+        switch (command) {
+            case "search": {
+                String studentId = txtStudentId.getText().trim();
+                String studentName = txtStudentName.getText().trim();
 
-        if (mode == SearchMode.CONFIRM_BORROW) {
-            new AcceptBorrowingFrm(currentUser, selectedBorrowing).setVisible(true);
-            
-        } else if (mode == SearchMode.CANCEL_BORROW) {
-            new ConfirmCancelFrm(selectedBorrowing, currentUser).setVisible(true);
-            this.dispose();
-        } else {
-            
-            showInlineDetail();
-        }
-    }
+                if (mode == SearchMode.CONFIRM_BORROW || mode == SearchMode.CANCEL_BORROW) {
+                    searchResults = borrowingDAO.searchBorrowing(studentId, studentName, "pending");
+                } else {
+                    searchResults = borrowingDAO.searchBorrowing(studentId, studentName, "borrowed", "overdue");
+                }
 
-    private void showInlineDetail() {
-        lblDetailName.setText("Họ tên: " + selectedBorrowing.getStudent().getFullName());
-        lblDetailId.setText("Mã SV: " + selectedBorrowing.getStudent().getStudentId());
-        
-        ((TitledBorder)pnlBorrowingDetail.getBorder()).setTitle("Chi tiết phiếu mượn #" + selectedBorrowing.getId());
+                tbmResult.setRowCount(0);
+                DateTimeFormatter sdf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                int idx = 1;
 
-        tbmBorrowedBooks.setRowCount(0);
-        DateTimeFormatter sdf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-        int idx = 1;
-        for (BorrowedBook bb : selectedBorrowing.getBooks()) {
-            String expDate = bb.getExpectedReturnDate() != null ? bb.getExpectedReturnDate().format(sdf) : "";
-            String bookName = "Sách ID: " + (bb.getBookItem() != null ? bb.getBookItem().getId() : "N/A");
-            int bookItemId = bb.getBookItem() != null ? bb.getBookItem().getId() : -1;
-            
-            
-            long fineCount = 0;
-            if (bb.getBorrowedBookFines() != null) {
-                fineCount = bb.getBorrowedBookFines().size();
+                if(searchResults.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Không tìm thấy kết quả phù hợp", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
+                else
+                {
+                    for (Borrowing b : searchResults) {
+                        String bDate = b.getCreatedAt() != null ? b.getCreatedAt().format(sdf) : "";
+                        String eDate = b.getExpectedReceiveDate() != null ? b.getExpectedReceiveDate().format(sdf) : "";
+                        tbmResult.addRow(new Object[]{
+                            idx++,
+                            b.getId(),
+                            b.getStudent() != null ? b.getStudent().getFullName() : "",
+                            bDate,
+                            eDate,
+                            b.getStatus()
+                        });
+                    }
+                }
+                break;
             }
-            String finesSum = fineCount > 0 ? fineCount + " lỗi" : "Không có"; 
-            tbmBorrowedBooks.addRow(new Object[]{
-                idx++,
-                bookItemId,
-                bookName,
-                expDate,
-                bb.getStatus(),
-                finesSum
-            });
-        }
+            case "clear": {
+                txtStudentId.setText("");
+                txtStudentName.setText("");
+                tbmResult.setRowCount(0);
+                break;
+            }
+            case "back": {
+                dispose();
+                break;
+            }
+            case "addFine": {
+                int selectedRow = tblBorrowedBooks.getSelectedRow();
+                if (selectedRow < 0) {
+                    JOptionPane.showMessageDialog(SearchBorrowingFrm.this,
+                            "Vui lòng chọn một quyển sách để thêm lỗi phạt", "Thông báo",
+                            JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
 
-        pnlBorrowingDetail.setVisible(true);
-        mainSplitPane.setDividerLocation(300);
+                selectedBorrowedBook = selectedBorrowing.getBooks().get(selectedRow);
+
+                new AddFineDlg(SearchBorrowingFrm.this, selectedBorrowedBook).setVisible(true);
+                selectedBorrowing.updateBorrowedBook(selectedBorrowedBook);
+
+                lblDetailName.setText("Họ tên: " + selectedBorrowing.getStudent().getFullName());
+                lblDetailId.setText("Mã SV: " + selectedBorrowing.getStudent().getStudentId());
+
+                ((TitledBorder) pnlBorrowingDetail.getBorder())
+                        .setTitle("Chi tiết phiếu mượn #" + selectedBorrowing.getId());
+
+                tbmBorrowedBooks.setRowCount(0);
+                DateTimeFormatter sdf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+                int idx = 1;
+                for (BorrowedBook bb : selectedBorrowing.getBooks()) {
+                    String expDate = bb.getExpectedReturnDate() != null ?
+                            bb.getExpectedReturnDate().format(sdf) : "";
+                    String bookName = "Sách ID: " + (bb.getBookItem() != null ?
+                            bb.getBookItem().getId() : "N/A");
+                    int bookItemId = bb.getBookItem() != null ? bb.getBookItem().getId() : -1;
+
+                    long fineCount = 0;
+                    if (bb.getBorrowedBookFines() != null) {
+                        fineCount = bb.getBorrowedBookFines().size();
+                    }
+                    String finesSum = fineCount > 0 ? fineCount + " lỗi" : "Không có";
+                    tbmBorrowedBooks.addRow(new Object[]{
+                            idx++,
+                            bookItemId,
+                            bookName,
+                            expDate,
+                            bb.getStatus(),
+                            finesSum
+                    });
+                }
+
+                pnlBorrowingDetail.setVisible(true);
+                mainSplitPane.setDividerLocation(300);
+                break;
+            }
+            case "detailBack": {
+                pnlBorrowingDetail.setVisible(false);
+                mainSplitPane.setDividerLocation(1.0); 
+                break;
+            }
+            case "continue": {
+                if (selectedBorrowing == null) {
+                    JOptionPane.showMessageDialog(this, "Vui lòng chọn một phiếu mượn", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                new ReturnConfirmFrm(currentUser, selectedBorrowing).setVisible(true);
+                this.dispose();
+                break;
+            }
+            default:
+                break;
+        }
     }
 
-    private void addFineAction() {
-        int selectedRow = tblBorrowedBooks.getSelectedRow();
-        if (selectedRow < 0) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn một quyển sách để thêm lỗi phạt", "Thông báo", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        selectedBorrowedBook = selectedBorrowing.getBooks().get(selectedRow);
-
-        new AddFineDlg(this, selectedBorrowedBook).setVisible(true);
-        selectedBorrowing.updateBorrowedBook(selectedBorrowedBook);
-        
-        showInlineDetail(); 
-    }
 }

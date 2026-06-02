@@ -1,7 +1,7 @@
 package com.ptit.p.documents.view;
 
 import com.ptit.p.documents.dao.BookDAO;
-import com.ptit.p.documents.dao.BookItemDAO;
+import com.ptit.p.documents.dao.BookItemDAOTest;
 import com.ptit.p.documents.model.Book;
 import com.ptit.p.documents.model.User;
 
@@ -209,7 +209,7 @@ public class DeleteBookFrm extends JFrame implements ActionListener {
             }
 
             
-            BookItemDAO bookItemDAO = new BookItemDAO();
+            BookItemDAOTest bookItemDAO = new BookItemDAOTest();
             bookItemDAO.deleteBookItem(isbn);
 
             

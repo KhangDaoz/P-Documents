@@ -3,7 +3,7 @@ package com.ptit.p.documents.view;
 import com.ptit.p.documents.dao.BookDAO;
 import com.ptit.p.documents.dao.FineDAO;
 import com.ptit.p.documents.dao.BorrowedBookDAO;
-import com.ptit.p.documents.dao.BookItemDAO;
+import com.ptit.p.documents.dao.BookItemDAOTest;
 import com.ptit.p.documents.model.Book;
 import com.ptit.p.documents.model.BorrowedBook;
 import com.ptit.p.documents.model.BorrowedBookFine;
@@ -118,7 +118,7 @@ public class AddFineDlg extends JDialog {
             return "Không xác định";
         }
         BookDAO bookDAO = new BookDAO();
-        Book book = bookDAO.findByID(new BookItemDAO().getBookISBN(borrowedBook.getBookItem().getId()));
+        Book book = bookDAO.findByID(new BookItemDAOTest().getBookISBN(borrowedBook.getBookItem().getId()));
         return book != null ? book.getTitle() : "Không xác định";
     }
 

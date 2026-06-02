@@ -1,7 +1,7 @@
 package com.ptit.p.documents.view;
 
 import com.ptit.p.documents.dao.BookDAO;
-import com.ptit.p.documents.dao.BookItemDAO;
+import com.ptit.p.documents.dao.BookItemDAOTest;
 import com.ptit.p.documents.model.Book;
 import com.ptit.p.documents.model.BookItem;
 import com.ptit.p.documents.model.User;
@@ -276,7 +276,7 @@ public class AddBookFrm extends JFrame implements ActionListener {
 
             
             if (copies > 0) {
-                BookItemDAO bookItemDAO = new BookItemDAO();
+                BookItemDAOTest bookItemDAO = new BookItemDAOTest();
                 for (int i = 0; i < copies; i++) {
                     BookItem item = new BookItem();
                     item.setStatus("good");

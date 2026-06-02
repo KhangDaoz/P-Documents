@@ -2,7 +2,7 @@ package com.ptit.p.documents.view;
 
 import com.ptit.p.documents.dao.BillDAO;
 import com.ptit.p.documents.dao.BookDAO;
-import com.ptit.p.documents.dao.BookItemDAO;
+import com.ptit.p.documents.dao.BookItemDAOTest;
 import com.ptit.p.documents.dao.BorrowedBookDAO;
 import com.ptit.p.documents.dao.BorrowingDAO;
 import com.ptit.p.documents.dao.FineDAO;
@@ -34,7 +34,7 @@ public class ReturnConfirmFrm extends JFrame {
 
     private final BorrowingDAO borrowingDAO;
     private final BorrowedBookDAO borrowedBookDAO;
-    private final BookItemDAO bookItemDAO;
+    private final BookItemDAOTest bookItemDAO;
     private final BillDAO billDAO;
     private final BookDAO bookDAO;
     private final FineDAO fineDAO;
@@ -215,7 +215,7 @@ public class ReturnConfirmFrm extends JFrame {
         this.borrowing = borrowing;
         this.borrowingDAO = new BorrowingDAO();
         this.borrowedBookDAO = new BorrowedBookDAO();
-        this.bookItemDAO = new BookItemDAO();
+        this.bookItemDAO = new BookItemDAOTest();
         this.billDAO = new BillDAO();
         this.bookDAO = new BookDAO();
         this.fineDAO = new FineDAO();
@@ -424,7 +424,7 @@ public class ReturnConfirmFrm extends JFrame {
         if (bb.getBookItem() == null) {
             return "Không xác định";
         }
-        Book book = bookDAO.findByID(new BookItemDAO().getBookISBN(bb.getBookItem().getId()));
+        Book book = bookDAO.findByID(new BookItemDAOTest().getBookISBN(bb.getBookItem().getId()));
         return book != null ? book.getTitle() : "Không xác định";
     }
 

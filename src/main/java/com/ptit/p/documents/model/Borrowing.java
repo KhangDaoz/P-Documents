@@ -1,6 +1,6 @@
 package com.ptit.p.documents.model;
 
-import com.ptit.p.documents.dao.BookItemDAO;
+import com.ptit.p.documents.dao.BookItemDAOTest;
 import java.util.ArrayList;
 import java.time.LocalDate;
 import java.util.List;
@@ -159,7 +159,7 @@ public class Borrowing {
     public String toString() {
         if (books == null || books.isEmpty()) return "";
         StringBuilder sb = new StringBuilder();
-        BookItemDAO dao = new BookItemDAO();
+        BookItemDAOTest dao = new BookItemDAOTest();
         for (int i = 0; i < books.size(); i++) {
             if (books.get(i).getBookItem() != null) {
                 sb.append(dao.getBookISBN(books.get(i).getBookItem().getId()));

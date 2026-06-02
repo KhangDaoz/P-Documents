@@ -3,7 +3,7 @@ package com.ptit.p.documents.view;
 import com.ptit.p.documents.dao.BorrowingDAO;
 import com.ptit.p.documents.dao.BorrowedBookDAO;
 import com.ptit.p.documents.dao.BookDAO;
-import com.ptit.p.documents.dao.BookItemDAO;
+import com.ptit.p.documents.dao.BookItemDAOTest;
 import com.ptit.p.documents.model.Book;
 import com.ptit.p.documents.model.Borrowing;
 import com.ptit.p.documents.model.BorrowedBook;
@@ -22,7 +22,7 @@ public class AcceptBorrowingFrm extends JFrame {
     private BorrowingDAO borrowingDAO;
     private BookDAO bookDAO;
     private BorrowedBookDAO borrowedBookDAO;
-    private BookItemDAO bookItemDAO;
+    private BookItemDAOTest bookItemDAO;
 
     private JLabel lblStudentName;
     private JLabel lblStudentId;
@@ -39,7 +39,7 @@ public class AcceptBorrowingFrm extends JFrame {
         this.borrowingDAO = new BorrowingDAO();
         this.bookDAO = new BookDAO();
         this.borrowedBookDAO = new BorrowedBookDAO();
-        this.bookItemDAO = new BookItemDAO();
+        this.bookItemDAO = new BookItemDAOTest();
 
         setTitle("Xác nhận phiếu mượn");
         setSize(800, 500);

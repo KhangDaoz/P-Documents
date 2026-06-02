@@ -141,7 +141,16 @@ CREATE TABLE tblBill (
 INSERT INTO tblUser (username, password, fullName, phone, role) VALUES
 ('admin',      'admin123',   'Nguyễn Văn Admin', '0900000001', 'admin'),
 ('manager1',   'manager123', 'Lê Thị Quản Lý',   '0900000002', 'manager'),
-('librarian1', 'lib123',     'Trần Thị Thư',     '0900000003', 'librarian');
+('librarian1', 'lib123',     'Trần Thị Thư',     '0900000003', 'librarian'),
+('thangnt',    't123',       'Nguyen Tien Thang', '0987654321', 'manager'),
+('lanpt',      'l234',       'Pham Thi Lan',     '0977777777', 'librarian'),
+('minhbq',     'm123',       'Bui Quang Minh',   '0944444444', 'librarian'),
+('truongnv',   't456',       'Nguyen Van Truong', '0912345678', 'librarian'),
+('dungnt',     'd789',       'Nguyen Tuan Dung', '0909090909', 'librarian'),
+('namlh',      'n012',       'Le Hoang Nam',     '0988888888', 'librarian'),
+('tuanva',     't567',       'Vu Anh Tuan',      '0966666666', 'librarian'),
+('huongnt',    'h890',       'Ngo Thu Huong',    '0955555555', 'librarian'),
+('quangdt',    'q234',       'Dang Tuan Quang',  '0933333333', 'librarian');
 
 INSERT INTO tblStudent (ID, fullName, email, phone, address) VALUES
 ('SV001', 'Đỗ Huy Hoàng',     'hoang@ptit.edu.vn', '0911111111', 'Hà Nội'),

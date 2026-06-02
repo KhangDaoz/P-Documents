@@ -123,17 +123,6 @@ public class AddUserFrm extends JFrame implements ActionListener {
 
     }
 
-    // Constructor nhận dữ liệu cũ để điền lại khi người dùng nhấn Back từ màn hình Confirm
-    public AddUserFrm(User admin, User targetUser) {
-        this(admin);
-        if (targetUser != null) {
-            txtFullName.setText(targetUser.getFullName());
-            txtUsername.setText(targetUser.getUsername());
-            txtPassword.setText(targetUser.getPassword());
-            txtPhone.setText(targetUser.getPhone());
-            txtRole.setText(targetUser.getRole());
-        }
-    }
 
     private JLabel createGridLabel(String text, Color background) {
         JLabel label = new JLabel(text, JLabel.CENTER);

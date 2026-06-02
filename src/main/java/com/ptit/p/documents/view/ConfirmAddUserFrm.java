@@ -150,12 +150,12 @@ public class ConfirmAddUserFrm extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(this, "Tạo tài khoản thất bại! Tên đăng nhập có thể đã tồn tại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 // Quay lại màn hình nhập liệu để Admin sửa
                 this.dispose();
-                AddUserFrm addFrm = new AddUserFrm(this.admin, user);
+                AddUserFrm addFrm = new AddUserFrm(this.admin);
                 addFrm.setVisible(true);
             }
         } else if (e.getSource() == btnCancel) {
             this.dispose();
-            AddUserFrm addFrm = new AddUserFrm(this.admin, user);
+            AddUserFrm addFrm = new AddUserFrm(this.admin);
             addFrm.setVisible(true);
         }
     }

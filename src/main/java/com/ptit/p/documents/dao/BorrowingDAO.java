@@ -290,7 +290,52 @@ public class BorrowingDAO extends DAO {
                     st.setAddress(rs.getString("address"));
                     b.setStudent(st);
 
-                    b.setBooks(loadBorrowedBooks(b.getId()));
+
+                    ArrayList<BorrowedBook> books = new ArrayList<>();
+                    String sqlBorrowedBooks = "SELECT bb.ID, bb.expectedReturnDate, bb.actualReturnDate, bb.status,"
+                            + " bb.note, bb.price, bb.tblBookItemID,"
+                            + " bi.tblBookISBN, bk.ISBN, bk.title, bk.author, bk.genre"
+                            + " FROM tblBorrowedBook bb"
+                            + " JOIN tblBookItem bi ON bb.tblBookItemID = bi.ID"
+                            + " JOIN tblBook bk ON bi.tblBookISBN = bk.ISBN"
+                            + " WHERE bb.tblBorrowingID = ?";
+                    try (PreparedStatement psBooks = getCon().prepareStatement(sqlBorrowedBooks)) {
+                        psBooks.setInt(1, b.getId());
+                        try (ResultSet rsBooks = psBooks.executeQuery()) {
+                            while (rsBooks.next()) {
+                                BorrowedBook bb = new BorrowedBook();
+                                bb.setId(rsBooks.getInt("ID"));
+                                bb.setExpectedReturnDate(
+                                        rsBooks.getDate("expectedReturnDate") != null
+                                                ? rsBooks.getDate("expectedReturnDate").toLocalDate()
+                                                : null);
+                                bb.setActualReturnDate(
+                                        rsBooks.getDate("actualReturnDate") != null
+                                                ? rsBooks.getDate("actualReturnDate").toLocalDate()
+                                                : null);
+                                bb.setStatus(rsBooks.getString("status"));
+                                bb.setNote(rsBooks.getString("note"));
+                                bb.setPrice(rsBooks.getDouble("price"));
+
+                                BookItem bi = new BookItem();
+                                bi.setId(rsBooks.getInt("tblBookItemID"));
+                                bi.setBookISBN(rsBooks.getString("tblBookISBN"));
+                                bb.setBookItem(bi);
+
+                                Book book = new Book();
+                                book.setIsbn(rsBooks.getString("ISBN"));
+                                book.setTitle(rsBooks.getString("title"));
+                                book.setAuthor(rsBooks.getString("author"));
+                                book.setGenre(rsBooks.getString("genre"));
+                                bb.setBook(book);
+
+                                books.add(bb);
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    b.setBooks(books);
                     result.add(b);
                 }
             }

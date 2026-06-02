@@ -1,5 +1,6 @@
 package com.ptit.p.documents.dao;
 
+import com.ptit.p.documents.model.Book;
 import com.ptit.p.documents.model.BorrowingStat;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -43,13 +44,13 @@ public class BorrowingStatDAO extends DAO {
             ps.setInt(3, topN);
             rs = ps.executeQuery();
             while (rs.next()) {
-                result.add(new BorrowingStat(
+                Book book = new Book(
                     rs.getString("ISBN"),
                     rs.getString("title"),
                     rs.getString("author"),
-                    rs.getString("genre"),
-                    rs.getInt("borrow_count")
-                ));
+                    rs.getString("genre")
+                );
+                result.add(new BorrowingStat(book, rs.getInt("borrow_count")));
             }
         } catch (Exception e) {
             System.err.println("[BorrowingStatDAO] getTopBorrowedBooks lỗi: " + e.getMessage());

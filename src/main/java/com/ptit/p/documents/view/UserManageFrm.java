@@ -4,15 +4,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import com.ptit.p.documents.model.User;
 
 public class UserManageFrm extends JFrame implements ActionListener {
     private final JButton btnAddUser;
     private final JButton btnEditUser;
     private final JButton btnDeleteUser;
     private final JButton btnBack;
+    private final User user;
 
-    public UserManageFrm() {
+    public UserManageFrm(User user) {
         super("Quản lý tài khoản");
+        this.user = user;
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(660, 470);
         setLocationRelativeTo(null);
@@ -118,19 +121,19 @@ public class UserManageFrm extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnAddUser) {
             this.dispose();
-            AddUserFrm addFrm = new AddUserFrm();
+            AddUserFrm addFrm = new AddUserFrm(this.user);
             addFrm.setVisible(true);
         } else if (e.getSource() == btnEditUser) {
             this.dispose();
-            SearchUserFrm searchFrm = new SearchUserFrm(SearchUserFrm.Mode.EDIT);
+            SearchUserFrm searchFrm = new SearchUserFrm(this.user);
             searchFrm.setVisible(true);
         } else if (e.getSource() == btnDeleteUser) {
             this.dispose();
-            SearchUserFrm searchFrm = new SearchUserFrm(SearchUserFrm.Mode.DELETE);
+            SearchUserFrm searchFrm = new SearchUserFrm(this.user);
             searchFrm.setVisible(true);
         } else if (e.getSource() == btnBack) {
             this.dispose();
-            AdminHomeFrm homeFrm = new AdminHomeFrm();
+            AdminHomeFrm homeFrm = new AdminHomeFrm(this.user);
             homeFrm.setVisible(true);
         }
     }

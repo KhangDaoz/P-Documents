@@ -14,9 +14,11 @@ public class ConfirmAddUserFrm extends JFrame implements ActionListener {
     private final JTable tblAddUserConfirm;
     private final JButton btnConfirm;
     private final JButton btnCancel;
+    private final User admin;
 
-    public ConfirmAddUserFrm(User user) {
+    public ConfirmAddUserFrm(User admin, User user) {
         super("Xác nhận tài khoản mới");
+        this.admin = admin;
         this.user = user;
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -39,28 +41,28 @@ public class ConfirmAddUserFrm extends JFrame implements ActionListener {
         lblHeader.setBounds(100, 30, 400, 35);
         pnl.add(lblHeader);
 
-        
+        // Grid panel cho bảng thông tin
         JPanel pnlGrid = new JPanel(new GridLayout(5, 2, 0, 0));
         pnlGrid.setBounds(100, 75, 400, 175);
         pnlGrid.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
 
-        
+        // Dòng 1: Họ tên
         pnlGrid.add(createGridLabel("Họ và tên", Color.WHITE));
         pnlGrid.add(createGridLabel(user.getFullName(), Color.WHITE));
 
-        
+        // Dòng 2: Tên đăng nhập
         pnlGrid.add(createGridLabel("Tên đăng nhập", Color.WHITE));
         pnlGrid.add(createGridLabel(user.getUsername(), Color.WHITE));
 
-        
+        // Dòng 3: Mật khẩu
         pnlGrid.add(createGridLabel("Mật khẩu", Color.WHITE));
         pnlGrid.add(createGridLabel(user.getPassword(), Color.WHITE));
 
-        
+        // Dòng 4: Số điện thoại
         pnlGrid.add(createGridLabel("Số điện thoại", Color.WHITE));
         pnlGrid.add(createGridLabel(user.getPhone(), Color.WHITE));
 
-        
+        // Dòng 5: Quyền hạn
         pnlGrid.add(createGridLabel("Quyền hạn", Color.WHITE));
         String roleText = user.getRole();
         if ("admin".equalsIgnoreCase(roleText)) {
@@ -74,7 +76,7 @@ public class ConfirmAddUserFrm extends JFrame implements ActionListener {
 
         pnl.add(pnlGrid);
 
-        
+        // Nút Xác nhận & Quay lại
         btnCancel = new JButton("Quay lại");
         btnCancel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         btnCancel.setBackground(Color.WHITE);
@@ -135,27 +137,25 @@ public class ConfirmAddUserFrm extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnConfirm) {
-            
             UserDAO userDAO = new UserDAO();
             boolean success = userDAO.addUser(user);
 
             if (success) {
-                
                 JOptionPane.showMessageDialog(this, "Account created successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                
+                // Admin click nút OK trên thông báo -> gọi lại lớp UserManageFrm
                 this.dispose();
-                UserManageFrm manageFrm = new UserManageFrm();
+                UserManageFrm manageFrm = new UserManageFrm(this.admin);
                 manageFrm.setVisible(true);
             } else {
                 JOptionPane.showMessageDialog(this, "Tạo tài khoản thất bại! Tên đăng nhập có thể đã tồn tại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                
+                // Quay lại màn hình nhập liệu để Admin sửa
                 this.dispose();
-                AddUserFrm addFrm = new AddUserFrm();
+                AddUserFrm addFrm = new AddUserFrm(this.admin, user);
                 addFrm.setVisible(true);
             }
         } else if (e.getSource() == btnCancel) {
             this.dispose();
-            AddUserFrm addFrm = new AddUserFrm(user);
+            AddUserFrm addFrm = new AddUserFrm(this.admin, user);
             addFrm.setVisible(true);
         }
     }
